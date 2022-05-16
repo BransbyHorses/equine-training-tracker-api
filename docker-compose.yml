@@ -4,9 +4,9 @@ services:
   postgresql_database:
     image: postgres:latest
     environment:
-      - POSTGRES_USER="${DB_USER}"
-      - POSTGRES_PASSWORD="${DB_USER}"
-      - POSTGRES_DB="${DB_NAME}"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=bransby68
+      - POSTGRES_DB=equine-training-tracker-db
     ports:
       - "5432:5432"
     restart: always
