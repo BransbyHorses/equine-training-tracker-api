@@ -19,9 +19,6 @@ public class Yard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-//    @OneToMany
-//    @JoinColumn(name = "cognito_id")
-//    private List<Trainer> trainers;
 
     @Override
     public boolean equals(Object o) {
