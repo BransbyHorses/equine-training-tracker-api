@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=bransby68
+      - POSTGRES_PASSWORD=password
       - POSTGRES_DB=equine-training-tracker-db
     ports:
       - "5432:5432"
