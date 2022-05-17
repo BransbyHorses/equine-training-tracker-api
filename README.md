@@ -11,9 +11,17 @@ Spring Boot REST API for Bransby equine training tracker application. Intialized
 
 ### Set up Postgres services
 
-Install [Intellij EnvFile plugin](https://plugins.jetbrains.com/plugin/7861-envfile) to use .env variables
+Install and configure [Intellij EnvFile plugin](https://plugins.jetbrains.com/plugin/7861-envfile) to use environment variables. Add the following variables to an .env file:
 
-Run postgres database and PGAdmin in Docker:
+```bash
+# Postgres environment variables
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_NAME=
+```
+
+Run a postgres database and PGAdmin in Docker:
 ```bash
 $ docker-compose up -d
 ```
