@@ -10,11 +10,14 @@ Spring Boot REST API for Bransby equine training tracker application. Intialized
   * Docker
 
 ### Set up Postgres services
+
+Install [Intellij EnvFile plugin](https://plugins.jetbrains.com/plugin/7861-envfile) to use .env variables
+
 Run postgres database and PGAdmin in Docker:
 ```bash
 $ docker-compose up -d
 ```
-Start postgres database only:
+or run the postgres database only:
 ```bash
 $ docker-compose up -d postgresql_database
 ```
