@@ -32,5 +32,9 @@ $ docker-compose up -d postgresql_database
 Remove data persisted in the postgres volume with either:
 ```bash
 $ docker-compose down -v
+ 
+or 
+
+$ docker-compose down
 $ docker volume rm equine-training-tracker-api_database-data
 ```
