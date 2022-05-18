@@ -17,7 +17,6 @@ Install and configure [Intellij EnvFile plugin](https://plugins.jetbrains.com/pl
 # Postgres environment variables
 DB_USER=
 DB_PASSWORD=
-DB_HOST=
 DB_NAME=
 ```
 
