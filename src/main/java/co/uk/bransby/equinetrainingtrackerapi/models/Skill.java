@@ -3,16 +3,14 @@ package co.uk.bransby.equinetrainingtrackerapi.models;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "skills")
+@Entity
+@Table(name = "skills")
 public class Skill {
 
     @Id
