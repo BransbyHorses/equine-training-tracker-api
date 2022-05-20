@@ -1,12 +1,16 @@
 package co.uk.bransby.equinetrainingtrackerapi.models;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name="EQUINES")
 public class Equine {
@@ -23,5 +27,16 @@ public class Equine {
     private String equine_training;
     private Boolean equine_on_hold;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Equine equine = (Equine) o;
+        return equine_id != null && Objects.equals(equine_id, equine.equine_id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
