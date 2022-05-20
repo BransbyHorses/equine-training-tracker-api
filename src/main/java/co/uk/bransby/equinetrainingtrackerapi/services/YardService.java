@@ -22,8 +22,8 @@ public class YardService {
         return yardRepository.findAll();
     }
     // read a specified yard from the database
-    public Yard readYard(Long id) {
-        return yardRepository.getById(id);
+    public Optional<Yard> readYard(Long id) {
+        return yardRepository.findById(id);
     }
     // create a new yard in the database
     public Yard createYard(Yard yard){
