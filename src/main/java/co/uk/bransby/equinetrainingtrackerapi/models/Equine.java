@@ -19,7 +19,7 @@ public class Equine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long equine_id;
     private String equine_name;
-    private Long equine_yard;
+    private String equine_yard;
     private Long equine_trainerId;
     private String equine_category;
     private String equine_programme;
