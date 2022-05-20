@@ -11,7 +11,6 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name="DISRUPTIONS")
 public class Disruption {
