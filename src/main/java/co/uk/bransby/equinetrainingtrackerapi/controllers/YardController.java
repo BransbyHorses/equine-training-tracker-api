@@ -28,10 +28,13 @@ public class YardController {
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<Yard> findYard(@PathVariable Long id) {
-        Optional<Yard> yard = yardService.getYard(id);
         HttpHeaders resHeaders = new HttpHeaders();
-        return yard.map(data -> new ResponseEntity<Yard>(data, resHeaders, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            Yard yard = yardService.getYard(id);
+            return new ResponseEntity<Yard>(yard, resHeaders, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
+        }
     }
     // read all yards
     @GetMapping

@@ -37,9 +37,18 @@ class YardServiceTest {
 
     @Test
     void canGetYard() {
-        yardServiceUnderTest.getYard(yardInstance.getId());
+        given(yardRepository.findById(1L)).willReturn(Optional.ofNullable(yardInstance));
+        yardServiceUnderTest.getYard(1L);
         Mockito.verify(yardRepository).findById(yardInstance.getId());
     }
+
+    @Test
+    void throwsExceptionWhenYardWasNotFound() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            yardServiceUnderTest.getYard(yardInstance.getId());
+        });
+    }
+
 
     @Test
     void canCreateYard() {
