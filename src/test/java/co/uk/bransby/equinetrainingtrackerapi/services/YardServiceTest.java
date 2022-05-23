@@ -2,17 +2,18 @@ package co.uk.bransby.equinetrainingtrackerapi.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,19 +52,9 @@ class YardServiceTest {
     }
 
     @Test
-    void returnsNullWhenNoYardFoundToUpdate() {
-
-    }
-
-    @Test
     void canDeleteYard() {
         Long id = 1L;
         yardServiceUnderTest.deleteYard(id);
         Mockito.verify(yardRepository).deleteById(id);
-    }
-
-    @Test
-    void willThrowExceptionWhenYardHasNotBeenDeleted() {
-
     }
 }
