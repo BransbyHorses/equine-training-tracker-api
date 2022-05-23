@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +18,23 @@ public class YardService {
         this.yardRepository = yardRepository;
     }
 
-    // read all yards from the database
-    public List<Yard> readAllYards() {
+    public List<Yard> getAllYards() {
         return yardRepository.findAll();
     }
-    // read a specified yard from the database
-    public Optional<Yard> readYard(Long id) {
+    public Optional<Yard> getYard(Long id) {
         return yardRepository.findById(id);
     }
-    // create a new yard in the database
     public Yard createYard(Yard yard){
         return yardRepository.saveAndFlush(yard);
     }
-    // update a yard in the database
     public Yard updateYard(Long id, Yard updatedYard) {
-        Optional<Yard> yardFromDb = yardRepository.findById(id);
-        if(yardFromDb.isPresent()) {
-            BeanUtils.copyProperties(updatedYard, yardFromDb.get(), "id");
-            return yardRepository.saveAndFlush(yardFromDb.get());
+        Optional<Yard> yardToUpdate = yardRepository.findById(id);
+        if(yardToUpdate.isPresent()) {
+            BeanUtils.copyProperties(updatedYard, yardToUpdate.get(), "id");
+            return yardRepository.saveAndFlush(yardToUpdate.get());
         }
         return null;
     }
-    // delete a yard from the database
     public boolean deleteYard(Long id) {
         try {
             yardRepository.deleteById(id);
