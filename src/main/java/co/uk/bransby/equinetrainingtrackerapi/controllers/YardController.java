@@ -26,7 +26,7 @@ public class YardController {
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<Yard> findYard(@PathVariable Long id) {
-        Optional<Yard> yard = yardService.readYard(id);
+        Optional<Yard> yard = yardService.getYard(id);
         HttpHeaders resHeaders = new HttpHeaders();
         return yard.map(data -> new ResponseEntity<Yard>(data, resHeaders, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -34,7 +34,7 @@ public class YardController {
     // read all yards
     @GetMapping
     public ResponseEntity<List<Yard>> findAllYards() {
-        List<Yard> allYards = yardService.readAllYards();
+        List<Yard> allYards = yardService.getAllYards();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<List<Yard>>(allYards, resHeaders, HttpStatus.OK);
     }
