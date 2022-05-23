@@ -5,6 +5,7 @@ import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +27,11 @@ public class YardService {
     public Yard createYard(Yard yard){
         return yardRepository.saveAndFlush(yard);
     }
-    public Yard updateYard(Long id, Yard updatedYard) {
-        Optional<Yard> yardToUpdate = yardRepository.findById(id);
-        if(yardToUpdate.isPresent()) {
-            BeanUtils.copyProperties(updatedYard, yardToUpdate.get(), "id");
-            return yardRepository.saveAndFlush(yardToUpdate.get());
-        }
-        return null;
+    public Yard updateYard(Long id, Yard updatedYardValues) throws EntityNotFoundException {
+        Yard yardToUpdate = yardRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+        BeanUtils.copyProperties(updatedYardValues, yardToUpdate, "id");
+        return yardRepository.saveAndFlush(yardToUpdate);
     }
     public void deleteYard(Long id) {
         yardRepository.deleteById(id);
