@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -46,14 +47,23 @@ public class YardController {
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<Yard>(newYard, resHeaders, HttpStatus.CREATED);
     }
-    // delete yard
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void deleteYard(@PathVariable Long id) {
-        yardService.deleteYard(id);
-    }
     // update yard
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public Yard updateYard(@RequestBody Yard yard) {
-        return yardService.updateYard(yard.getId(), yard);
+    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody Yard updatedYardValues) {
+        HttpHeaders resHeaders = new HttpHeaders();
+        try {
+            Yard updatedYard =  yardService.updateYard(id, updatedYardValues);
+            return new ResponseEntity<Yard>(updatedYard, resHeaders, HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
+        }
+    }
+    // delete yard
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteYard(@PathVariable Long id) {
+        HttpHeaders resHeaders = new HttpHeaders();
+        yardService.deleteYard(id);
+        return new ResponseEntity(resHeaders, HttpStatus.OK);
     }
 }
