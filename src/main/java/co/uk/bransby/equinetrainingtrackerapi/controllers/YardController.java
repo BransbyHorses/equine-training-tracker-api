@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.services.YardService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,8 @@ public class YardController {
     }
     // delete yard
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public Long deleteYard(@PathVariable Long id) {
-        return null;
+    public void deleteYard(@PathVariable Long id) {
+        yardService.deleteYard(id);
     }
     // update yard
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)

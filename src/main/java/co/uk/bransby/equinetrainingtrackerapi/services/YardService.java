@@ -2,7 +2,6 @@ package co.uk.bransby.equinetrainingtrackerapi.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +34,7 @@ public class YardService {
         }
         return null;
     }
-    public boolean deleteYard(Long id) {
-        try {
-            yardRepository.deleteById(id);
-            return true;
-        } catch(Exception e){
-            return false;
-        }
+    public void deleteYard(Long id) {
+        yardRepository.deleteById(id);
     }
 }
