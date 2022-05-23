@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -20,11 +19,14 @@ import java.util.Optional;
 class YardServiceTest {
 
     @Mock YardRepository yardRepository;
+    @InjectMocks
     private YardService yardServiceUnderTest;
+    private Yard yardInstance;
 
     @BeforeEach
     void setUp() {
         yardServiceUnderTest = new YardService(yardRepository);
+        yardInstance = new Yard(1L, "Test Yard Instance");
     }
 
     @Test
@@ -35,26 +37,34 @@ class YardServiceTest {
 
     @Test
     void canGetYard() {
-        Long id = 1L;
-        yardServiceUnderTest.getYard(id);
-        Mockito.verify(yardRepository).findById(id);
+        yardServiceUnderTest.getYard(yardInstance.getId());
+        Mockito.verify(yardRepository).findById(yardInstance.getId());
     }
 
     @Test
     void canCreateYard() {
-        Yard newYard = new Yard();
-        yardServiceUnderTest.createYard(newYard);
-        Mockito.verify(yardRepository).saveAndFlush(newYard);
+        yardServiceUnderTest.createYard(yardInstance);
+        Mockito.verify(yardRepository).saveAndFlush(yardInstance);
     }
 
     @Test
     void canUpdateYard() {
+        given(yardRepository.findById(1L)).willReturn(Optional.ofNullable(yardInstance));
+        yardInstance.setName("New Yard Name");
+        yardServiceUnderTest.updateYard(1L, yardInstance);
+        Mockito.verify(yardRepository).saveAndFlush(yardInstance);
+    }
+
+    @Test
+    void throwsExceptionWhenYardWasNotFoundAndUpdated() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            yardServiceUnderTest.updateYard(yardInstance.getId(), yardInstance);
+        });
     }
 
     @Test
     void canDeleteYard() {
-        Long id = 1L;
-        yardServiceUnderTest.deleteYard(id);
-        Mockito.verify(yardRepository).deleteById(id);
+        yardServiceUnderTest.deleteYard(yardInstance.getId());
+        Mockito.verify(yardRepository).deleteById(yardInstance.getId());
     }
 }
