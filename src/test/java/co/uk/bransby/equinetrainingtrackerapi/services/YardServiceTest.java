@@ -43,14 +43,6 @@ class YardServiceTest {
     }
 
     @Test
-    void throwsExceptionWhenYardWasNotFound() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            yardServiceUnderTest.getYard(yardInstance.getId());
-        });
-    }
-
-
-    @Test
     void canCreateYard() {
         yardServiceUnderTest.createYard(yardInstance);
         Mockito.verify(yardRepository).saveAndFlush(yardInstance);
@@ -66,9 +58,7 @@ class YardServiceTest {
 
     @Test
     void throwsExceptionWhenYardWasNotFoundAndUpdated() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            yardServiceUnderTest.updateYard(yardInstance.getId(), yardInstance);
-        });
+        Assertions.assertThrows(EntityNotFoundException.class, () -> yardServiceUnderTest.updateYard(yardInstance.getId(), yardInstance));
     }
 
     @Test

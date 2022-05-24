@@ -22,7 +22,7 @@ public class YardService {
         return yardRepository.findAll();
     }
 
-    public Optional<Yard> getYard(Long id) throws EntityNotFoundException {
+    public Optional<Yard> getYard(Long id) {
         return yardRepository.findById(id);
     }
 
