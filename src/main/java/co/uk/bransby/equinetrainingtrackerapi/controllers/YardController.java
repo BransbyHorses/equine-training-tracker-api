@@ -24,26 +24,23 @@ public class YardController {
     @RequestMapping("{id}")
     public ResponseEntity<Yard> findYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        try {
-            Yard yard = yardService.getYard(id);
-            return new ResponseEntity<Yard>(yard, resHeaders, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
-        }
+        return yardService.getYard(id)
+                .map(yard -> new ResponseEntity<>(yard, resHeaders, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
     public ResponseEntity<List<Yard>> findAllYards() {
         List<Yard> allYards = yardService.getAllYards();
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<List<Yard>>(allYards, resHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(allYards, resHeaders, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Yard> createYard(@RequestBody Yard yard) {
         Yard newYard = yardService.createYard(yard);
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<Yard>(newYard, resHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(newYard, resHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
@@ -51,7 +48,7 @@ public class YardController {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Yard updatedYard =  yardService.updateYard(id, updatedYardValues);
-            return new ResponseEntity<Yard>(updatedYard, resHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(updatedYard, resHeaders, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
@@ -59,9 +56,13 @@ public class YardController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<> deleteYard(@PathVariable Long id) {
+    public ResponseEntity<Yard> deleteYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        yardService.deleteYard(id);
-        return new ResponseEntity<>(resHeaders, HttpStatus.OK);
+        return yardService.getYard(id)
+                .map(yard -> {
+                    yardService.deleteYard(id);
+                    return new ResponseEntity<>(yard, resHeaders, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
 }

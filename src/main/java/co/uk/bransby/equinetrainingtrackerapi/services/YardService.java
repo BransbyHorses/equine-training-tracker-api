@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class YardService {
@@ -20,19 +21,22 @@ public class YardService {
     public List<Yard> getAllYards() {
         return yardRepository.findAll();
     }
-    public Yard getYard(Long id) throws EntityNotFoundException {
-        return yardRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+
+    public Optional<Yard> getYard(Long id) throws EntityNotFoundException {
+        return yardRepository.findById(id);
     }
+
     public Yard createYard(Yard yard){
         return yardRepository.saveAndFlush(yard);
     }
+
     public Yard updateYard(Long id, Yard updatedYardValues) throws EntityNotFoundException {
         Yard yardToUpdate = yardRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         BeanUtils.copyProperties(updatedYardValues, yardToUpdate, "id");
         return yardRepository.saveAndFlush(yardToUpdate);
     }
+
     public void deleteYard(Long id) {
         yardRepository.deleteById(id);
     }
