@@ -21,7 +21,7 @@ public class EquineController {
     }
 
     @GetMapping
-    @RequestMapping({"id"})
+    @RequestMapping({"{id}"})
     public ResponseEntity<Equine> findEquine(@PathVariable Long id){
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
@@ -42,7 +42,7 @@ public class EquineController {
         return new ResponseEntity<>(newEquine, resHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{id", method = requestMethod.PUT)
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Equine> updateEquine(@PathVariable Long id, @RequestBody Equine updatedEquineValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
@@ -53,7 +53,7 @@ public class EquineController {
         }
     }
 
-    @RequestMapping(value = "{id", method = requestMethod.DELETE)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Equine> deleteEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
