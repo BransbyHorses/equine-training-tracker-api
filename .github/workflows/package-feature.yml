@@ -1,4 +1,4 @@
-# highlight build and/or test failures in GitHub feature branches before merging with main
+# build and test feature branches (with mvn Package) before merging with main
 
 name: Feature Branch Build
 
