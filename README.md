@@ -18,6 +18,8 @@ Install and configure [Intellij EnvFile plugin](https://plugins.jetbrains.com/pl
 DB_USER=
 DB_PASSWORD=
 DB_NAME=
+# project environment variables
+DATASOURCE=
 ```
 
 Run a postgres database and PGAdmin in Docker:
