@@ -6,7 +6,7 @@ Spring Boot REST API for Bransby equine training tracker application. Intialized
 
 ### Prerequisites
 
-  * Java 11+
+  * Java 17
   * Docker
 
 ### Set up Postgres services
