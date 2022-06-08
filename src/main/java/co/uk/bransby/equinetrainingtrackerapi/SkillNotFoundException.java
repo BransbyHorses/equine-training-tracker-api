@@ -8,4 +8,9 @@ public class SkillNotFoundException extends RuntimeException {
         super("Could not find skill " + id);
     }
 
+    public SkillNotFoundException(String name) {
+        super("Could not find skill " + name);
+    }
+
+
 }

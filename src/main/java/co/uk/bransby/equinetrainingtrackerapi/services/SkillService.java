@@ -32,8 +32,16 @@ public class SkillService {
         return skillRepository.save(skill);
     }
 
-    public Skill update(Skill skill) {
-        return skillRepository.save(skill);
+    public Skill update(Skill updatedSkill, Long id) {
+        return skillRepository.findById(id)
+                .map(skill -> {
+                    skill.setName(updatedSkill.getName());
+                    return skillRepository.save(skill);
+                })
+                .orElseGet(() -> {
+                    updatedSkill.setId(id);
+                    return skillRepository.save(updatedSkill);
+                });
     }
 
 
@@ -41,8 +49,16 @@ public class SkillService {
         return skillRepository.findById(id);
     }
 
+    public Optional<Skill> findByName(String name) {
+        return Optional.ofNullable(skillRepository.findByName(name));
+    }
+
     public void deleteById(Long id) {
         skillRepository.deleteById(id);
+    }
+
+    public void deleteByName(String name) {
+       // skillRepository.deleteByName(name);
     }
 
 }

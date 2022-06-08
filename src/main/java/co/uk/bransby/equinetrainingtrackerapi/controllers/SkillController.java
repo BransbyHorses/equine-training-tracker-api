@@ -2,9 +2,11 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.SkillNotFoundException;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
-import co.uk.bransby.equinetrainingtrackerapi.persistence.SkillRepository;
 import co.uk.bransby.equinetrainingtrackerapi.services.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,43 +24,66 @@ public class SkillController {
 
 
     @GetMapping
-    public List<Skill> all() {
-
-       return skillService.findAll();
-    }
-
-    @PostMapping
-    public Skill addSkill(@RequestBody Skill skill) {
-
-        return skillService.save(skill);
+    public ResponseEntity<List<Skill>> all() {
+        HttpHeaders headers = new HttpHeaders();
+        List<Skill> allSkills = skillService.findAll();
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .headers(headers)
+               .body(allSkills);
     }
 
     @GetMapping("{id}")
-    public Skill getById(@PathVariable Long id) {
+    public ResponseEntity<Skill> getById(@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
         return skillService.findById(id)
-                .orElseThrow(() -> new SkillNotFoundException(id));
+                .map(skill -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .headers(headers)
+                        .body(skill))
+                .orElse(ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .headers(headers).build());
     }
 
-    @PutMapping("{id}")
-    public Skill updateSkill(@RequestBody Skill newSkill, @PathVariable Long id) {
+    @PostMapping
+    public ResponseEntity<Skill> addSkill(@RequestBody Skill skill) {
+        HttpHeaders headers = new HttpHeaders();
+        Skill newSkill = skillService.save(skill);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .headers(headers)
+                .body(newSkill);
+    }
 
-        return skillService.findById(id)
-                .map(skill -> {
-                    skill.setName(newSkill.getName());
-                    return skillService.save(skill);
-                })
-                .orElseGet(() -> {
-                    newSkill.setId(id);
-                    return skillService.save(newSkill);
-                });
+
+
+    @PutMapping("{id}")
+    public ResponseEntity<Skill> updateSkill(@RequestBody Skill skill, @PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        Skill updatedSkill = skillService.update(skill, id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .body(updatedSkill);
     }
 
     @DeleteMapping("{id}")
-    public void deleteSkill(@PathVariable Long id) {
-         skillService.deleteById(id);
+    public ResponseEntity<Skill> deleteSkillById(@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        return skillService.findById(id)
+                .map(skill -> {
+                    skillService.deleteById(id);
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .headers(headers)
+                            .body(skill);
+                        })
+                .orElse(ResponseEntity
+                            .status(HttpStatus.NOT_FOUND)
+                            .headers(headers)
+                            .build());
 
     }
-
-
 
 }
