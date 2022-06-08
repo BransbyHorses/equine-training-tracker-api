@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.SkillNotFoundException;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.services.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +55,6 @@ public class SkillController {
                 .body(newSkill);
     }
 
-
-
     @PutMapping("{id}")
     public ResponseEntity<Skill> updateSkill(@RequestBody Skill skill, @PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -83,7 +80,6 @@ public class SkillController {
                             .status(HttpStatus.NOT_FOUND)
                             .headers(headers)
                             .build());
-
     }
 
 }
