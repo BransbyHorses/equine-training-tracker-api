@@ -42,7 +42,7 @@ public class EquineController {
         return new ResponseEntity<>(newEquine, resHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "{id}")
     public ResponseEntity<Equine> updateEquine(@PathVariable Long id, @RequestBody Equine updatedEquineValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
@@ -53,7 +53,7 @@ public class EquineController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Equine> deleteEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
