@@ -47,8 +47,8 @@ public class CategoryController {
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
-            Category updatedYard = categoryService.updateCategory(id, updatedCategoryValues);
-            return new ResponseEntity<>(updatedYard, resHeaders, HttpStatus.OK);
+            Category updatedCategory = categoryService.updateCategory(id, updatedCategoryValues);
+            return new ResponseEntity<>(updatedCategory, resHeaders, HttpStatus.OK);
         } catch(EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
         }
