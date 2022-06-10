@@ -41,8 +41,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category newCategory) {
-        Category savedCategory = categoryService.createCategory(newCategory);
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO newCategory) {
+        Category mappedCategory = modelMapper.map(newCategory, Category.class);
+        Category savedCategory = categoryService.createCategory(mappedCategory);
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(savedCategory, resHeaders, HttpStatus.CREATED);
     }
