@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -13,8 +12,11 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name="YARDS")
-public class Yard {
+@Table(name = "PROGRAMMES")
+
+public class Programme {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,12 +26,13 @@ public class Yard {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Yard yard = (Yard) o;
-        return id != null && Objects.equals(id, yard.id);
+        Programme programme = (Programme) o;
+        return id != null && Objects.equals(id, programme.id);
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }
