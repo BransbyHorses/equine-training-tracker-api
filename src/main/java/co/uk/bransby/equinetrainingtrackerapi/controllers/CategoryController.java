@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.CategoryDTO;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -44,17 +48,18 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategoryValues) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
-            Category updatedYard = categoryService.updateCategory(id, updatedCategoryValues);
-            return new ResponseEntity<>(updatedYard, resHeaders, HttpStatus.OK);
+            Category mappedCategory = modelMapper.map(updatedCategoryValues, Category.class);
+            Category savedUpdatedCategory = categoryService.updateCategory(id, mappedCategory);
+            return new ResponseEntity<>(savedUpdatedCategory, resHeaders, HttpStatus.OK);
         } catch(EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long id) {
         return categoryService.getCategory(id)
                 .map(category -> {
