@@ -11,16 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public class EquineTrainingTrackerApiApplication {
 
 
-	public static void main(String[] args) {
-
-
-
-		SpringApplication.run(EquineTrainingTrackerApiApplication.class, args);
-		Skill skill = new Skill();
-		skill.setName("test");
-		System.out.println(skill);
-
-
-	}
+	public static void main(String[] args) {SpringApplication.run(EquineTrainingTrackerApiApplication.class, args);}
 
 }

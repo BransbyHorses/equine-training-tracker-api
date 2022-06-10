@@ -36,7 +36,8 @@ public class SkillService {
     public Skill update(Skill updatedSkill, Long id) {
         return skillRepository.findById(id)
                 .map(skill -> {
-                    skill.setName(updatedSkill.getName());
+                    skill = updatedSkill;
+                    skill.setId(id);
                     return skillRepository.save(skill);
                 })
                 .orElseGet(() -> {
@@ -48,10 +49,6 @@ public class SkillService {
 
     public Optional<Skill> findById(Long id) {
         return skillRepository.findById(id);
-    }
-
-    public Optional<Skill> findByName(String name) {
-        return Optional.ofNullable(skillRepository.findByName(name));
     }
 
     public void deleteById(Long id) {
