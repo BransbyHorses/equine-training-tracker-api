@@ -2,19 +2,28 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +46,6 @@ class CategoryControllerTest {
         categories.add(new Category(3L, "Test Category 3"));
         categories.add(new Category(4L, "Test Category 4"));
         categories.add(new Category(5L, "Test Category 5"));
-
     }
 
     @Test
@@ -49,27 +57,70 @@ class CategoryControllerTest {
     }
 
     @Test
-    void willGetCategoryAndReturnOkResponse() {
+    void willGetCategoryAndReturnOkResponse() throws Exception {
+        given(categoryService.getCategory(1L)).willReturn(Optional.of(categories.get(0)));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Category 1"));
     }
 
     @Test
-    void willReturnNotFoundResponseWhenCategoryWasNotFound() {
-
+    void willReturnNotFoundResponseWhenCategoryWasNotFound() throws Exception {
+        given(categoryService.getCategory(1L)).willReturn(Optional.empty());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories/{id}", 6))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    void willCreateCategoryAndReturnCreatedResponse() {
+    void willCreateCategoryAndReturnCreatedResponse() throws Exception {
+        Category newCategory =  new Category(6L, "New Category");
+        given(categoryService.createCategory(newCategory)).willReturn(newCategory);
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/categories")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(newCategory)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(6L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("New Category"));
     }
 
     @Test
-    void willUpdateCategoryAndReturnOkResponse() {
+    void willUpdateCategoryAndReturnOkResponse() throws Exception {
+        Category updatedCategory = new Category(7L, "Updated Category");
+        given(categoryService.updateCategory(7L, updatedCategory)).willReturn(updatedCategory);
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updatedCategory)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(7L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Updated Category"));
     }
 
     @Test
-    void willDeleteCategoryAndReturnOkResponse() {
+    void willReturnNotFoundResponseWhenCategoryWasNotFoundAndUpdated() throws Exception {
+        Category updatedCategory = new Category(7L, "Updated Category");
+        given(categoryService.updateCategory(7L, updatedCategory))
+                .willThrow(new EntityNotFoundException());
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedCategory)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    void WillReturnNotFoundResponseWhenCategoryWasNotFoundAndDeleted(){
+    void willDeleteCategoryAndReturnOkResponse() throws Exception {
+        given(categoryService.getCategory(1L)).willReturn(Optional.of(categories.get(0)));
+        Mockito.doNothing().when(categoryService).deleteCategory(1L);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/categories/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Category 1"));
+    }
+
+    @Test
+    void WillReturnNotFoundResponseWhenCategoryWasNotFoundAndDeleted() throws Exception {
+        given(categoryService.getCategory(1L)).willReturn(Optional.empty());
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/categories/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
