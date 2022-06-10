@@ -31,8 +31,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);
     }
 
-    @GetMapping
-    @RequestMapping("{id}")
+    @GetMapping(value = "{id}")
     public ResponseEntity<Category> getCategory(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return categoryService.getCategory(id)
