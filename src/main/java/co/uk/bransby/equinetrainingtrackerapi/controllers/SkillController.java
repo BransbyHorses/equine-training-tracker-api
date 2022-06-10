@@ -48,7 +48,7 @@ public class SkillController {
     @PostMapping
     public ResponseEntity<Skill> addSkill(@RequestBody Skill skill) {
         HttpHeaders headers = new HttpHeaders();
-        Skill newSkill = skillService.save(skill);
+        Skill newSkill = skillService.create(skill);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .headers(headers)

@@ -22,7 +22,8 @@ public class SkillService {
     public List<Skill> findAll() {
         return skillRepository.findAll();
     }
-    public Skill save(Skill skill) {
+
+    public Skill create(Skill skill) {
         Optional skillOptional;
         skillOptional = Optional.ofNullable(skillRepository.findByName(skill.getName()));
         if(skillOptional.isPresent()) {
@@ -57,8 +58,6 @@ public class SkillService {
         skillRepository.deleteById(id);
     }
 
-    public void deleteByName(String name) {
-       // skillRepository.deleteByName(name);
-    }
+
 
 }

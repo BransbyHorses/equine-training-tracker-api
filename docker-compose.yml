@@ -1,4 +1,4 @@
-version: '3.4'
+docversion: '3.4'
 
 services:
   postgresql_database:
