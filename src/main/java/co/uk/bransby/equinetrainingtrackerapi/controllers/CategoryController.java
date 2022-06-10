@@ -17,11 +17,11 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping
