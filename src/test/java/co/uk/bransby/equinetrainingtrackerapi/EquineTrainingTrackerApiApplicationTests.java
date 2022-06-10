@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.transaction.Transactional;
 
 @SpringBootTest
-@@ActiveProfiles("test")
+@ActiveProfiles("test")
 class EquineTrainingTrackerApiApplicationTests {
 
 	@Test
