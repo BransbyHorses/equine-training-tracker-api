@@ -1,6 +1,6 @@
 # build, test, analyse main branch on each push
 
-name: Feature Branch
+name: Main Branch
 
 on:
   push:
