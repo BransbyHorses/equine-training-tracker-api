@@ -3,7 +3,6 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 import co.uk.bransby.equinetrainingtrackerapi.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.models.dto.DisruptionDTO;
 import co.uk.bransby.equinetrainingtrackerapi.services.DisruptionService;
-import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
