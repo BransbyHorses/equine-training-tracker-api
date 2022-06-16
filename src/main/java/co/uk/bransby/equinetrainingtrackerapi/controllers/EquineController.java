@@ -24,8 +24,7 @@ public class EquineController {
         this.mapper = mapper;
     }
 
-    @GetMapping
-    @RequestMapping({"{id}"})
+    @GetMapping({"{id}"})
     public ResponseEntity<Equine> findEquine(@PathVariable Long id){
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
