@@ -1,17 +1,12 @@
-# build and test feature branches (with mvn Package) before merging in to main
+# build, test, analyse main branch on each push
 
-name: Feature Branch
+name: Main Branch
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, reopened, synchronize]
   push:
-    branches-ignore:
-      - main
+    branches: [main]
 
 jobs:
-
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -59,7 +54,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
     steps:
       - uses: actions/checkout@v3
         with:

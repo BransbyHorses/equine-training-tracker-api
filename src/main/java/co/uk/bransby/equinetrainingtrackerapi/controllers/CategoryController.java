@@ -50,8 +50,7 @@ public class CategoryController {
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
-            Category mappedCategory = modelMapper.map(updatedCategoryValues, Category.class);
-            Category savedUpdatedCategory = categoryService.updateCategory(id, mappedCategory);
+            Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));
             return new ResponseEntity<>(savedUpdatedCategory, resHeaders, HttpStatus.OK);
         } catch(EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
