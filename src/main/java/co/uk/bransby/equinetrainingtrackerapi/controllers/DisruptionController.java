@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -40,7 +41,7 @@ public class DisruptionController {
     public ResponseEntity<Disruption> createDisruption(@RequestBody DisruptionDTO newDisruption) {
         HttpHeaders resHeaders = new HttpHeaders();
         Disruption savedDisruption = disruptionService.createDisruption(disruptionModelMapper.map(newDisruption, Disruption.class));
-        return ResponseEntity.ok().headers(resHeaders).body(savedDisruption);
+        return ResponseEntity.created(URI.create("/data/disruptions/" + savedDisruption.getId())).headers(resHeaders).body(savedDisruption);
     }
 
     @PutMapping(value = "{id}")
