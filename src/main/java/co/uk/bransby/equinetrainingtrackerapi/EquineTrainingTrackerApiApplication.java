@@ -1,5 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,11 @@ public class EquineTrainingTrackerApiApplication {
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
+	}
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 
 	public static void main(String[] args) {
