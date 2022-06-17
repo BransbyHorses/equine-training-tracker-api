@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -109,6 +110,20 @@ class SkilControllerTest {
                 .content(objectMapper.writeValueAsString(updatedSkill)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(updatedSkill.getName()));
+    }
+
+    @Test
+    void deletesSkill() throws Exception {
+        Long skillId = 1L;
+        Skill deletedSkill = skillList.get(0);
+        given(skillService.findById(skillId)).willReturn((Optional.of(deletedSkill)));
+        doNothing().when(skillService).deleteById(deletedSkill.getId());
+
+        this.mockMvc.perform(delete(urlTemplate + "{id}", deletedSkill.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(deletedSkill.getName()))
+                .andExpect(jsonPath("$.id").value(deletedSkill.getId()));
+
     }
 
 }
