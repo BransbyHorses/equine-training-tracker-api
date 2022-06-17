@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.YardDTO;
 import co.uk.bransby.equinetrainingtrackerapi.services.YardService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ import java.util.List;
 public class YardController {
 
     private final YardService yardService;
+    private final ModelMapper modelMapper;
 
     public YardController(YardService yardService) {
         this.yardService = yardService;
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping
@@ -37,17 +41,17 @@ public class YardController {
     }
 
     @PostMapping
-    public ResponseEntity<Yard> createYard(@RequestBody Yard yard) {
-        Yard newYard = yardService.createYard(yard);
+    public ResponseEntity<Yard> createYard(@RequestBody YardDTO newYard) {
+        Yard createdYard = yardService.createYard(modelMapper.map(newYard, Yard.class));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(newYard, resHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdYard, resHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody Yard updatedYardValues) {
+    @PutMapping(value = "{id}")
+    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody YardDTO updatedYardValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
-            Yard updatedYard =  yardService.updateYard(id, updatedYardValues);
+            Yard updatedYard =  yardService.updateYard(id, modelMapper.map(updatedYardValues, Yard.class));
             return new ResponseEntity<>(updatedYard, resHeaders, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
@@ -55,7 +59,7 @@ public class YardController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Yard> deleteYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return yardService.getYard(id)
