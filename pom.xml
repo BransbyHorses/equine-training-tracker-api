@@ -91,7 +91,6 @@
 						</configuration>
 					</execution>
 				</executions>
-       main
 			</plugin>
 		</plugins>
 	</build>
