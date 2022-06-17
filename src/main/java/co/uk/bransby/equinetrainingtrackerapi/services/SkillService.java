@@ -24,7 +24,7 @@ public class SkillService {
     }
 
     public Skill create(Skill skill) {
-        Optional skillOptional;
+        Optional<Skill> skillOptional;
         skillOptional = Optional.ofNullable(skillRepository.findByName(skill.getName()));
         if(skillOptional.isPresent()) {
             throw new SkillCreationException(skill.getName());
