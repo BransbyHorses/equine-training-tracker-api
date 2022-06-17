@@ -1,5 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
+
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
 import org.springframework.http.HttpHeaders;

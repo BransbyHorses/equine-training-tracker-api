@@ -39,3 +39,7 @@ or
 $ docker-compose down
 $ docker volume rm equine-training-tracker-api_database-data
 ```
+
+### Swagger Services
+
+Run the project as above and then check {API_URL}/swagger-ui/#/ or run [locally](http://localhost:8080/swagger-ui/#/).
