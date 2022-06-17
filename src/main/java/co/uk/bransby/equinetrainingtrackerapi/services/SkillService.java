@@ -2,7 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.SkillCreationException;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
-import co.uk.bransby.equinetrainingtrackerapi.persistence.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.repositories.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

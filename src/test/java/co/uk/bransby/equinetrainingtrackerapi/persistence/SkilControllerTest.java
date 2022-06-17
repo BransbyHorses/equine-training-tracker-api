@@ -26,7 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @WebMvcTest(controllers = SkillController.class)
 @ActiveProfiles("test")
-public class SkilControllerTest {
+class SkilControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,7 +51,7 @@ public class SkilControllerTest {
     }
 
     @Test
-    public void fetchesAllSkills() throws Exception {
+    void fetchesAllSkills() throws Exception {
         given(skillService.findAll()).willReturn(skillList);
 
         this.mockMvc.perform(get(urlTemplate))
@@ -60,7 +60,7 @@ public class SkilControllerTest {
     }
 
     @Test
-    public void fetchesSkillById() throws Exception {
+    void fetchesSkillById() throws Exception {
         final Long skillId = 1L;
         Skill controlSkill = skillList.get(0);
 
@@ -73,7 +73,7 @@ public class SkilControllerTest {
     }
 
     @Test
-    public void respondsWithNotFoundIfAskedToFetchNonExistentSkill() throws Exception {
+    void respondsWithNotFoundIfAskedToFetchNonExistentSkill() throws Exception {
        final long skillId = 5L;
 
        given(skillService.findById(skillId)).willReturn(Optional.empty());
@@ -83,7 +83,7 @@ public class SkilControllerTest {
     }
 
     @Test
-    public void savesSkillAndRespondsWithCreated() throws Exception {
+    void savesSkillAndRespondsWithCreated() throws Exception {
 
         Skill newSkill = new Skill("Equine can be saved");
         given(skillService.create(any(Skill.class))).willAnswer((answer) -> answer.getArgument(0));
@@ -97,7 +97,7 @@ public class SkilControllerTest {
     }
 
     @Test
-    public void updatesSkill() throws Exception {
+    void updatesSkill() throws Exception {
         Long skillId = 1L;
         Skill updatedSkill = new Skill(skillId, "Equine can be transformed");
 
@@ -110,8 +110,5 @@ public class SkilControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(updatedSkill.getName()));
     }
-
-
-
 
 }
