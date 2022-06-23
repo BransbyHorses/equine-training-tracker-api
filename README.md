@@ -46,7 +46,7 @@ Run the project as above and then check {API_URL}/swagger-ui/#/ or run [locally]
 
 ### Docker Issues (Mac Only)
 
-To see all live docker containers types that are currently active, run the follwing line in your terminal:
+To see all live docker containers types that are currently active, run the following line in your terminal:
 ```bash
 $ docker ps
 ```
@@ -74,5 +74,3 @@ Then re-run:
 $ docker-compose up -d
 ```
 
-
->>>>>>> main
