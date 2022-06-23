@@ -1,4 +1,4 @@
-package co.uk.bransby.equinetrainingtrackerapi.controllers;
+package co.uk.bransby.equinetrainingtrackerapi;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
