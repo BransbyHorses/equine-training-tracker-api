@@ -40,9 +40,13 @@ $ docker-compose down
 $ docker volume rm equine-training-tracker-api_database-data
 ```
 
+### Swagger Services
+
+Run the project as above and then check {API_URL}/swagger-ui/#/ or run [locally](http://localhost:8080/swagger-ui/#/).
+
 ### Docker Issues (Mac Only)
 
-To see all live docker containers types that are currently active, run the follwing line in your terminal:
+To see all live docker containers types that are currently active, run the following line in your terminal:
 ```bash
 $ docker ps
 ```
@@ -69,5 +73,4 @@ Then re-run:
 ```bash
 $ docker-compose up -d
 ```
-
 
