@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
-
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.models.dto.CategoryDTO;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
