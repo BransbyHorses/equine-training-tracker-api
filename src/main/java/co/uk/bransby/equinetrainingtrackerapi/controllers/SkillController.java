@@ -35,7 +35,7 @@ public class SkillController {
         List<SkillDto> allSkills = skillService.findAll()
                 .stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
 
        return ResponseEntity
                .status(HttpStatus.OK)

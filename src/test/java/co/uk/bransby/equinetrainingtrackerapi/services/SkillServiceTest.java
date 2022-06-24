@@ -1,4 +1,4 @@
-package co.uk.bransby.equinetrainingtrackerapi.skills;
+package co.uk.bransby.equinetrainingtrackerapi.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.controllers.SkillController;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SkillServiceTest {
+class SkillServiceTest {
 
     @Mock
     private SkillRepository skillRepository;
@@ -64,7 +64,7 @@ public class SkillServiceTest {
         List<Skill> skillsList = skillRepository.findAll();
 
         assertThat(skillsList).isNotNull();
-        assertThat(skillsList.size()).isEqualTo(2);
+        assertThat(skillsList).hasSize(2);
     }
 
 
