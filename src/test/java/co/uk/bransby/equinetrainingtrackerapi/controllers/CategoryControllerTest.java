@@ -2,12 +2,9 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,8 +21,6 @@ import static org.mockito.BDDMockito.given;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(controllers = CategoryController.class)
 class CategoryControllerTest {
