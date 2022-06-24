@@ -28,5 +28,4 @@ public class EquineTrainingTrackerApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EquineTrainingTrackerApiApplication.class, args);
 	}
-
-	public static void main(String[] args) {SpringApplication.run(EquineTrainingTrackerApiApplication.class, args);}}
+}
