@@ -1,11 +1,11 @@
 package co.uk.bransby.equinetrainingtrackerapi.services;
 
-import co.uk.bransby.equinetrainingtrackerapi.SkillCreationException;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +27,7 @@ public class SkillService {
         Optional<Skill> skillOptional;
         skillOptional = Optional.ofNullable(skillRepository.findByName(skill.getName()));
         if(skillOptional.isPresent()) {
-            throw new SkillCreationException(skill.getName());
+            throw new EntityExistsException(skill.getName() + " already exists");
         }
 
         return skillRepository.save(skill);
