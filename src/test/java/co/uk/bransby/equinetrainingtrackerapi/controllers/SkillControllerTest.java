@@ -1,6 +1,5 @@
-package co.uk.bransby.equinetrainingtrackerapi.persistence;
+package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.controllers.SkillController;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.services.SkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,17 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 
 @WebMvcTest(controllers = SkillController.class)
 @ActiveProfiles("test")
-class SkilControllerTest {
+class SkillControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
