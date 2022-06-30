@@ -8,9 +8,9 @@ import java.util.Set;
 public class EquineDto {
     private Long id;
     private String name;
-    private YardDTO yard;
-    private CategoryDTO category;
-    private ProgrammeDTO programme;
+    private YardDto yard;
+    private CategoryDto category;
+    private ProgrammeDto programme;
     private Set<SkillDto> skills;
     private Boolean onHold;
     //    private String training;
