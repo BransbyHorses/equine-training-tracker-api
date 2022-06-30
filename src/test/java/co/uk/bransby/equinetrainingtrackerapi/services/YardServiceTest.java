@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +27,7 @@ class YardServiceTest {
     @BeforeEach
     void setUp() {
         yardServiceUnderTest = new YardService(yardRepository);
-        yardInstance = new Yard(1L, "Test Yard Instance");
+        yardInstance = new Yard(1L, "Test Yard Instance", new HashSet<>());
     }
 
     @Test

@@ -1,8 +1,11 @@
 package co.uk.bransby.equinetrainingtrackerapi.services;
 
+import co.uk.bransby.equinetrainingtrackerapi.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.models.Equine;
+import co.uk.bransby.equinetrainingtrackerapi.models.Programme;
+import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.EquineRepository;
-import org.junit.jupiter.api.AfterEach;
+import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -22,14 +26,16 @@ import static org.mockito.BDDMockito.given;
 class EquineServiceTest {
 
     @Mock EquineRepository  equineRepository;
+    @Mock
+    YardRepository yardRepository;
     @InjectMocks
     private EquineService equineServiceUnderTest;
     private Equine equineInstance;
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository);
-        equineInstance = new Equine(1L, "First Horse", "First Yard", 1L, "RED", "First programme", "First skill", "First training", true);
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, programmeRepository);
+        equineInstance = new Equine(1L, "Horse Name", new Yard(), new Category(), new Programme(), new HashSet<>(), true);
     }
 
     @Test

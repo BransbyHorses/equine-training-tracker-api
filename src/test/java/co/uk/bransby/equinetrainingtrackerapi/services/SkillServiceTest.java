@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -29,7 +31,7 @@ class SkillServiceTest {
     @BeforeEach
     void setUp() {
         skillServiceTest = new SkillService(skillRepository);
-        skillTestInstance = new Skill(1L, skillTestInstanceName);
+        skillTestInstance = new Skill(1L, skillTestInstanceName, new HashSet<>());
     }
 
     @Test

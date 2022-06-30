@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -29,7 +30,7 @@ class CategoryServiceTest {
     @BeforeEach
     void setup() {
         categoryServiceUnderTest = new CategoryService(categoryRepository);
-        categoryInstance = new Category(1L, "Test Category");
+        categoryInstance = new Category(1L, "Test Category", new HashSet<>());
     }
 
     @Test
