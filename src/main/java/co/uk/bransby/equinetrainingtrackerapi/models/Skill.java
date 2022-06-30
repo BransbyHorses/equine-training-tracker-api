@@ -21,7 +21,7 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "skills")
+    @ManyToMany(mappedBy = "skills", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonIgnore
     private Set<Equine> equines;

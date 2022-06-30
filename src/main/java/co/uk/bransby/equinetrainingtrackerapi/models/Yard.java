@@ -24,7 +24,7 @@ public class Yard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "yard")
+    @OneToMany(mappedBy = "yard", cascade = CascadeType.ALL)
     private Set<Equine> equines;
 
     @Override

@@ -22,7 +22,7 @@ public class Programme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "programme")
+    @OneToMany(mappedBy = "programme", cascade = CascadeType.ALL)
     private Set<Equine> equines;
 
     @Override
