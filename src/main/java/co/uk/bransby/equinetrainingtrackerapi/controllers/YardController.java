@@ -1,9 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
-import co.uk.bransby.equinetrainingtrackerapi.models.dto.YardDTO;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.YardDto;
 import co.uk.bransby.equinetrainingtrackerapi.services.YardService;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.Banner;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/data/yards")
@@ -19,40 +21,40 @@ public class YardController {
     private final YardService yardService;
     private final ModelMapper modelMapper;
 
-    public YardController(YardService yardService) {
+    public YardController(YardService yardService, ModelMapper modelMapper) {
         this.yardService = yardService;
-        this.modelMapper = new ModelMapper();
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
     @RequestMapping("{id}")
-    public ResponseEntity<Yard> findYard(@PathVariable Long id) {
+    public ResponseEntity<YardDto> findYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return yardService.getYard(id)
-                .map(yard -> new ResponseEntity<>(yard, resHeaders, HttpStatus.OK))
+                .map(yard -> new ResponseEntity<>(modelMapper.map(yard, YardDto.class), resHeaders, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public ResponseEntity<List<Yard>> findAllYards() {
-        List<Yard> allYards = yardService.getAllYards();
+    public ResponseEntity<List<YardDto>> findAllYards() {
+        List<YardDto> allYards = yardService.getAllYards().stream().map(e -> modelMapper.map(e, YardDto.class)).collect(Collectors.toList());
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allYards, resHeaders, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Yard> createYard(@RequestBody YardDTO newYard) {
+    public ResponseEntity<YardDto> createYard(@RequestBody YardDto newYard) {
         Yard createdYard = yardService.createYard(modelMapper.map(newYard, Yard.class));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(createdYard, resHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(modelMapper.map(createdYard, YardDto.class), resHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody YardDTO updatedYardValues) {
+    public ResponseEntity<YardDto> updateYard(@PathVariable Long id, @RequestBody YardDto updatedYardValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Yard updatedYard =  yardService.updateYard(id, modelMapper.map(updatedYardValues, Yard.class));
-            return new ResponseEntity<>(updatedYard, resHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(modelMapper.map(updatedYard, YardDto.class), resHeaders, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
@@ -60,12 +62,12 @@ public class YardController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<Yard> deleteYard(@PathVariable Long id) {
+    public ResponseEntity<YardDto> deleteYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return yardService.getYard(id)
                 .map(yard -> {
                     yardService.deleteYard(id);
-                    return new ResponseEntity<>(yard, resHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>(modelMapper.map(yard, YardDto.class), resHeaders, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
