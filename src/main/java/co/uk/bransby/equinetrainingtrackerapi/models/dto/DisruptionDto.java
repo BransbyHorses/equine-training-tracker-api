@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
-public class ProgrammeDTO {
-    private Long id;
-    private String name;
+public class DisruptionDto {
+    Long id;
+    String name;
 }
