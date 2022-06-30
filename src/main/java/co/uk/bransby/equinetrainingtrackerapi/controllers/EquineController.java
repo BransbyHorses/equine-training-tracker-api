@@ -46,7 +46,7 @@ public class EquineController {
         return new ResponseEntity<>(newEquine, resHeaders, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Equine> updateEquine(@PathVariable Long id, @RequestBody EquineDto updatedEquineValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         Equine updateEquine = mapToEntity(updatedEquineValues);
@@ -58,7 +58,7 @@ public class EquineController {
         }
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Equine> deleteEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
@@ -80,7 +80,7 @@ public class EquineController {
         }
     }
 
-    @PatchMapping("/{equineId}/programme/{programmeId}")
+    @PatchMapping("/{equineId}/programmes/{programmeId}")
     public ResponseEntity<?> assignEquineToProgramme(@PathVariable Long equineId, @PathVariable Long programmeId) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
