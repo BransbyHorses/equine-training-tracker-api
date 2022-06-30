@@ -5,27 +5,42 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Builder
 @Entity
-@Table(name="EQUINES")
+@Table(name="equines")
 public class Equine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String yard;
-    private Long trainerId;
-    private String category;
-    private String programme;
-    private String skills;
-    private String training;
+    @ManyToOne
+    @JoinColumn(name = "yard_id", referencedColumnName = "id")
+    private Yard yard;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "programme_id", referencedColumnName = "id")
+    private Programme programme;
+    @ManyToMany
+    @JoinTable(
+            name = "equine_skills",
+            joinColumns = @JoinColumn(name = "equine_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private Set<Skill> skills;
     private Boolean onHold;
+//    private Long trainerId;
+//    private String trainingRecord;
 
     @Override
     public boolean equals(Object o) {
@@ -34,7 +49,6 @@ public class Equine {
         Equine equine = (Equine) o;
         return id != null && Objects.equals(id, equine.id);
     }
-
     @Override
     public int hashCode() {
         return getClass().hashCode();

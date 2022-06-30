@@ -29,7 +29,6 @@ public class SkillService {
         if(skillOptional.isPresent()) {
             throw new EntityExistsException(skill.getName() + " already exists");
         }
-
         return skillRepository.save(skill);
     }
 
@@ -44,6 +43,7 @@ public class SkillService {
                     updatedSkill.setId(id);
                     return skillRepository.save(updatedSkill);
                 });
+        // if not exist, don't save
     }
 
 
@@ -54,7 +54,5 @@ public class SkillService {
     public void deleteById(Long id) {
         skillRepository.deleteById(id);
     }
-
-
 
 }

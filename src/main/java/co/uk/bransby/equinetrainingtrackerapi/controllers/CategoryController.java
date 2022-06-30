@@ -31,7 +31,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Category> getCategory(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return categoryService.getCategory(id)
@@ -46,13 +46,14 @@ public class CategoryController {
         return new ResponseEntity<>(savedCategory, resHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping("{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));
             return new ResponseEntity<>(savedUpdatedCategory, resHeaders, HttpStatus.OK);
         } catch(EntityNotFoundException e) {
+            // make error model - status code, url, error message
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
         }
     }

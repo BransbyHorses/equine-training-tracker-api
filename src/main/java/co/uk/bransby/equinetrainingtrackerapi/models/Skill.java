@@ -1,10 +1,12 @@
 package co.uk.bransby.equinetrainingtrackerapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,10 +21,10 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    public Skill(String name) {
-        this.name = name;
-    }
+    @ManyToMany(mappedBy = "skills")
+    @ToString.Exclude
+    @JsonIgnore
+    private Set<Equine> equines;
 
     @Override
     public boolean equals(Object o) {

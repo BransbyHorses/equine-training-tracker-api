@@ -33,6 +33,7 @@ public class CategoryService {
     public Category updateCategory(Long id, Category updatedCategoryValues) {
         Category categoryToUpdate = categoryRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+        // replace BeanUtils with update
         BeanUtils.copyProperties(updatedCategoryValues, categoryToUpdate, "id");
         return categoryRepository.saveAndFlush(categoryToUpdate);
     }

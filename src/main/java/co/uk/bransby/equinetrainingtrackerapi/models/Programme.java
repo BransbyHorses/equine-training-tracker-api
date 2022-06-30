@@ -4,7 +4,9 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,11 +18,12 @@ import java.util.Objects;
 
 public class Programme {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "programme")
+    private Set<Equine> equines;
 
     @Override
     public boolean equals(Object o) {
