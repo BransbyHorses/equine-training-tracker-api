@@ -5,6 +5,7 @@ import co.uk.bransby.equinetrainingtrackerapi.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.models.Programme;
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.EquineRepository;
+import co.uk.bransby.equinetrainingtrackerapi.repositories.ProgrammeRepository;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.YardRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,8 @@ class EquineServiceTest {
     @Mock EquineRepository  equineRepository;
     @Mock
     YardRepository yardRepository;
+    @Mock
+    ProgrammeRepository programmeRepository;
     @InjectMocks
     private EquineService equineServiceUnderTest;
     private Equine equineInstance;
