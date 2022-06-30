@@ -11,60 +11,64 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/data/equines")
 public class EquineController {
 
     private final EquineService equineService;
-    private final ModelMapper mapper;
+    private final ModelMapper modelMapper;
 
     public EquineController(EquineService equineService, ModelMapper mapper) {
         this.equineService = equineService;
-        this.mapper = mapper;
+        this.modelMapper = mapper;
     }
 
     @GetMapping({"{id}"})
-    public ResponseEntity<Equine> findEquine(@PathVariable Long id) {
+    public ResponseEntity<EquineDto> findEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
-                .map(equine -> new ResponseEntity<>(equine, resHeaders, HttpStatus.OK))
+                .map(equine -> new ResponseEntity<>(mapToDto(equine), resHeaders, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public ResponseEntity<List<Equine>> findAllEquines() {
-        List<Equine> allEquines = equineService.getAllEquines();
+    public ResponseEntity<List<EquineDto>> findAllEquines() {
+        List<EquineDto> allEquines = equineService.getAllEquines()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allEquines, resHeaders, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Equine> createEquine(@RequestBody EquineDto equineToBeCreated) {
+    public ResponseEntity<EquineDto> createEquine(@RequestBody EquineDto equineToBeCreated) {
         Equine newEquine = equineService.createEquine(mapToEntity(equineToBeCreated));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(newEquine, resHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapToDto(newEquine), resHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Equine> updateEquine(@PathVariable Long id, @RequestBody EquineDto updatedEquineValues) {
+    public ResponseEntity<EquineDto> updateEquine(@PathVariable Long id, @RequestBody EquineDto updatedEquineValues) {
         HttpHeaders resHeaders = new HttpHeaders();
-        Equine updateEquine = mapToEntity(updatedEquineValues);
         try {
-            Equine updatedEquine = equineService.updateEquine(id, updateEquine);
-            return new ResponseEntity<>(updatedEquine, resHeaders, HttpStatus.OK);
+            Equine updatedEquine = equineService.updateEquine(id, mapToEntity(updatedEquineValues));
+            return new ResponseEntity<>(mapToDto(updatedEquine), resHeaders, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Equine> deleteEquine(@PathVariable Long id) {
+    public ResponseEntity<EquineDto> deleteEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
                 .map(equine -> {
                     equineService.deleteEquine(id);
-                    return new ResponseEntity<>(equine, resHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>(mapToDto(equine), resHeaders, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
@@ -95,9 +99,9 @@ public class EquineController {
     // TODO - add a skill to an equine controller
 
     private EquineDto mapToDto(Equine equine) {
-        return mapper.map(equine, EquineDto.class);
+        return modelMapper.map(equine, EquineDto.class);
     }
     private Equine mapToEntity(EquineDto equineDto) {
-        return mapper.map(equineDto, Equine.class);
+        return modelMapper.map(equineDto, Equine.class);
     }
 }
