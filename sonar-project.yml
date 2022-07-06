@@ -1,0 +1,4 @@
+sonar:
+  organization: bransbyhorses
+  projectKey: BransbyHorses_equine-training-tracker-api
+  sources: src/main
