@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name="YARDS")
+@Table(name="yards")
 public class Yard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name = "PROGRAMMES")
+@Table(name = "programmes")
 
 public class Programme {
 

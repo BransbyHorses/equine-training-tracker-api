@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name="CATEGORIES")
+@Table(name="categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,6 @@ public class Category {
         Category category = (Category) o;
         return id != null && Objects.equals(id, category.id);
     }
-
     @Override
     public int hashCode() {
         return getClass().hashCode();

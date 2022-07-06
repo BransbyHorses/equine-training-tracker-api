@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name = "SKILLS")
+@Table(name = "skills")
 public class Skill {
 
     @Id
