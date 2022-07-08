@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,15 +38,15 @@ class SkillControllerTest {
 
     private List<Skill> skillList;
 
-    private String urlTemplate = "/data/skills/";
+    private final String urlTemplate = "/data/skills/";
 
     @BeforeEach
     void setUp() {
         this.skillList = new ArrayList<>();
-        this.skillList.add(new Skill(1L, "Accepts presence of humans at close proximity"));
-        this.skillList.add(new Skill(2L, "Accepts touch"));
-        this.skillList.add(new Skill(3L, "Will wear a head collar"));
-        this.skillList.add(new Skill(4L, "Can be led"));
+        this.skillList.add(new Skill(1L, "Accepts presence of humans at close proximity", new HashSet<>()));
+        this.skillList.add(new Skill(2L, "Accepts touch", new HashSet<>()));
+        this.skillList.add(new Skill(3L, "Will wear a head collar", new HashSet<>()));
+        this.skillList.add(new Skill(4L, "Can be led", new HashSet<>()));
     }
 
     @Test
@@ -83,7 +84,7 @@ class SkillControllerTest {
     @Test
     void savesSkillAndRespondsWithCreated() throws Exception {
 
-        Skill newSkill = new Skill("Equine can be saved");
+        Skill newSkill = new Skill(1L, "Test Skill", new HashSet<>());
         given(skillService.create(any(Skill.class))).willAnswer((answer) -> answer.getArgument(0));
 
 
@@ -97,7 +98,7 @@ class SkillControllerTest {
     @Test
     void updatesSkill() throws Exception {
         Long skillId = 1L;
-        Skill updatedSkill = new Skill(skillId, "Equine can be transformed");
+        Skill updatedSkill = new Skill(skillId, "Equine can be transformed", new HashSet<>());
 
         given(skillService.findById(skillId)).willReturn(Optional.of(updatedSkill));
         given(skillService.update(updatedSkill, updatedSkill.getId())).willReturn(updatedSkill);

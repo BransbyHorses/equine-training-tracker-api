@@ -1,6 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
+import co.uk.bransby.equinetrainingtrackerapi.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +19,7 @@ import javax.persistence.EntityNotFoundException;
 
 import static org.mockito.BDDMockito.given;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebMvcTest(controllers = CategoryController.class)
 class CategoryControllerTest {
@@ -36,11 +35,11 @@ class CategoryControllerTest {
     @BeforeEach
     void setUp() {
         this.categories = new ArrayList<>();
-        categories.add(new Category(1L, "Test Category 1"));
-        categories.add(new Category(2L, "Test Category 2"));
-        categories.add(new Category(3L, "Test Category 3"));
-        categories.add(new Category(4L, "Test Category 4"));
-        categories.add(new Category(5L, "Test Category 5"));
+        categories.add(new Category(1L, "Test Category 1", new HashSet<>()));
+        categories.add(new Category(2L, "Test Category 2", new HashSet<>()));
+        categories.add(new Category(3L, "Test Category 3", new HashSet<>()));
+        categories.add(new Category(4L, "Test Category 4", new HashSet<>()));
+        categories.add(new Category(5L, "Test Category 5", new HashSet<>()));
     }
 
     @Test
@@ -69,7 +68,7 @@ class CategoryControllerTest {
 
     @Test
     void willCreateCategoryAndReturnCreatedResponse() throws Exception {
-        Category newCategory =  new Category(6L, "New Category");
+        Category newCategory =  new Category(6L, "New Category", new HashSet<>());
         given(categoryService.createCategory(newCategory)).willReturn(newCategory);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/categories")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +80,7 @@ class CategoryControllerTest {
 
     @Test
     void willUpdateCategoryAndReturnOkResponse() throws Exception {
-        Category updatedCategory = new Category(7L, "Updated Category");
+        Category updatedCategory = new Category(7L, "Updated Category", new HashSet<>());
         given(categoryService.updateCategory(7L, updatedCategory)).willReturn(updatedCategory);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,7 +92,7 @@ class CategoryControllerTest {
 
     @Test
     void willReturnNotFoundResponseWhenCategoryWasNotFoundAndUpdated() throws Exception {
-        Category updatedCategory = new Category(7L, "Updated Category");
+        Category updatedCategory = new Category(7L, "Updated Category", new HashSet<>());
         given(categoryService.updateCategory(7L, updatedCategory))
                 .willThrow(new EntityNotFoundException());
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())

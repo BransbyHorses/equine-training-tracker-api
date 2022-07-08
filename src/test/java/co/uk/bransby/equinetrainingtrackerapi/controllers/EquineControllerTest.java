@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.models.Equine;
+import co.uk.bransby.equinetrainingtrackerapi.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.services.EquineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,13 +39,12 @@ class EquineControllerTest {
     @BeforeEach
     void setUp() {
         this.equineList = new ArrayList<>();
-        equineList.add(new Equine(1L, "First Horse", "First Yard", 1L, "RED", "First programme", "First skill", "First training", true));
-        equineList.add(new Equine(2L, "Second Horse", "Second Yard", 2L, "GREEN", "Second programme", "Second skill", "Second training", false));
-        equineList.add(new Equine(3L, "Third Horse", "Third Yard", 3L, "AMBER", "Third programme", "Third skill", "Third training", true));
-        equineList.add(new Equine(4L, "Fourth Horse", "Fourth Yard", 4L, "GREEN", "Fourth programme", "Fourth skill", "Fourth training", false));
-        equineList.add(new Equine(5L, "Fifth Horse", "Fifth Yard", 5L, "AMBER", "Fifth programme", "Fifth skill", "Fifth training", true));
+        equineList.add(new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(2L, "Second Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(3L, "Third Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(4L, "Fourth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(5L, "Fifth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
     }
-
 
     @Test
     void findEquineById() throws Exception {
@@ -57,12 +57,9 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equineList.get(0).getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(equineList.get(0).getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(equineList.get(0).getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.trainerId").value(equineList.get(0).getTrainerId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(equineList.get(0).getCategory()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(equineList.get(0).getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equineList.get(0).getSkills()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.training").value(equineList.get(0).getTraining()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.onHold").value(equineList.get(0).getOnHold()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equineList.get(0).getSkills()));
 
     }
 
@@ -79,7 +76,7 @@ class EquineControllerTest {
     void createEquine() throws Exception {
         BDDMockito.given(equineService.createEquine(ArgumentMatchers.any(Equine.class))).willAnswer((invocation -> invocation.getArgument(0)));
 
-        Equine newEquine = new Equine(6L, "Sixth Horse", "Sixth Yard", 6L, "RED", "Sixth programme", "Sixth skill", "Sixth training", false);
+        Equine newEquine = new Equine(6L, "Sixth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,17 +85,14 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(newEquine.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newEquine.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(newEquine.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.trainerId").value(newEquine.getTrainerId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(newEquine.getCategory()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(newEquine.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(newEquine.getSkills()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.training").value(newEquine.getTraining()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.onHold").value(newEquine.getOnHold()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(newEquine.getSkills()));
     }
 
     @Test
     void updateEquine() throws Exception {
-        Equine EquineToUpdate = new Equine(1L, "Updated Horse", "First Yard", 1L, "BLUE", "First programme", "First skill", "First training", true);
+        Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
 
         BDDMockito.given(equineService.updateEquine(EquineToUpdate.getId(), EquineToUpdate)).willReturn(EquineToUpdate);
 
@@ -109,13 +103,9 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(EquineToUpdate.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(EquineToUpdate.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(EquineToUpdate.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.trainerId").value(EquineToUpdate.getTrainerId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(EquineToUpdate.getCategory()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(EquineToUpdate.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(EquineToUpdate.getSkills()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.training").value(EquineToUpdate.getTraining()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.onHold").value(EquineToUpdate.getOnHold()));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(EquineToUpdate.getSkills()));
     }
 
 
@@ -132,12 +122,9 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equine.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(equine.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(equine.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.trainerId").value(equine.getTrainerId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(equine.getCategory()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(equine.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equine.getSkills()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.training").value(equine.getTraining()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.onHold").value(equine.getOnHold()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equine.getSkills()));
 
     }
 
@@ -153,7 +140,7 @@ class EquineControllerTest {
 
     @Test
     void returnsNotFoundIfEquineAbsentWhenUpdated() throws Exception {
-        Equine invalidEquine = new Equine(9L, "Invalid Horse", "First Yard", 1L, "BLUE", "First programme", "First skill", "First training", true);
+        Equine invalidEquine = new Equine(9L, "Invalid Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
 
         BDDMockito.given(equineService.updateEquine(invalidEquine.getId(), invalidEquine)).willThrow((new EntityNotFoundException()));
 

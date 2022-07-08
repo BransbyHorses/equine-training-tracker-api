@@ -19,6 +19,7 @@ import org.mockito.ArgumentMatchers;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +37,11 @@ class YardControllerTest {
     @BeforeEach
     void setUp() {
         this.yardList = new ArrayList<>();
-        yardList.add(new Yard(1L, "Test Yard 1"));
-        yardList.add(new Yard(2L, "Test Yard 2"));
-        yardList.add(new Yard(3L, "Test Yard 3"));
-        yardList.add(new Yard(4L, "Test Yard 4"));
-        yardList.add(new Yard(5L, "Test Yard 5"));
+        yardList.add(new Yard(1L, "Test Yard 1", new HashSet<>()));
+        yardList.add(new Yard(2L, "Test Yard 2", new HashSet<>()));
+        yardList.add(new Yard(3L, "Test Yard 3", new HashSet<>()));
+        yardList.add(new Yard(4L, "Test Yard 4", new HashSet<>()));
+        yardList.add(new Yard(5L, "Test Yard 5", new HashSet<>()));
     }
 
     @Test
@@ -79,7 +80,7 @@ class YardControllerTest {
     void canCreateYardAndReturnOkResponse() throws Exception {
         BDDMockito.given(yardService.createYard(ArgumentMatchers.any(Yard.class))).willAnswer((invocation -> invocation.getArgument(0)));
 
-        Yard newYard = new Yard(1L, "Test New Yard");
+        Yard newYard = new Yard(1L, "Test New Yard", new HashSet<>());
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/yards")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +92,7 @@ class YardControllerTest {
 
     @Test
     void canUpdateYardAndReturnOkResponse() throws Exception {
-        Yard updatedYard = new Yard(1L, "Updated Yard");
+        Yard updatedYard = new Yard(1L, "Updated Yard", new HashSet<>());
 
         BDDMockito.given(yardService.updateYard(updatedYard.getId(), updatedYard)).willReturn(updatedYard);
 
@@ -105,7 +106,7 @@ class YardControllerTest {
 
     @Test
     void willReturnNotFoundResponseWhenYardWasNotFoundAndUpdated() throws Exception {
-        Yard updatedYard = new Yard(9L, "Invalid Updated Yard");
+        Yard updatedYard = new Yard(9L, "Invalid Updated Yard", new HashSet<>());
 
         BDDMockito.given(yardService.updateYard(updatedYard.getId(), updatedYard)).willThrow(new EntityNotFoundException());
 
