@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 import co.uk.bransby.equinetrainingtrackerapi.models.dto.SkillDto;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.services.SkillService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,21 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/data/skills")
 public class SkillController {
 
-    @Autowired
     private final SkillService skillService;
-
-    @Autowired
     private ModelMapper modelMapper;
-
-
-    SkillController(SkillService skillService) {
-        this.skillService = skillService;
-    }
-
 
     @GetMapping
     public ResponseEntity<List<SkillDto>> all() {
