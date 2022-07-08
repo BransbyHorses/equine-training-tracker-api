@@ -1,10 +1,12 @@
 package co.uk.bransby.equinetrainingtrackerapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,17 +14,16 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name = "SKILLS")
+@Table(name = "skills")
 public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    public Skill(String name) {
-        this.name = name;
-    }
+    @ManyToMany(mappedBy = "skills")
+    @ToString.Exclude
+    private Set<Equine> equines;
 
     @Override
     public boolean equals(Object o) {

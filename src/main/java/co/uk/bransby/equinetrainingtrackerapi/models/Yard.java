@@ -6,6 +6,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,12 +14,15 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name="YARDS")
+@Table(name="yards")
 public class Yard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "id")
+    @ToString.Exclude
+    private Set<Equine> equines;
 
     @Override
     public boolean equals(Object o) {
