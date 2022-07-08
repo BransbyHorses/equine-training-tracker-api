@@ -22,8 +22,7 @@ public class ProgrammeController {
     private final ProgrammeService programmeService;
     private final ModelMapper modelMapper;
 
-    @GetMapping
-    @RequestMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<ProgrammeDto> findProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return programmeService.getProgramme(id)
@@ -53,7 +52,7 @@ public class ProgrammeController {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Programme updatedProgramme =  programmeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, Programme.class));
-            return new ResponseEntity<ProgrammeDto>(modelMapper.map(updatedProgramme, ProgrammeDto.class), resHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(modelMapper.map(updatedProgramme, ProgrammeDto.class), resHeaders, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
@@ -66,7 +65,7 @@ public class ProgrammeController {
         return programmeService.getProgramme(id)
                 .map(programme -> {
                     programmeService.deleteProgramme(id);
-                    return new ResponseEntity<ProgrammeDto>(modelMapper.map(programme, ProgrammeDto.class), resHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>(modelMapper.map(programme, ProgrammeDto.class), resHeaders, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
     }
