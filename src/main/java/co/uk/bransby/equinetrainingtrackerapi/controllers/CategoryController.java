@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Category;
-import co.uk.bransby.equinetrainingtrackerapi.models.dto.CategoryDTO;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.CategoryDto;
 import co.uk.bransby.equinetrainingtrackerapi.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
@@ -40,14 +40,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO newCategory) {
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryDto newCategory) {
         Category savedCategory = categoryService.createCategory(modelMapper.map(newCategory, Category.class));
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(savedCategory, resHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO updatedCategoryValues) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDto updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));

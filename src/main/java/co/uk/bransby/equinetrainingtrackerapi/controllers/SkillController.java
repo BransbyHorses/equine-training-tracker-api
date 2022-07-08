@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.dtos.SkillDto;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.SkillDto;
 import co.uk.bransby.equinetrainingtrackerapi.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.services.SkillService;
 import org.modelmapper.ModelMapper;

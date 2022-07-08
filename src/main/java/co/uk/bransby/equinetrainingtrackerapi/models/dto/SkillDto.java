@@ -1,4 +1,4 @@
-package co.uk.bransby.equinetrainingtrackerapi.dtos;
+package co.uk.bransby.equinetrainingtrackerapi.models.dto;
 
 public class SkillDto {
 

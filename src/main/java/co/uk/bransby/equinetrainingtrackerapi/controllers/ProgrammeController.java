@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Programme;
-import co.uk.bransby.equinetrainingtrackerapi.models.dto.ProgrammeDTO;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.ProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.services.ProgrammeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
@@ -44,14 +44,14 @@ public class ProgrammeController {
 
 
     @PostMapping
-    public ResponseEntity<Programme> createProgramme(@RequestBody ProgrammeDTO newProgramme) {
+    public ResponseEntity<Programme> createProgramme(@RequestBody ProgrammeDto newProgramme) {
         Programme savedNewProgramme = programmeService.createProgramme(modelMapper.map(newProgramme, Programme.class));
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(savedNewProgramme, resHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Programme> updateProgramme(@PathVariable Long id, @RequestBody ProgrammeDTO updatedProgrammeValues) {
+    public ResponseEntity<Programme> updateProgramme(@PathVariable Long id, @RequestBody ProgrammeDto updatedProgrammeValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Programme updatedProgramme =  programmeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, Programme.class));

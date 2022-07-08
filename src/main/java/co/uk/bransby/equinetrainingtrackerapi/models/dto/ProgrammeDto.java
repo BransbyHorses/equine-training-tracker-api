@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class YardDTO {
+public class ProgrammeDto {
     private Long id;
     private String name;
 }

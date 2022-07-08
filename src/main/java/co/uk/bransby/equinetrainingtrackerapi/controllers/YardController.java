@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Yard;
-import co.uk.bransby.equinetrainingtrackerapi.models.dto.YardDTO;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.YardDto;
 import co.uk.bransby.equinetrainingtrackerapi.services.YardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
@@ -41,14 +41,14 @@ public class YardController {
     }
 
     @PostMapping
-    public ResponseEntity<Yard> createYard(@RequestBody YardDTO newYard) {
+    public ResponseEntity<Yard> createYard(@RequestBody YardDto newYard) {
         Yard createdYard = yardService.createYard(modelMapper.map(newYard, Yard.class));
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(createdYard, resHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody YardDTO updatedYardValues) {
+    public ResponseEntity<Yard> updateYard(@PathVariable Long id, @RequestBody YardDto updatedYardValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Yard updatedYard =  yardService.updateYard(id, modelMapper.map(updatedYardValues, Yard.class));
