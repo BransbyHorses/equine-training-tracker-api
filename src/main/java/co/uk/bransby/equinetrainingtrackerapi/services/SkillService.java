@@ -39,11 +39,11 @@ public class SkillService {
                     skill.setId(id);
                     return skillRepository.save(skill);
                 })
+                // if skill does not exist, return error and don't save
                 .orElseGet(() -> {
                     updatedSkill.setId(id);
                     return skillRepository.save(updatedSkill);
                 });
-        // if not exist, don't save
     }
 
 

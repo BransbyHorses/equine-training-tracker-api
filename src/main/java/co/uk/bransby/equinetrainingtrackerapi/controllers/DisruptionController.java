@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.Disruption;
-import co.uk.bransby.equinetrainingtrackerapi.models.dto.DisruptionDTO;
+import co.uk.bransby.equinetrainingtrackerapi.models.dto.DisruptionDto;
 import co.uk.bransby.equinetrainingtrackerapi.services.DisruptionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
@@ -38,14 +38,14 @@ public class DisruptionController {
     }
 
     @PostMapping
-    public ResponseEntity<Disruption> createDisruption(@RequestBody DisruptionDTO newDisruption) {
+    public ResponseEntity<Disruption> createDisruption(@RequestBody DisruptionDto newDisruption) {
         HttpHeaders resHeaders = new HttpHeaders();
         Disruption savedDisruption = disruptionService.createDisruption(disruptionModelMapper.map(newDisruption, Disruption.class));
         return ResponseEntity.created(URI.create("/data/disruptions/" + savedDisruption.getId())).headers(resHeaders).body(savedDisruption);
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<Disruption> updateDisruption(@PathVariable Long id, @RequestBody DisruptionDTO updatedDisruptionValues) {
+    public ResponseEntity<Disruption> updateDisruption(@PathVariable Long id, @RequestBody DisruptionDto updatedDisruptionValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Disruption updatedDisruption = disruptionService.updateDisruption(id, disruptionModelMapper.map(updatedDisruptionValues, Disruption.class));

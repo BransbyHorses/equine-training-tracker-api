@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.services;
 
-
 import co.uk.bransby.equinetrainingtrackerapi.models.Programme;
 import co.uk.bransby.equinetrainingtrackerapi.repositories.ProgrammeRepository;
 import org.springframework.beans.BeanUtils;
@@ -15,11 +14,9 @@ public class ProgrammeService {
 
     private final ProgrammeRepository programmeRepository;
 
-
     public ProgrammeService(ProgrammeRepository programmeRepository) {
         this.programmeRepository = programmeRepository;
     }
-
 
     public List<Programme> getAllProgrammes() {
         return programmeRepository.findAll();
@@ -29,8 +26,8 @@ public class ProgrammeService {
         return programmeRepository.findById(id);
     }
 
-    public Programme createProgramme(Programme Programme){
-        return programmeRepository.saveAndFlush(Programme);
+    public Programme createProgramme(Programme programme){
+        return programmeRepository.saveAndFlush(programme);
     }
 
     public Programme updateProgramme(Long id, Programme updatedProgrammeValues) throws EntityNotFoundException {

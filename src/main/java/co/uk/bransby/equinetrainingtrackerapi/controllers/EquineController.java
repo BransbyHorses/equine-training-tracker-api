@@ -25,7 +25,7 @@ public class EquineController {
         this.modelMapper = mapper;
     }
 
-    @GetMapping({"{id}"})
+    @GetMapping("{id}")
     public ResponseEntity<EquineDto> findEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return equineService.getEquine(id)
@@ -96,7 +96,16 @@ public class EquineController {
     }
 
     // TODO - assign equine to category controller
+    @PatchMapping("/{equineId}/categories/{categoryId}")
+    public ResponseEntity<?> assignEquineToCategory(@PathVariable Long equineId, @ PathVariable Long  categoryId) {
+        return null;
+    }
+
     // TODO - add a skill to an equine controller
+    @PatchMapping("/{equineId}/skills/{skillId}")
+    public ResponseEntity<?> assignEquineASkill(@PathVariable Long equineId, @ PathVariable Long  skillId) {
+        return null;
+    }
 
     private EquineDto mapToDto(Equine equine) {
         return modelMapper.map(equine, EquineDto.class);
