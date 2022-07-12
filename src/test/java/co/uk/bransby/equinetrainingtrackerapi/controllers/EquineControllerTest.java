@@ -54,13 +54,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/{id}", equineId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equineList.get(0).getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(equineList.get(0).getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(equineList.get(0).getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(equineList.get(0).getCategory()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(equineList.get(0).getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equineList.get(0).getSkills()));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equineList.get(0).getId()));
     }
 
     @Test
@@ -82,12 +76,7 @@ class EquineControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(newEquine)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(newEquine.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newEquine.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(newEquine.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(newEquine.getCategory()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(newEquine.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(newEquine.getSkills()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(newEquine.getId()));
     }
 
     @Test
@@ -100,12 +89,7 @@ class EquineControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(EquineToUpdate)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(EquineToUpdate.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(EquineToUpdate.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(EquineToUpdate.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(EquineToUpdate.getCategory()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(EquineToUpdate.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(EquineToUpdate.getSkills()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(EquineToUpdate.getId()));
     }
 
 
@@ -119,12 +103,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/{id}", equineId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equine.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(equine.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.yard").value(equine.getYard()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value(equine.getCategory()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.programme").value(equine.getProgramme()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.skills").value(equine.getSkills()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equine.getId()));
 
     }
 
