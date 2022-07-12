@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.services.EquineService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,7 +127,7 @@ class EquineControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/equines/{id}", invalidEquine.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(invalidEquine)))
-                .andExpect((MockMvcResultMatchers.status().isNotFound()));
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -137,5 +138,77 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/{id}", invalidEquineId))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void willAssignProgrammeToEquineAndReturnOkResponse() throws Exception {
+        BDDMockito.given(equineService.assignEquineToProgramme(1L, 1L))
+                .willReturn(new Equine());
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/programmes/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willReturnNotFoundResponseAndNotFoundMessageWhenEquineOrProgrammeEntityWasNotFound() throws Exception {
+        BDDMockito.given(equineService.assignEquineToProgramme(1L, 1L))
+                .willThrow(new EntityNotFoundException("No equine found with id: 1"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/programmes/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("No equine found with id: 1"));
+    }
+
+    @Test
+    void willAssignEquineToYardAndReturnOkResponse() throws Exception {
+        BDDMockito.given(equineService.assignEquineToYard(1L, 1L))
+                .willReturn(new Equine());
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/yards/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willReturnNotFoundResponseAndNotFoundMessageWhenEquineOrYardEntityWasNotFound() throws Exception {
+        BDDMockito.given(equineService.assignEquineToYard(1L, 1L))
+                .willThrow(new EntityNotFoundException("No yard found with id: 1"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/yards/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("No yard found with id: 1"));
+    }
+
+    @Test
+    void willAssignEquineToCategoryAndReturnOkResponse() throws Exception {
+        BDDMockito.given(equineService.assignEquineToCategory(1L, 1L))
+                .willReturn(new Equine());
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/categories/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willReturnNotFoundResponseAndNotFoundMessageWhenEquineOrCategoryEntityWasNotFound() throws Exception {
+        BDDMockito.given(equineService.assignEquineToCategory(1L, 1L))
+                .willThrow(new EntityNotFoundException("No category found with id: 1"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/categories/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("No category found with id: 1"));
+    }
+
+    @Test
+    void willAssignSkillToEquineAndReturnOkResponse() throws Exception {
+        BDDMockito.given(equineService.assignEquineASkill(1L, 1L))
+                .willReturn(new Equine());
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/skills/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willReturnNotFoundResponseAndNotFoundMessageWhenEquineOrSkillEntityWasNotFound() throws Exception {
+        BDDMockito.given(equineService.assignEquineASkill(1L, 1L))
+                .willThrow(new EntityNotFoundException("No skill found with id: 1"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/skills/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("No skill found with id: 1"));
     }
 }
