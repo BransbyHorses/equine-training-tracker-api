@@ -1,0 +1,148 @@
+package co.uk.bransby.equinetrainingtrackerapi.api.services;
+
+import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.mockito.BDDMockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class EquineServiceTest {
+
+    @Mock
+    EquineRepository equineRepository;
+    @Mock
+    CategoryRepository categoryRepository;
+    @Mock
+    YardRepository yardRepository;
+    @Mock
+    SkillRepository skillRepository;
+    @Mock
+    ProgrammeRepository programmeRepository;
+    @InjectMocks
+    private EquineService equineServiceUnderTest;
+    private Equine equineInstance;
+
+    @BeforeEach
+    void setUp() {
+        equineServiceUnderTest = new EquineService(equineRepository, programmeRepository, yardRepository, categoryRepository, skillRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
+    }
+
+    @Test
+    void getAllEquines() {
+        equineServiceUnderTest.getAllEquines();
+        Mockito.verify(equineRepository).findAll();
+    }
+
+    @Test
+    void getEquine() {
+        given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
+        equineServiceUnderTest.getEquine(1L);
+        Mockito.verify(equineRepository).findById(equineInstance.getId());
+    }
+
+    @Test
+    void createEquine() {
+        equineServiceUnderTest.createEquine(equineInstance);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void updateEquine() {
+        given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
+        equineInstance.setName("Updated Equine");
+        equineServiceUnderTest.updateEquine(1L, equineInstance);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void deleteEquine() {
+        equineServiceUnderTest.deleteEquine(equineInstance.getId());
+        Mockito.verify(equineRepository).deleteById(equineInstance.getId());
+    }
+
+    @Test
+    void throwsIfEquineNotFound() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> equineServiceUnderTest.updateEquine(equineInstance.getId(), equineInstance));
+    }
+
+    @Test
+    void willAssignEquineToProgramme() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(programmeRepository.findById(1L)).willReturn(Optional.of(equineInstance.getProgramme()));
+        equineServiceUnderTest.assignEquineToProgramme(1L, 1L);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void willThrowEquineNotFoundExceptionWhenAssigningEquineToProgramme() {
+        given(equineRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToProgramme(1L, 1L)
+        );
+        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willThrowProgrammeNotFoundExceptionWhenAssigningEquineToProgramme() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(programmeRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToProgramme(1L, 1L)
+        );
+        Assertions.assertEquals("No programme found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willAssignEquineToYard() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(yardRepository.findById(1L)).willReturn(Optional.of(equineInstance.getYard()));
+        equineServiceUnderTest.assignEquineToYard(1L, 1L);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void willThrowEquineNotFoundExceptionWhenAssigningEquineToYard() {
+        given(equineRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
+        );
+        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willThrowYardNotFoundExceptionWhenAssigningEquineToYard() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(yardRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
+        );
+        Assertions.assertEquals("No yard found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    @Disabled
+    void willAssignEquineToCategory() {}
+
+    @Test
+    @Disabled
+    void willAssignSkillToEquine() {}
+}
