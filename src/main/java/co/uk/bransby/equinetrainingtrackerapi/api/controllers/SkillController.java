@@ -26,7 +26,8 @@ public class SkillController {
     @GetMapping
     public ResponseEntity<List<SkillDto>> all() {
         HttpHeaders headers = new HttpHeaders();
-        List<SkillDto> allSkills = Stream.of(skillService.findAll())
+        List<SkillDto> allSkills = skillService.findAll()
+                .stream()
                 .map(skill -> modelMapper.map(skill, SkillDto.class))
                 .toList();
 

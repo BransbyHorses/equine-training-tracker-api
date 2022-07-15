@@ -42,7 +42,8 @@ public class EquineController {
 
     @GetMapping
     public ResponseEntity<List<EquineDto>> findAllEquines() {
-        List<EquineDto> allEquines = Stream.of(equineService.getAllEquines())
+        List<EquineDto> allEquines = equineService.getAllEquines()
+                .stream()
                 .map(equine -> mapToDto((Equine) equine)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<List<EquineDto>>(allEquines, resHeaders, HttpStatus.OK);

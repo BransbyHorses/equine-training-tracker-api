@@ -33,7 +33,8 @@ public class ProgrammeController {
 
     @GetMapping
     public ResponseEntity<List<ProgrammeDto>> findAllProgrammes() {
-        List<ProgrammeDto> allProgrammes = Stream.of(programmeService.getAllProgrammes())
+        List<ProgrammeDto> allProgrammes = programmeService.getAllProgrammes()
+                .stream()
                 .map(programme -> modelMapper.map(programme, ProgrammeDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allProgrammes, resHeaders, HttpStatus.OK);

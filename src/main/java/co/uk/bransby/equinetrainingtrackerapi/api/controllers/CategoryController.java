@@ -24,7 +24,8 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        List<CategoryDto> categories = Stream.of(categoryService.getCategories())
+        List<CategoryDto> categories = categoryService.getCategories()
+                .stream()
                 .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);

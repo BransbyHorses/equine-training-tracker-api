@@ -27,7 +27,8 @@ public class DisruptionController {
     @GetMapping
     public ResponseEntity<List<DisruptionDto>> getDisruptions() {
         HttpHeaders resHeaders = new HttpHeaders();
-        List<DisruptionDto> disruptions = Stream.of(disruptionService.getDisruptions())
+        List<DisruptionDto> disruptions = disruptionService.getDisruptions()
+                .stream()
                 .map(disruption -> modelMapper.map(disruption, DisruptionDto.class)).toList();
         return ResponseEntity.ok().headers(resHeaders).body(disruptions);
     }
