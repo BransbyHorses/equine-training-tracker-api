@@ -35,7 +35,6 @@ public class YardController {
     public ResponseEntity<List<YardDto>> findAllYards() {
         List<YardDto> allYards = yardService.getAllYards().stream()
                 .map(yard -> modelMapper.map(yard, YardDto.class)).toList();
-        System.out.println(allYards);
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allYards, resHeaders, HttpStatus.OK);
     }

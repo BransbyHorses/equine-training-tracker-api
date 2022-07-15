@@ -49,7 +49,7 @@ public class DisruptionController {
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> updateDisruption(@PathVariable Long id, @RequestBody DisruptionDto updatedDisruptionValues) {
+    public ResponseEntity<DisruptionDto> updateDisruption(@PathVariable Long id, @RequestBody DisruptionDto updatedDisruptionValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Disruption updatedDisruption = disruptionService.updateDisruption(id, modelMapper.map(updatedDisruptionValues, Disruption.class));
@@ -60,7 +60,7 @@ public class DisruptionController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> deleteDisruption(@PathVariable Long id) {
+    public ResponseEntity<DisruptionDto> deleteDisruption(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return disruptionService.getDisruption(id)
                 .map(disruption -> {

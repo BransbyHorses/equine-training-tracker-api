@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -46,8 +45,8 @@ public class CategoryController {
         return new ResponseEntity<CategoryDto>(modelMapper.map(savedCategory, CategoryDto.class), resHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDto updatedCategoryValues) {
+    @PutMapping("{id}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         try {
             Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));
@@ -58,7 +57,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long id) {
         return categoryService.getCategory(id)
                 .map(category -> {
                     categoryService.deleteCategory(id);
