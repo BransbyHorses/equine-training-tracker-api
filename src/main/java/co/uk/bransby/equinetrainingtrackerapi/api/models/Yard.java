@@ -19,7 +19,7 @@ public class Yard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Equine> equines;
 

@@ -20,15 +20,19 @@ public class Equine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     @ManyToOne
     @JoinColumn(name = "yard_id", referencedColumnName = "id")
     private Yard yard;
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
     @ManyToOne
     @JoinColumn(name = "programme_id", referencedColumnName = "id")
     private Programme programme;
+
     @ManyToMany
     @JoinTable(
             name = "equines_skills",
