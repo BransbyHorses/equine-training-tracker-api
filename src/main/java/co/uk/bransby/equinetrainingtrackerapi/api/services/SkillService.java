@@ -24,8 +24,7 @@ public class SkillService {
     }
 
     public Skill create(Skill skill) {
-        Optional<Skill> skillOptional;
-        skillOptional = Optional.ofNullable(skillRepository.findByName(skill.getName()));
+        Optional<Skill> skillOptional = Optional.ofNullable(skillRepository.findByName(skill.getName()));
         if(skillOptional.isPresent()) {
             throw new EntityExistsException(skill.getName() + " already exists");
         }

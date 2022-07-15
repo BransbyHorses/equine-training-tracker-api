@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -48,14 +50,18 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<SkillDto> addSkill(@RequestBody SkillDto skillDto) {
+    public ResponseEntity<?> addSkill(@RequestBody SkillDto skillDto) {
         HttpHeaders headers = new HttpHeaders();
-        Skill skillEntity = convertToEntity(skillDto);
-        Skill newSkill = skillService.create(skillEntity);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .headers(headers)
-                .body(convertToDto(newSkill));
+        try {
+            Skill skillEntity = convertToEntity(skillDto);
+            Skill newSkill = skillService.create(skillEntity);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .headers(headers)
+                    .body(convertToDto(newSkill));
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @PutMapping("{id}")
