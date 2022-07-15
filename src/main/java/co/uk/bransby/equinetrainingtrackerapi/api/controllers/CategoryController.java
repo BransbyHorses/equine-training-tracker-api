@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -24,10 +24,8 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        List<CategoryDto> categories = categoryService.getCategories()
-                .stream()
-                .map(category -> modelMapper.map(category, CategoryDto.class))
-                .collect(Collectors.toList());
+        List<CategoryDto> categories = Stream.of(categoryService.getCategories())
+                .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);
     }

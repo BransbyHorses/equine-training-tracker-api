@@ -76,7 +76,7 @@ class EquineServiceTest {
 
     @Test
     void throwsIfEquineNotFound() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> equineServiceUnderTest.updateEquine(equineInstance.getId(), equineInstance));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> equineServiceUnderTest.updateEquine(1L, equineInstance));
     }
 
     @Test
@@ -213,7 +213,7 @@ class EquineServiceTest {
         equineInstance.setSkills(skills);
         given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
         equineServiceUnderTest.deleteEquineSkill(1L, 1L);
-        Assertions.assertEquals(equineInstance.getSkills().size(), 2);
+        Assertions.assertEquals(2, equineInstance.getSkills().size());
         Assertions.assertFalse(equineInstance.getSkills().contains(removedSkill));
         Mockito.verify(equineRepository).saveAndFlush(equineInstance);
     }

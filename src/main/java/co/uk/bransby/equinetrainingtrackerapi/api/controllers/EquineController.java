@@ -14,6 +14,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -41,10 +42,8 @@ public class EquineController {
 
     @GetMapping
     public ResponseEntity<List<EquineDto>> findAllEquines() {
-        List<EquineDto> allEquines = equineService.getAllEquines()
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+        List<EquineDto> allEquines = Stream.of(equineService.getAllEquines())
+                .map(equine -> mapToDto((Equine) equine)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<List<EquineDto>>(allEquines, resHeaders, HttpStatus.OK);
     }

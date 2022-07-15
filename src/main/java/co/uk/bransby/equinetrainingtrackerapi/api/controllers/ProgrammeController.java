@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -32,10 +33,8 @@ public class ProgrammeController {
 
     @GetMapping
     public ResponseEntity<List<ProgrammeDto>> findAllProgrammes() {
-        List<ProgrammeDto> allProgrammes = programmeService.getAllProgrammes()
-                .stream()
-                .map(programme -> modelMapper.map(programme, ProgrammeDto.class))
-                .collect(Collectors.toList());
+        List<ProgrammeDto> allProgrammes = Stream.of(programmeService.getAllProgrammes())
+                .map(programme -> modelMapper.map(programme, ProgrammeDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allProgrammes, resHeaders, HttpStatus.OK);
     }

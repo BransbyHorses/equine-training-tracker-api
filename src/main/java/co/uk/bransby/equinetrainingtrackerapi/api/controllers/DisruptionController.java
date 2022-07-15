@@ -4,6 +4,7 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.DisruptionDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.DisruptionService;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -25,10 +27,8 @@ public class DisruptionController {
     @GetMapping
     public ResponseEntity<List<DisruptionDto>> getDisruptions() {
         HttpHeaders resHeaders = new HttpHeaders();
-        List<DisruptionDto> disruptions = disruptionService.getDisruptions()
-                .stream()
-                .map(disruption -> modelMapper.map(disruption, DisruptionDto.class))
-                .collect(Collectors.toList());
+        List<DisruptionDto> disruptions = Stream.of(disruptionService.getDisruptions())
+                .map(disruption -> modelMapper.map(disruption, DisruptionDto.class)).toList();
         return ResponseEntity.ok().headers(resHeaders).body(disruptions);
     }
 

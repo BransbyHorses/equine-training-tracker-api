@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -25,9 +26,8 @@ public class SkillController {
     @GetMapping
     public ResponseEntity<List<SkillDto>> all() {
         HttpHeaders headers = new HttpHeaders();
-        List<SkillDto> allSkills = skillService.findAll()
-                .stream()
-                .map(this::convertToDto)
+        List<SkillDto> allSkills = Stream.of(skillService.findAll())
+                .map(skill -> modelMapper.map(skill, SkillDto.class))
                 .toList();
 
        return ResponseEntity

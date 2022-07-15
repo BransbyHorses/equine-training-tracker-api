@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -22,8 +23,7 @@ public class YardController {
     private final YardService yardService;
     private final ModelMapper modelMapper;
 
-    @GetMapping
-    @RequestMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<YardDto> findYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return yardService.getYard(id)
@@ -33,10 +33,8 @@ public class YardController {
 
     @GetMapping
     public ResponseEntity<List<YardDto>> findAllYards() {
-        List<YardDto> allYards = yardService.getAllYards()
-                .stream()
-                .map(yard -> modelMapper.map(yard, YardDto.class))
-                .collect(Collectors.toList());
+        List<YardDto> allYards = Stream.of(yardService.getAllYards())
+                .map(yard -> modelMapper.map(yard, YardDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(allYards, resHeaders, HttpStatus.OK);
     }

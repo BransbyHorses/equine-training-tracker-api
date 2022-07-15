@@ -59,7 +59,8 @@ class DisruptionServiceTest {
 
     @Test
     void willThrowExceptionWhenDisruptionWasNotFoundAndUpdated() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> disruptionServiceUnderTest.updateDisruption(1L, new Disruption()));
+        Disruption disruption = new Disruption();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> disruptionServiceUnderTest.updateDisruption(1L, disruption));
     }
 
     @Test
