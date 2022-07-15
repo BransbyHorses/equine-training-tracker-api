@@ -199,4 +199,22 @@ class EquineServiceTest {
     @Disabled
     void willThrowSkillExistsExceptionWhenAssigningSkillToEquine() {
     }
+
+    @Test
+    void willDeleteSkillFromEquine() {
+        Skill removedSkill = new Skill(1L, "Skill 1", new HashSet<>());
+        Set<Skill> skills =
+                new HashSet<Skill>(
+                        Arrays.asList(
+                                removedSkill,
+                                new Skill(2L, "Skill 2", new HashSet<>()),
+                                new Skill(3L, "Skill 3", new HashSet<>()
+                                )));
+        equineInstance.setSkills(skills);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        equineServiceUnderTest.deleteEquineSkill(1L, 1L);
+        Assertions.assertEquals(equineInstance.getSkills().size(), 2);
+        Assertions.assertFalse(equineInstance.getSkills().contains(removedSkill));
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
 }

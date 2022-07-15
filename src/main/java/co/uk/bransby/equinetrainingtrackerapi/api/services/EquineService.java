@@ -105,12 +105,12 @@ public class EquineService {
         }
     }
 
-    public void deleteEquineSkill(Long equineId, Long skillId) {
+    public void deleteEquineSkill(Long equineId, Long skillId) throws EntityNotFoundException {
         Equine equine = equineRepository.findById(equineId)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
         Set<Skill> skills = equine.getSkills()
                 .stream()
-                .filter(skill -> skill.getId().equals(skillId))
+                .filter(skill -> !skill.getId().equals(skillId))
                 .collect(Collectors.toSet());
         equine.setSkills(skills);
         equineRepository.saveAndFlush(equine);

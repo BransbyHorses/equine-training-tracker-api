@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.*;
+
 @WebMvcTest(controllers = EquineController.class)
 @ExtendWith(MockitoExtension.class)
 class EquineControllerTest {
@@ -99,7 +101,7 @@ class EquineControllerTest {
         Equine equine = equineList.get(0);
 
         BDDMockito.given(equineService.getEquine(equineId)).willReturn(Optional.of(equine));
-        Mockito.doNothing().when(equineService).deleteEquine(equineId);
+        doNothing().when(equineService).deleteEquine(equineId);
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/{id}", equineId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -209,5 +211,19 @@ class EquineControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/skills/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("No skill found with id: 1"));
+    }
+
+    @Test
+    void willDeleteSkillFromEquineAndReturnOkResponse() throws Exception {
+        doNothing().when(equineService).deleteEquineSkill(1L, 1L);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/1/skills/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willThrowExceptionWhenEquineNotFoundToDeleteSkill() throws Exception {
+        doThrow(new EntityNotFoundException()).when(equineService).deleteEquineSkill(1L, 1L);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/1/skills/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
