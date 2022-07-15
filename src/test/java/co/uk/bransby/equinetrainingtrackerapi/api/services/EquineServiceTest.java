@@ -14,8 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.BDDMockito.*;
 
@@ -139,10 +138,65 @@ class EquineServiceTest {
     }
 
     @Test
-    @Disabled
-    void willAssignEquineToCategory() {}
+    void willAssignEquineToCategory() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(categoryRepository.findById(1L)).willReturn(Optional.of(equineInstance.getCategory()));
+        equineServiceUnderTest.assignEquineToCategory(1L, 1L);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void willThrowEquineNotFoundExceptionWhenAssigningEquineToCategory() {
+        given(equineRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
+        );
+        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willThrowCategoryNotFoundExceptionWhenAssigningEquineToCategory() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(categoryRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
+        );
+        Assertions.assertEquals("No category found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willAssignSkillToEquine() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(skillRepository.findById(1L)).willReturn(Optional.of(new Skill()));
+        equineServiceUnderTest.assignEquineASkill(1L, 1L);
+        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    }
+
+    @Test
+    void willThrowEquineNotFoundExceptionWhenAssigningSkillToEquine() {
+        given(equineRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineASkill(1L, 1L)
+        );
+        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+    }
+
+    @Test
+    void willThrowSkillNotFoundExceptionWhenAssigningSkillToEquine() {
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(skillRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> equineServiceUnderTest.assignEquineASkill(1L, 1L)
+        );
+        Assertions.assertEquals("No skill found with id: 1", exception.getMessage());
+    }
 
     @Test
     @Disabled
-    void willAssignSkillToEquine() {}
+    void willThrowSkillExistsExceptionWhenAssigningSkillToEquine() {
+    }
 }

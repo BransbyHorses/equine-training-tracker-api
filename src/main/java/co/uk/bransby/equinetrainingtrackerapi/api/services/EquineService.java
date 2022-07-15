@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -71,26 +72,34 @@ public class EquineService {
     }
 
     public Equine assignEquineToCategory(Long equineId, Long categoryId) throws EntityNotFoundException {
-        return equineRepository.findById(equineId)
-                .map(equine -> {
-                    Category category = categoryRepository.findById(categoryId)
-                            .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
-                    equine.setCategory(category);
-                    return equineRepository.saveAndFlush(equine);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        Optional<Equine> equineInDb = equineRepository.findById(equineId);
+        if(equineInDb.isPresent()) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
+            Equine equine = equineInDb.get();
+            equine.setCategory(category);
+            return equineRepository.saveAndFlush(equine);
+        } else {
+            throw new EntityNotFoundException("No equine found with id: " + equineId);
+        }
     }
 
     public Equine assignEquineASkill(Long equineId, Long skillId) {
-        return equineRepository.findById(equineId)
-                .map(equine -> {
-                    Skill skill = skillRepository.findById(skillId)
-                            .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-                    Set<Skill> skills = equine.getSkills();
-                    skills.add(skill);
-                    equine.setSkills(skills);
-                    return equineRepository.save(equine);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        Optional<Equine> equineInDb = equineRepository.findById(equineId);
+        if(equineInDb.isPresent()) {
+            Skill skill = skillRepository.findById(skillId)
+                    .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
+            Equine equine = equineInDb.get();
+            Set<Skill> equineSkills = equine.getSkills();
+            if(equineSkills.contains(skill)) {
+                throw new EntityExistsException("Skill with id " + skillId + "already exists on equine " + equineId);
+            } else {
+                equineSkills.add(skill);
+                equine.setSkills(equineSkills);
+                return equineRepository.saveAndFlush(equine);
+            }
+        } else {
+            throw new EntityNotFoundException("No equine found with id: " + equineId);
+        }
     }
 }
