@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.CategoryRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.CategoryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,8 @@ class CategoryServiceTest {
 
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    EquineRepository equineRepository;
 
     @InjectMocks
     CategoryService categoryServiceUnderTest;
@@ -30,7 +33,7 @@ class CategoryServiceTest {
 
     @BeforeEach
     void setup() {
-        categoryServiceUnderTest = new CategoryService(categoryRepository);
+        categoryServiceUnderTest = new CategoryService(categoryRepository, equineRepository);
         categoryInstance = new Category(1L, "Test Category", new HashSet<>());
     }
 

@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Programme;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.ProgrammeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,12 @@ import java.util.Optional;
 public class ProgrammeService {
 
     private final ProgrammeRepository programmeRepository;
+    private final EquineRepository equineRepository;
 
-
-    public ProgrammeService(ProgrammeRepository programmeRepository) {
+    public ProgrammeService(ProgrammeRepository programmeRepository, EquineRepository equineRepository) {
         this.programmeRepository = programmeRepository;
+        this.equineRepository = equineRepository;
     }
-
 
     public List<Programme> getAllProgrammes() {
         return programmeRepository.findAll();
@@ -39,7 +41,17 @@ public class ProgrammeService {
         BeanUtils.copyProperties(updatedProgrammeValues, programmeToUpdate, "id");
         return programmeRepository.saveAndFlush(programmeToUpdate);
     }
+
     public void deleteProgramme(Long id) {
+        Programme programme = programmeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
+        for(Equine equine : programme.getEquines()) {
+            programme.removeEquine(equine);
+            Equine equineDb = equineRepository.getById(equine.getId());
+            equineDb.setProgramme(null);
+            equineRepository.saveAndFlush(equineDb);
+        }
+        programmeRepository.saveAndFlush(programme);
         programmeRepository.deleteById(id);
     }
 }

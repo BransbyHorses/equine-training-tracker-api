@@ -1,8 +1,8 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.SkillService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,13 +25,16 @@ class SkillServiceTest {
     @Mock
     private SkillRepository skillRepository;
 
+    @Mock
+    private EquineRepository equineRepository;
+
     @InjectMocks
     private SkillService skillServiceTest;
     private Skill skillTestInstance;
 
     @BeforeEach
     void setUp() {
-        skillServiceTest = new SkillService(skillRepository);
+        skillServiceTest = new SkillService(skillRepository, equineRepository);
         skillTestInstance = new Skill(1L, skillTestInstanceName, new HashSet<>());
     }
 

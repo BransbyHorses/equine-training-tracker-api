@@ -20,7 +20,7 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "skills", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "skills")
     @ToString.Exclude
     private Set<Equine> equines;
 
@@ -35,5 +35,9 @@ public class Skill {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void removeEquine(Equine equine) {
+        this.equines.remove(equine);
     }
 }

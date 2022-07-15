@@ -1,8 +1,8 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Yard;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.YardRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.YardService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +21,15 @@ import java.util.Optional;
 class YardServiceTest {
 
     @Mock YardRepository yardRepository;
+    @Mock
+    EquineRepository equineRepository;
     @InjectMocks
     private YardService yardServiceUnderTest;
     private Yard yardInstance;
 
     @BeforeEach
     void setUp() {
-        yardServiceUnderTest = new YardService(yardRepository);
+        yardServiceUnderTest = new YardService(yardRepository, equineRepository);
         yardInstance = new Yard(1L, "Test Yard Instance", new HashSet<>());
     }
 

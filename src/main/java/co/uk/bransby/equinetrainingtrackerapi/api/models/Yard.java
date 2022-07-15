@@ -19,7 +19,7 @@ public class Yard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id")
     @ToString.Exclude
     private Set<Equine> equines;
 
@@ -34,5 +34,9 @@ public class Yard {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void removeEquine(Equine equine) {
+        this.equines.remove(equine);
     }
 }

@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,7 +21,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id")
     @ToString.Exclude
     private Set<Equine> equines;
 
@@ -34,5 +36,9 @@ public class Category {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void removeEquine(Equine equine) {
+        this.equines.remove(equine);
     }
 }
