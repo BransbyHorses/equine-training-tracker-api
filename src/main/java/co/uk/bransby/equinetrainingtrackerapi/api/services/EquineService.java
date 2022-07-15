@@ -92,7 +92,7 @@ public class EquineService {
             Equine equine = equineInDb.get();
             Set<Skill> equineSkills = equine.getSkills();
             if(equineSkills.contains(skill)) {
-                throw new EntityExistsException("Skill with id " + skillId + "already exists on equine " + equineId);
+                throw new EntityExistsException("Skill with id " + skillId + " already exists on equine " + equineId);
             } else {
                 equineSkills.add(skill);
                 equine.setSkills(equineSkills);
