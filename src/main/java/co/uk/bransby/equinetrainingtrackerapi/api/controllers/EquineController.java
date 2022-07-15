@@ -121,4 +121,14 @@ public class EquineController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
+    @DeleteMapping("{equineId}/skills/{skillId}")
+    public ResponseEntity<?> deleteEquineSkill(@PathVariable Long equineId, @PathVariable Long skillId) {
+        try {
+            equineService.deleteEquineSkill(equineId, skillId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

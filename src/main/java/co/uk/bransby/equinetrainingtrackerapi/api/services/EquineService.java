@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -101,5 +103,16 @@ public class EquineService {
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
         }
+    }
+
+    public void deleteEquineSkill(Long equineId, Long skillId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        Set<Skill> skills = equine.getSkills()
+                .stream()
+                .filter(skill -> skill.getId().equals(skillId))
+                .collect(Collectors.toSet());
+        equine.setSkills(skills);
+        equineRepository.saveAndFlush(equine);
     }
 }

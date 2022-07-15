@@ -46,7 +46,6 @@ public class SkillService {
                 });
     }
 
-
     public Optional<Skill> findById(Long id) {
         return skillRepository.findById(id);
     }
@@ -54,7 +53,5 @@ public class SkillService {
     public void deleteById(Long id) {
         skillRepository.deleteById(id);
     }
-
-
 
 }
