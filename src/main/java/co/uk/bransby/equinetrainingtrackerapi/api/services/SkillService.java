@@ -4,7 +4,6 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -33,7 +32,6 @@ public class SkillService {
         if(skillOptional.isPresent()) {
             throw new EntityExistsException(skill.getName() + " already exists");
         }
-
         return skillRepository.save(skill);
     }
 
