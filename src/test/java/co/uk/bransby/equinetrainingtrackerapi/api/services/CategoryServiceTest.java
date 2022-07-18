@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Category;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.CategoryRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -68,7 +69,15 @@ class CategoryServiceTest {
 
     @Test
     void canDeleteCategory() {
+        // given
+        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new Programme(), new HashSet<Skill>());
+        categoryInstance.setEquines(new HashSet<>(List.of(equine)));
+        given(categoryRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
+        given(equineRepository.getById(1L)).willReturn(equine);
+        // when
         categoryServiceUnderTest.deleteCategory(1L);
+        // then
+        Assertions.assertNull(equine.getCategory());
         Mockito.verify(categoryRepository).deleteById(1L);
     }
 }
