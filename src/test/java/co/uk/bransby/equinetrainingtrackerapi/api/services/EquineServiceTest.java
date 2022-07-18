@@ -5,7 +5,6 @@ import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
@@ -196,8 +196,16 @@ class EquineServiceTest {
     }
 
     @Test
-    @Disabled
     void willThrowSkillExistsExceptionWhenAssigningSkillToEquine() {
+        Skill skill = new Skill(1L, "Test Skill", new HashSet<>());
+        equineInstance.setSkills(new HashSet<>(List.of(skill)));
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
+        given(skillRepository.findById(1L)).willReturn(Optional.of(skill));
+        Exception exception = Assertions.assertThrows(
+                EntityExistsException.class,
+                () -> equineServiceUnderTest.assignEquineASkill(1L, 1L)
+        );
+        Assertions.assertEquals("Skill with id " + skill.getId() + " already exists on equine " + equineInstance.getId(), exception.getMessage());
     }
 
     @Test
