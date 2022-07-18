@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.controllers.CategoryController;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;

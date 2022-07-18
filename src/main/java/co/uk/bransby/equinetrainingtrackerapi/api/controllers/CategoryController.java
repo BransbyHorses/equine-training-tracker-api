@@ -3,7 +3,6 @@ package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Category;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.CategoryDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.CategoryService;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,13 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/data/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final ModelMapper modelMapper;
+
+    public CategoryController(ModelMapper modelMapper, CategoryService categoryService) {
+        this.modelMapper = modelMapper;
+        this.categoryService = categoryService;
+    }
+
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
@@ -30,7 +34,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping("{id}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         return categoryService.getCategory(id)
@@ -56,7 +60,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long id) {
         return categoryService.getCategory(id)
                 .map(category -> {
