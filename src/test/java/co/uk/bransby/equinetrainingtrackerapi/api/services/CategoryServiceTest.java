@@ -64,7 +64,13 @@ class CategoryServiceTest {
 
     @Test
     void willThrowExceptionWhenCategoryWasNotFoundAndUpdated() {
+        given(categoryRepository.findById(1L)).willReturn(Optional.empty());
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> categoryServiceUnderTest.updateCategory(1L, categoryInstance)
+        );
         Assertions.assertThrows(EntityNotFoundException.class, () -> categoryServiceUnderTest.updateCategory(1L, categoryInstance));
+        Assertions.assertEquals("No category found with id: " + categoryInstance.getId(), exception.getMessage());
     }
 
     @Test
