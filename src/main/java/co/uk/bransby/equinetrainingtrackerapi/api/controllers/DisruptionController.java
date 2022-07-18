@@ -4,7 +4,6 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.DisruptionDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.DisruptionService;
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
