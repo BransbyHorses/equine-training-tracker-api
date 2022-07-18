@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Yard;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.YardRepository;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +15,7 @@ import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +68,15 @@ class YardServiceTest {
 
     @Test
     void canDeleteYard() {
+        Equine equine = new Equine(1L, "First Horse", yardInstance, new Category(), new Programme(), new HashSet<Skill>());
+        yardInstance.setEquines(new HashSet<>(List.of(equine)));
+        // given
+        given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));
+        given(equineRepository.getById(1L)).willReturn(equine);
+        // when
         yardServiceUnderTest.deleteYard(yardInstance.getId());
+        // then
+        Assertions.assertNull(equine.getYard());
         Mockito.verify(yardRepository).deleteById(yardInstance.getId());
     }
 }
