@@ -13,9 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.BDDMockito.given;
 
@@ -39,27 +37,39 @@ class CategoryServiceTest {
 
     @Test
     void canGetCategories() {
-        categoryServiceUnderTest.getCategories();
-        Mockito.verify(categoryRepository).findAll();
+        List<Category> categoryList = new ArrayList<>(List.of(new Category(), new Category()));
+        given(categoryRepository.findAll()).willReturn(categoryList);
+        List<Category> categories = categoryServiceUnderTest.getCategories();
+        Assertions.assertEquals(categories, categoryList);
     }
 
     @Test
     void canGetCategory() {
-        categoryServiceUnderTest.getCategory(1L);
-        Mockito.verify(categoryRepository).findById(1L);
+        given(categoryRepository.findById(1L)).willReturn(Optional.ofNullable(categoryInstance));
+        Optional<Category> category = categoryServiceUnderTest.getCategory(1L);
+        Assertions.assertEquals(category.get().getId(), categoryInstance.getId());
+        Assertions.assertEquals(category.get().getName(), categoryInstance.getName());
+        Assertions.assertEquals(category.get().getEquines(), categoryInstance.getEquines());
     }
 
     @Test
     void canCreateCategory() {
-        categoryServiceUnderTest.createCategory(categoryInstance);
-        Mockito.verify(categoryRepository).saveAndFlush(categoryInstance);
+        given(categoryRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
+        Category category = categoryServiceUnderTest.createCategory(categoryInstance);
+        Assertions.assertEquals(category.getId(), categoryInstance.getId());
+        Assertions.assertEquals(category.getName(), categoryInstance.getName());
+        Assertions.assertEquals(category.getEquines(), categoryInstance.getEquines());
     }
 
     @Test
     void canUpdateCategory() {
+        Category updatedCategoryValues = new Category(1L, "Updated Category Value", new HashSet<>());
         given(categoryRepository.findById(categoryInstance.getId())).willReturn(Optional.ofNullable(categoryInstance));
-        categoryServiceUnderTest.updateCategory(categoryInstance.getId(), categoryInstance);
-        Mockito.verify(categoryRepository).saveAndFlush(categoryInstance);
+        given(categoryRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
+        Category updatedCategory = categoryServiceUnderTest.updateCategory(categoryInstance.getId(), updatedCategoryValues);
+        Assertions.assertEquals(updatedCategoryValues.getId(), 1L);
+        Assertions.assertEquals(updatedCategoryValues.getName(), updatedCategory.getName());
+        Assertions.assertEquals(updatedCategoryValues.getEquines(), updatedCategory.getEquines());
     }
 
     @Test
@@ -75,14 +85,11 @@ class CategoryServiceTest {
 
     @Test
     void canDeleteCategory() {
-        // given
         Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new Programme(), new HashSet<Skill>());
         categoryInstance.setEquines(new HashSet<>(List.of(equine)));
         given(categoryRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
         given(equineRepository.getById(1L)).willReturn(equine);
-        // when
         categoryServiceUnderTest.deleteCategory(1L);
-        // then
         Assertions.assertNull(equine.getCategory());
         Mockito.verify(categoryRepository).deleteById(1L);
     }
