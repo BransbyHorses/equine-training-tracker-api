@@ -70,8 +70,13 @@ class EquineServiceTest {
 
     @Test
     void deleteEquine() {
-        equineServiceUnderTest.deleteEquine(equineInstance.getId());
-        Mockito.verify(equineRepository).deleteById(equineInstance.getId());
+        given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
+        given(equineRepository.saveAndFlush(equineInstance)).willReturn(equineInstance);
+        equineServiceUnderTest.deleteEquine(1L);
+        Assertions.assertNull(equineInstance.getCategory());
+        Assertions.assertNull(equineInstance.getProgramme());
+        Assertions.assertNull(equineInstance.getYard());
+        Assertions.assertEquals(new HashSet<>(), equineInstance.getSkills());
     }
 
     @Test

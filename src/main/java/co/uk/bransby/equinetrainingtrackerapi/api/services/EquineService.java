@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -44,6 +41,14 @@ public class EquineService {
     }
 
     public void deleteEquine(Long id){
+        Equine equine = equineRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
+        // remove relationships before deleting
+        equine.setCategory(null);
+        equine.setProgramme(null);
+        equine.setYard(null);
+        equine.setSkills(new HashSet<>());
+        equineRepository.saveAndFlush(equine);
         equineRepository.deleteById(id);
     }
 
