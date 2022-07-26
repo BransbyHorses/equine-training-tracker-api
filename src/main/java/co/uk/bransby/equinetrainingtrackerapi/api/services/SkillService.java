@@ -57,11 +57,8 @@ public class SkillService {
                 .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
         for(Equine equine : skill.getEquines()) {
             skill.removeEquine(equine);
-            Equine equineDb = equineRepository.getById(equine.getId());
-            Set<Skill> skills = equineDb.getSkills();
-            skills.remove(skill);
-            equineDb.setSkills(skills);
-            equineRepository.saveAndFlush(equineDb);
+            equine.getSkills().remove(skill);
+            equineRepository.saveAndFlush(equine);
         }
         skillRepository.saveAndFlush(skill);
         skillRepository.deleteById(id);

@@ -43,9 +43,8 @@ public class CategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
         for(Equine equine : category.getEquines()) {
             category.removeEquine(equine);
-            Equine equineDb = equineRepository.getById(equine.getId());
-            equineDb.setCategory(null);
-            equineRepository.saveAndFlush(equineDb);
+            equine.setCategory(null);
+            equineRepository.saveAndFlush(equine);
         }
         categoryRepository.saveAndFlush(category);
         categoryRepository.deleteById(id);

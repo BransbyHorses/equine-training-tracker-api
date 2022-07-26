@@ -47,9 +47,8 @@ public class ProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
         for(Equine equine : programme.getEquines()) {
             programme.removeEquine(equine);
-            Equine equineDb = equineRepository.getById(equine.getId());
-            equineDb.setProgramme(null);
-            equineRepository.saveAndFlush(equineDb);
+            equine.setProgramme(null);
+            equineRepository.saveAndFlush(equine);
         }
         programmeRepository.saveAndFlush(programme);
         programmeRepository.deleteById(id);

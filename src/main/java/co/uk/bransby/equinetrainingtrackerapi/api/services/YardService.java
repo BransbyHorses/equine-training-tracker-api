@@ -46,9 +46,8 @@ public class YardService {
                         .orElseThrow(() -> new EntityNotFoundException("No yard found with id: 1"));
         for(Equine equine : yard.getEquines()) {
             yard.removeEquine(equine);
-            Equine equineDb = equineRepository.getById(equine.getId());
-            equineDb.setYard(null);
-            equineRepository.saveAndFlush(equineDb);
+            equine.setYard(null);
+            equineRepository.saveAndFlush(equine);
         }
         yardRepository.saveAndFlush(yard);
         yardRepository.deleteById(id);
