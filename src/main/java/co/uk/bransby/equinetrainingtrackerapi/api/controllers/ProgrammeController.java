@@ -66,7 +66,7 @@ public class ProgrammeController {
         try {
             Programme programme = programmeService.getProgramme(id);
             programmeService.deleteProgramme(id);
-            return ResponseEntity.ok().headers(resHeaders).body(id);
+            return ResponseEntity.ok().headers(resHeaders).build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(resHeaders).build();
         }
