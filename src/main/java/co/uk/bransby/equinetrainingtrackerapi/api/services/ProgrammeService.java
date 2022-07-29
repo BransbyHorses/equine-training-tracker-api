@@ -32,7 +32,7 @@ public class ProgrammeService {
         return programmeRepository.saveAndFlush(Programme);
     }
 
-    public Programme updateProgramme(Long id, Programme updatedProgrammeValues) throws EntityNotFoundException {
+    public Programme updateProgramme(Long id, Programme updatedProgrammeValues) {
         Programme programmeToUpdate = programmeRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         BeanUtils.copyProperties(updatedProgrammeValues, programmeToUpdate, "id");
