@@ -24,9 +24,12 @@ public class ProgrammeController {
     @GetMapping("{id}")
     public ResponseEntity<ProgrammeDto> findProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        return programmeService.getProgramme(id)
-                .map(programme -> new ResponseEntity<>(modelMapper.map(programme, ProgrammeDto.class), resHeaders, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
+        try {
+            Programme programme = programmeService.getProgramme(id);
+            return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(programme, ProgrammeDto.class));
+        } catch(EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping
@@ -60,12 +63,13 @@ public class ProgrammeController {
     @DeleteMapping ("{id}")
     public ResponseEntity<?> deleteProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        return programmeService.getProgramme(id)
-                .map(programme -> {
-                    programmeService.deleteProgramme(id);
-                    return new ResponseEntity<>(modelMapper.map(programme, ProgrammeDto.class), resHeaders, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
+        try {
+            Programme programme = programmeService.getProgramme(id);
+            programmeService.deleteProgramme(id);
+            return ResponseEntity.ok().headers(resHeaders).body(id);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(resHeaders).build();
+        }
     }
 }
 
