@@ -22,8 +22,9 @@ public class DisruptionService {
         return disruptionRepository.findAll();
     }
 
-    public Optional<Disruption> getDisruption(Long id) {
-        return disruptionRepository.findById(id);
+    public Disruption getDisruption(Long id) {
+        return disruptionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No disruption found with id: " + id));
     }
 
     public Disruption createDisruption(Disruption newDisruption) {
@@ -32,12 +33,14 @@ public class DisruptionService {
 
     public Disruption updateDisruption(Long id, Disruption updatedDisruptionValues) {
         Disruption disruptionToUpdate = disruptionRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("No disruption found with id: " + id));
         BeanUtils.copyProperties(updatedDisruptionValues, disruptionToUpdate, "id");
         return disruptionRepository.saveAndFlush(disruptionToUpdate);
     }
 
     public void deleteDisruption(Long id) {
+        disruptionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No disruption found with id: " + id));
         disruptionRepository.deleteById(id);
     }
 }

@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
+
 @ExtendWith(MockitoExtension.class)
 class DisruptionServiceTest {
 
@@ -38,6 +40,7 @@ class DisruptionServiceTest {
 
     @Test
     void canGetDisruptionFromId() {
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(new Disruption()));
         disruptionServiceUnderTest.getDisruption(1L);
         Mockito.verify(disruptionRepository).findById(1L);
     }
@@ -52,7 +55,7 @@ class DisruptionServiceTest {
     @Test
     void canUpdateDisruption() {
         Disruption updatedDisruption = new Disruption();
-        BDDMockito.given(disruptionRepository.findById(1L)).willReturn(Optional.of(updatedDisruption));
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(updatedDisruption));
         disruptionServiceUnderTest.updateDisruption(1L, updatedDisruption);
         Mockito.verify(disruptionRepository).saveAndFlush(updatedDisruption);
     }
@@ -65,6 +68,7 @@ class DisruptionServiceTest {
 
     @Test
     void deleteDisruption() {
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(new Disruption()));
         disruptionServiceUnderTest.deleteDisruption(1L);
         Mockito.verify(disruptionRepository).deleteById(1L);
     }
