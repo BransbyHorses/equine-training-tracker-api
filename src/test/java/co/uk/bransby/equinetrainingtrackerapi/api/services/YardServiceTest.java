@@ -72,7 +72,6 @@ class YardServiceTest {
         yardInstance.setEquines(new HashSet<>(List.of(equine)));
         // given
         given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));
-        given(equineRepository.getById(1L)).willReturn(equine);
         // when
         yardServiceUnderTest.deleteYard(yardInstance.getId());
         // then

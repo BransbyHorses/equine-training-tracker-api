@@ -91,7 +91,6 @@ class SkillServiceTest {
         Set<Equine> equines = new HashSet<>(List.of(equine));
         skillTestInstance.setEquines(equines);
         given(skillRepository.findById(1L)).willReturn(Optional.of(skillTestInstance));
-        given(equineRepository.getById(1L)).willReturn(equine);
         // when
         skillServiceTest.deleteById(1L);
         // then

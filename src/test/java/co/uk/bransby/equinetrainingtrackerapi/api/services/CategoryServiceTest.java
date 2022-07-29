@@ -88,7 +88,6 @@ class CategoryServiceTest {
         Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new Programme(), new HashSet<Skill>());
         categoryInstance.setEquines(new HashSet<>(List.of(equine)));
         given(categoryRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
-        given(equineRepository.getById(1L)).willReturn(equine);
         categoryServiceUnderTest.deleteCategory(1L);
         Assertions.assertNull(equine.getCategory());
         Mockito.verify(categoryRepository).deleteById(1L);
