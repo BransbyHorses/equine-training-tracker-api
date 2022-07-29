@@ -39,8 +39,10 @@ public class DisruptionService {
     }
 
     public void deleteDisruption(Long id) {
-        disruptionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No disruption found with id: " + id));
-        disruptionRepository.deleteById(id);
+        try {
+            disruptionRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("No disruption found with id: " + id);
+        }
     }
 }
