@@ -5,30 +5,27 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Programme;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.ProgrammeRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class ProgrammeService {
 
     private final ProgrammeRepository programmeRepository;
     private final EquineRepository equineRepository;
 
-    public ProgrammeService(ProgrammeRepository programmeRepository, EquineRepository equineRepository) {
-        this.programmeRepository = programmeRepository;
-        this.equineRepository = equineRepository;
-    }
-
     public List<Programme> getAllProgrammes() {
         return programmeRepository.findAll();
     }
 
-    public Optional<Programme> getProgramme(Long id) {
-        return programmeRepository.findById(id);
+    public Programme getProgramme(Long id) {
+        return programmeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
     }
 
     public Programme createProgramme(Programme Programme){
