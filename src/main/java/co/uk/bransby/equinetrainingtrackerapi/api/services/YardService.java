@@ -26,22 +26,23 @@ public class YardService {
         return yardRepository.findAll();
     }
 
-    public Optional<Yard> getYard(Long id) {
-        return yardRepository.findById(id);
+    public Yard getYard(Long id) {
+        return yardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No yard found with id: " + id));
     }
 
     public Yard createYard(Yard yard){
         return yardRepository.saveAndFlush(yard);
     }
 
-    public Yard updateYard(Long id, Yard updatedYardValues) throws EntityNotFoundException {
+    public Yard updateYard(Long id, Yard updatedYardValues) {
         Yard yardToUpdate = yardRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("No yard found with id: " + id));
         BeanUtils.copyProperties(updatedYardValues, yardToUpdate, "id");
         return yardRepository.saveAndFlush(yardToUpdate);
     }
 
-    public void deleteYard(Long id) {
+    public void deleteYard(Long id) throws EntityNotFoundException {
         Yard yard = yardRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("No yard found with id: 1"));
         for(Equine equine : yard.getEquines()) {
