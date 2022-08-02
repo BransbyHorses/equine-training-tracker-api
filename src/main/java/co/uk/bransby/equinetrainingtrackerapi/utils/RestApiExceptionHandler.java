@@ -24,4 +24,10 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return buildRestApiErrorResponse(error);
     }
 
+    @ExceptionHandler
+    protected ResponseEntity<RestApiError> handleEntityExists(HttpServletRequest req, EntityNotFoundException e) {
+        RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.CONFLICT, e.getMessage());
+        return buildRestApiErrorResponse(error);
+    }
+
 }
