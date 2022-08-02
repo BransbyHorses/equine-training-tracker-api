@@ -69,12 +69,4 @@ class DisruptionServiceTest {
         disruptionServiceUnderTest.deleteDisruption(1L);
         Mockito.verify(disruptionRepository).deleteById(1L);
     }
-
-    @Test
-    void deleteDisruptionThrowsEntityNotFoundException() {
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> disruptionServiceUnderTest.deleteDisruption(1L));
-        Assertions.assertEquals("No disruption found with id: 1", exception.getMessage());
-    }
 }
