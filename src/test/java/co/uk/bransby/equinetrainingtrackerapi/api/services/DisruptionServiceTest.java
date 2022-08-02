@@ -68,7 +68,6 @@ class DisruptionServiceTest {
 
     @Test
     void deleteDisruption() {
-        given(disruptionRepository.findById(1L)).willReturn(Optional.of(new Disruption()));
         disruptionServiceUnderTest.deleteDisruption(1L);
         Mockito.verify(disruptionRepository).deleteById(1L);
     }
