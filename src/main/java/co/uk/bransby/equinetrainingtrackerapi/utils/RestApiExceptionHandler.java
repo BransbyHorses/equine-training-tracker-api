@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,13 +19,13 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<RestApiError> handleEntityNotFound(HttpServletRequest req, EntityNotFoundException e) {
         RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.NOT_FOUND, e.getMessage());
         return buildRestApiErrorResponse(error);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(EntityExistsException.class)
     protected ResponseEntity<RestApiError> handleEntityExists(HttpServletRequest req, EntityNotFoundException e) {
         RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.CONFLICT, e.getMessage());
         return buildRestApiErrorResponse(error);
