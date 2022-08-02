@@ -26,8 +26,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityExistsException.class)
-    protected ResponseEntity<RestApiError> handleEntityExists(HttpServletRequest req, EntityNotFoundException e) {
+    protected ResponseEntity<RestApiError> handleEntityExists(HttpServletRequest req, EntityExistsException e) {
         RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.CONFLICT, e.getMessage());
+        return buildRestApiErrorResponse(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected  ResponseEntity<RestApiError> handleIllegalArgument(HttpServletRequest req, IllegalArgumentException e) {
+        RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.BAD_REQUEST, e.getMessage());
         return buildRestApiErrorResponse(error);
     }
 
