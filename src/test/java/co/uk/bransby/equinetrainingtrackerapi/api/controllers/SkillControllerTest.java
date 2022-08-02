@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +65,7 @@ class SkillControllerTest {
         final Long skillId = 1L;
         Skill controlSkill = skillList.get(0);
 
-        given(skillService.findById(skillId)).willReturn(Optional.of(controlSkill));
+        given(skillService.findById(skillId)).willReturn(controlSkill);
 
         this.mockMvc.perform(get(urlTemplate + "{id}", skillId))
                 .andExpect(status().isOk())
@@ -75,11 +76,10 @@ class SkillControllerTest {
     @Test
     void respondsWithNotFoundIfAskedToFetchNonExistentSkill() throws Exception {
        final long skillId = 5L;
-
-       given(skillService.findById(skillId)).willReturn(Optional.empty());
-
+       given(skillService.findById(skillId)).willThrow(new EntityNotFoundException("No skill found with id: 5"));
        this.mockMvc.perform(get(urlTemplate + "{id}", skillId))
-               .andExpect(status().isNotFound());
+               .andExpect(status().isNotFound())
+               .andExpect(jsonPath("$.errorMessage").value("No skill found with id: 5"));
     }
 
     @Test
@@ -101,7 +101,7 @@ class SkillControllerTest {
         Long skillId = 1L;
         Skill updatedSkill = new Skill(skillId, "Equine can be transformed", new HashSet<>());
 
-        given(skillService.findById(skillId)).willReturn(Optional.of(updatedSkill));
+        given(skillService.findById(skillId)).willReturn(updatedSkill);
         given(skillService.update(updatedSkill, updatedSkill.getId())).willReturn(updatedSkill);
 
         this.mockMvc.perform(put(urlTemplate + "{id}", updatedSkill.getId())
@@ -115,14 +115,10 @@ class SkillControllerTest {
     void deletesSkill() throws Exception {
         Long skillId = 1L;
         Skill deletedSkill = skillList.get(0);
-        given(skillService.findById(skillId)).willReturn((Optional.of(deletedSkill)));
+        given(skillService.findById(skillId)).willReturn(deletedSkill);
         doNothing().when(skillService).deleteById(deletedSkill.getId());
-
         this.mockMvc.perform(delete(urlTemplate + "{id}", deletedSkill.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(deletedSkill.getName()))
-                .andExpect(jsonPath("$.id").value(deletedSkill.getId()));
-
+                .andExpect(status().isOk());
     }
 
 }

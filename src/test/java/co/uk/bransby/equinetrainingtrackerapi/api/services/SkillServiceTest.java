@@ -79,8 +79,8 @@ class SkillServiceTest {
     @Test
     void canFindSkillById() {
         given(skillRepository.findById(1L)).willReturn(Optional.of(skillTestInstance));
-        Optional<Skill> skill = skillServiceTest.findById(1L);
-        assertThat(skill.get().getId()).isEqualTo(skillTestInstance.getId());
+        Skill skill = skillServiceTest.findById(1L);
+        assertThat(skill.getId()).isEqualTo(skillTestInstance.getId());
         Mockito.verify(skillRepository).findById(1L);
     }
 
@@ -97,6 +97,5 @@ class SkillServiceTest {
         assertThat(skillTestInstance.getEquines()).hasSize(0);
         assertThat(equine.getSkills()).hasSize(0);
     }
-
 
 }
