@@ -2,12 +2,10 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.DisruptionRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.DisruptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -70,5 +68,13 @@ class DisruptionServiceTest {
     void deleteDisruption() {
         disruptionServiceUnderTest.deleteDisruption(1L);
         Mockito.verify(disruptionRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteDisruptionThrowsEntityNotFoundException() {
+        Exception exception = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> disruptionServiceUnderTest.deleteDisruption(1L));
+        Assertions.assertEquals("No disruption found with id: 1", exception.getMessage());
     }
 }
