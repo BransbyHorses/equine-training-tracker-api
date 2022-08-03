@@ -41,9 +41,6 @@ public class Equine {
     )
     @ToString.Exclude
     private Set<Skill> skills;
-//    private String training;
-//    private Boolean onHold;
-//    private Long trainerId;
 
     @Override
     public boolean equals(Object o) {

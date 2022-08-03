@@ -12,7 +12,4 @@ public class EquineDto {
     private CategoryDto category;
     private ProgrammeDto programme;
     private Set<SkillDto> skills;
-//    private Long trainerId;
-//    private String training;
-//    private Boolean onHold;
 }
