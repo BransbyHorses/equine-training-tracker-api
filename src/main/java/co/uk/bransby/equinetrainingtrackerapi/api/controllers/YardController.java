@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,14 +39,20 @@ public class YardController {
         List<YardDto> allYards = yardService.getAllYards().stream()
                 .map(yard -> modelMapper.map(yard, YardDto.class)).toList();
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(allYards, resHeaders, HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .headers(resHeaders)
+                .body(allYards);
     }
 
     @PostMapping
     public ResponseEntity<YardDto> createYard(@RequestBody YardDto newYard) {
         Yard createdYard = yardService.createYard(modelMapper.map(newYard, Yard.class));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(modelMapper.map(createdYard, YardDto.class), resHeaders, HttpStatus.CREATED);
+        return ResponseEntity
+                .created(URI.create("/data/yards/" + createdYard.getId()))
+                .headers(resHeaders)
+                .body(modelMapper.map(createdYard, YardDto.class));
     }
 
     @PutMapping(value = "{id}")
@@ -62,6 +69,9 @@ public class YardController {
     public ResponseEntity<?> deleteYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         yardService.deleteYard(id);
-        return ResponseEntity.ok().headers(resHeaders).build();
+        return ResponseEntity
+                .ok()
+                .headers(resHeaders)
+                .build();
     }
 }
