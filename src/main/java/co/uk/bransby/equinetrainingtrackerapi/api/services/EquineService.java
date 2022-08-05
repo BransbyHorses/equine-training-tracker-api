@@ -25,15 +25,16 @@ public class EquineService {
         return equineRepository.findAll();
     }
 
-    public Optional<Equine> getEquine(Long id) {
-        return equineRepository.findById(id);
+    public Equine getEquine(Long id) {
+        return equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
     }
 
     public Equine createEquine(Equine equine){
         return equineRepository.saveAndFlush(equine);
     }
 
-    public Equine updateEquine(Long id, Equine updatedEquineValues) throws EntityNotFoundException {
+    public Equine updateEquine(Long id, Equine updatedEquineValues) {
         Equine equineToUpdate = equineRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         BeanUtils.copyProperties(updatedEquineValues, equineToUpdate, "id");
@@ -52,7 +53,7 @@ public class EquineService {
         equineRepository.deleteById(id);
     }
 
-    public Equine assignEquineToProgramme(Long equineId, Long programmeId) throws EntityNotFoundException {
+    public Equine assignEquineToProgramme(Long equineId, Long programmeId) {
         Optional<Equine> equine = equineRepository.findById(equineId);
         if(equine.isPresent()) {
             Programme programme = programmeRepository.findById(programmeId)
@@ -65,7 +66,7 @@ public class EquineService {
         }
     }
 
-    public Equine assignEquineToYard(Long equineId, Long yardId) throws EntityNotFoundException {
+    public Equine assignEquineToYard(Long equineId, Long yardId) {
         Optional<Equine> equineInDb = equineRepository.findById(equineId);
         if(equineInDb.isPresent()) {
             Yard yard = yardRepository.findById(yardId)
@@ -78,7 +79,7 @@ public class EquineService {
         }
     }
 
-    public Equine assignEquineToCategory(Long equineId, Long categoryId) throws EntityNotFoundException {
+    public Equine assignEquineToCategory(Long equineId, Long categoryId) {
         Optional<Equine> equineInDb = equineRepository.findById(equineId);
         if(equineInDb.isPresent()) {
             Category category = categoryRepository.findById(categoryId)
@@ -110,7 +111,7 @@ public class EquineService {
         }
     }
 
-    public void deleteEquineSkill(Long equineId, Long skillId) throws EntityNotFoundException {
+    public void deleteEquineSkill(Long equineId, Long skillId) {
         Equine equine = equineRepository.findById(equineId)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
         Set<Skill> skills = equine.getSkills()

@@ -40,29 +40,22 @@ public class SkillController {
     @GetMapping("{id}")
     public ResponseEntity<SkillDto> getById(@PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
-        return skillService.findById(id)
-                .map(skill -> ResponseEntity
-                            .status(HttpStatus.OK)
-                            .headers(headers)
-                            .body(convertToDto(skill)))
-                .orElse(ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .headers(headers).build());
+        Skill skill = skillService.findById(id);
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(convertToDto(skill));
     }
 
     @PostMapping
     public ResponseEntity<?> addSkill(@RequestBody SkillDto skillDto) {
         HttpHeaders headers = new HttpHeaders();
-        try {
             Skill skillEntity = convertToEntity(skillDto);
             Skill newSkill = skillService.create(skillEntity);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .headers(headers)
                     .body(convertToDto(newSkill));
-        } catch (EntityExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
     }
 
     @PutMapping("{id}")
@@ -77,26 +70,18 @@ public class SkillController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<SkillDto> deleteSkillById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteSkillById(@PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
-        return skillService.findById(id)
-                .map(skill -> {
-                    skillService.deleteById(id);
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .headers(headers)
-                            .body(convertToDto(skill));
-                        })
-                .orElse(ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .headers(headers)
-                            .build());
+        skillService.deleteById(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .build();
     }
 
     private Skill convertToEntity(SkillDto skillDto) {
         return modelMapper.map(skillDto, Skill.class);
     }
-
     private SkillDto convertToDto(Skill skill) {
         return modelMapper.map(skill, SkillDto.class);
     }

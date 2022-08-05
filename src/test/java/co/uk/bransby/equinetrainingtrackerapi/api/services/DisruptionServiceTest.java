@@ -2,12 +2,10 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.DisruptionRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.DisruptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
+
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class DisruptionServiceTest {
@@ -38,6 +38,7 @@ class DisruptionServiceTest {
 
     @Test
     void canGetDisruptionFromId() {
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(new Disruption()));
         disruptionServiceUnderTest.getDisruption(1L);
         Mockito.verify(disruptionRepository).findById(1L);
     }
@@ -52,7 +53,7 @@ class DisruptionServiceTest {
     @Test
     void canUpdateDisruption() {
         Disruption updatedDisruption = new Disruption();
-        BDDMockito.given(disruptionRepository.findById(1L)).willReturn(Optional.of(updatedDisruption));
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(updatedDisruption));
         disruptionServiceUnderTest.updateDisruption(1L, updatedDisruption);
         Mockito.verify(disruptionRepository).saveAndFlush(updatedDisruption);
     }

@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
 
@@ -33,9 +32,9 @@ public class DisruptionController {
     @GetMapping(value = "{id}")
     public ResponseEntity<DisruptionDto> getDisruption(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        return disruptionService.getDisruption(id)
-                .map(disruption -> ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(disruption, DisruptionDto.class)))
-                .orElse(ResponseEntity.notFound().headers(resHeaders).build());
+        Disruption disruption = disruptionService.getDisruption(id);
+        return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(disruption, DisruptionDto.class));
+
     }
 
     @PostMapping
@@ -48,22 +47,15 @@ public class DisruptionController {
     @PutMapping(value = "{id}")
     public ResponseEntity<DisruptionDto> updateDisruption(@PathVariable Long id, @RequestBody DisruptionDto updatedDisruptionValues) {
         HttpHeaders resHeaders = new HttpHeaders();
-        try {
-            Disruption updatedDisruption = disruptionService.updateDisruption(id, modelMapper.map(updatedDisruptionValues, Disruption.class));
-            return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(updatedDisruption, DisruptionDto.class));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().headers(resHeaders).build();
-        }
+        Disruption updatedDisruption = disruptionService.updateDisruption(id, modelMapper.map(updatedDisruptionValues, Disruption.class));
+        return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(updatedDisruption, DisruptionDto.class));
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<DisruptionDto> deleteDisruption(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDisruption(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        return disruptionService.getDisruption(id)
-                .map(disruption -> {
-                    disruptionService.deleteDisruption(id);
-                    return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(disruption, DisruptionDto.class));
-                })
-                .orElse(ResponseEntity.notFound().headers(resHeaders).build());
+        disruptionService.deleteDisruption(id);
+        return ResponseEntity.ok().headers(resHeaders).build();
+
     }
 }

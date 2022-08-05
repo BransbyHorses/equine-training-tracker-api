@@ -10,7 +10,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class SkillService {
@@ -48,8 +47,9 @@ public class SkillService {
                 });
     }
 
-    public Optional<Skill> findById(Long id) {
-        return skillRepository.findById(id);
+    public Skill findById(Long id) {
+        return skillRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
     }
 
     public void deleteById(Long id) {

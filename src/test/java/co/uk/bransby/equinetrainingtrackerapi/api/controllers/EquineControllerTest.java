@@ -27,7 +27,6 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(controllers = EquineController.class)
-@ExtendWith(MockitoExtension.class)
 class EquineControllerTest {
 
     @Autowired
@@ -51,9 +50,7 @@ class EquineControllerTest {
     @Test
     void findEquineById() throws Exception {
         final Long equineId = 1L;
-
-        BDDMockito.given(equineService.getEquine(equineId)).willReturn(Optional.ofNullable(equineList.get(0)));
-
+        BDDMockito.given(equineService.getEquine(equineId)).willReturn(equineList.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/{id}", equineId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equineList.get(0).getId()));
@@ -100,23 +97,11 @@ class EquineControllerTest {
         Long equineId = 1L;
         Equine equine = equineList.get(0);
 
-        BDDMockito.given(equineService.getEquine(equineId)).willReturn(Optional.of(equine));
+        BDDMockito.given(equineService.getEquine(equineId)).willReturn(equine);
         doNothing().when(equineService).deleteEquine(equineId);
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/{id}", equineId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(equine.getId()));
-
-    }
-
-    @Test
-    void returnsNotFoundIfEquineAbsent() throws  Exception {
-        final Long invalidEquineId = 7L;
-
-        BDDMockito.given(equineService.getEquine(invalidEquineId)).willReturn(Optional.empty());
-
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/{id}", invalidEquineId))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -128,16 +113,6 @@ class EquineControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/equines/{id}", invalidEquine.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(invalidEquine)))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    void returnsNotFoundIfEquineAbsentWhenDeleted() throws Exception {
-        final Long invalidEquineId = 7L;
-
-        BDDMockito.given(equineService.getEquine(invalidEquineId)).willReturn(Optional.empty());
-
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equines/{id}", invalidEquineId))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -156,7 +131,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/programmes/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("No equine found with id: 1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No equine found with id: 1"));
     }
 
     @Test
@@ -174,7 +149,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/yards/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("No yard found with id: 1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No yard found with id: 1"));
     }
 
     @Test
@@ -192,7 +167,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/categories/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("No category found with id: 1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No category found with id: 1"));
     }
 
     @Test
@@ -210,7 +185,7 @@ class EquineControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/skills/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("No skill found with id: 1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No skill found with id: 1"));
     }
 
     @Test

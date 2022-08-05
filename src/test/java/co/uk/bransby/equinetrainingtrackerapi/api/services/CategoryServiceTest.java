@@ -46,10 +46,10 @@ class CategoryServiceTest {
     @Test
     void canGetCategory() {
         given(categoryRepository.findById(1L)).willReturn(Optional.ofNullable(categoryInstance));
-        Optional<Category> category = categoryServiceUnderTest.getCategory(1L);
-        Assertions.assertEquals(category.get().getId(), categoryInstance.getId());
-        Assertions.assertEquals(category.get().getName(), categoryInstance.getName());
-        Assertions.assertEquals(category.get().getEquines(), categoryInstance.getEquines());
+        Category category = categoryServiceUnderTest.getCategory(1L);
+        Assertions.assertEquals(category.getId(), categoryInstance.getId());
+        Assertions.assertEquals(category.getName(), categoryInstance.getName());
+        Assertions.assertEquals(category.getEquines(), categoryInstance.getEquines());
     }
 
     @Test

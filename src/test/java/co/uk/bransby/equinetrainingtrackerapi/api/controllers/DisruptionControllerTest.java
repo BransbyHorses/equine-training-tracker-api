@@ -54,18 +54,11 @@ class DisruptionControllerTest {
 
     @Test
     void willGetDisruptionAndReturnOkResponse() throws Exception {
-        given(disruptionService.getDisruption(1L)).willReturn(Optional.of(disruptions.get(0)));
+        given(disruptionService.getDisruption(1L)).willReturn(disruptions.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/disruptions/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Disruption 1"));
-    }
-
-    @Test
-    void willReturnNotFoundResponseWhenDisruptionWasNotFound() throws Exception {
-        given(disruptionService.getDisruption(6L)).willReturn(Optional.empty());
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/disruptions/{id}", 6))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -105,18 +98,10 @@ class DisruptionControllerTest {
 
     @Test
     void willDeleteDisruptionAndReturnOkResponse() throws Exception {
-        given(disruptionService.getDisruption(1L)).willReturn(Optional.of(disruptions.get(0)));
+        given(disruptionService.getDisruption(1L)).willReturn(disruptions.get(0));
         Mockito.doNothing().when(disruptionService).deleteDisruption(1L);
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/disruptions/{id}", 1))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Disruption 1"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test
-    void willReturnNotFoundResponseWhenDisruptionWasNotFoundAndDeleted() throws Exception {
-        given(disruptionService.getDisruption(1L)).willReturn(Optional.empty());
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/disruptions/{id}", 1))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
 }

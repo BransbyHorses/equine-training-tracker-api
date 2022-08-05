@@ -51,18 +51,11 @@ class CategoryControllerTest {
 
     @Test
     void willGetCategoryAndReturnOkResponse() throws Exception {
-        given(categoryService.getCategory(1L)).willReturn(Optional.of(categories.get(0)));
+        given(categoryService.getCategory(1L)).willReturn(categories.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Category 1"));
-    }
-
-    @Test
-    void willReturnNotFoundResponseWhenCategoryWasNotFound() throws Exception {
-        given(categoryService.getCategory(1L)).willReturn(Optional.empty());
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories/{id}", 6))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -102,18 +95,9 @@ class CategoryControllerTest {
 
     @Test
     void willDeleteCategoryAndReturnOkResponse() throws Exception {
-        given(categoryService.getCategory(1L)).willReturn(Optional.of(categories.get(0)));
+        given(categoryService.getCategory(1L)).willReturn(categories.get(0));
         Mockito.doNothing().when(categoryService).deleteCategory(1L);
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/categories/{id}", 1))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Category 1"));
-    }
-
-    @Test
-    void WillReturnNotFoundResponseWhenCategoryWasNotFoundAndDeleted() throws Exception {
-        given(categoryService.getCategory(1L)).willReturn(Optional.empty());
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/categories/{id}", 1))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

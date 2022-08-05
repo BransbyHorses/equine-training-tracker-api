@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -27,46 +26,51 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        HttpHeaders resHeaders = new HttpHeaders();
         List<CategoryDto> categories = categoryService.getCategories()
                 .stream()
-                .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
-        HttpHeaders resHeaders = new HttpHeaders();
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .toList();
         return new ResponseEntity<>(categories, resHeaders, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        return categoryService.getCategory(id)
-                .map(category -> new ResponseEntity<>(modelMapper.map(category, CategoryDto.class), resHeaders, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND));
+        Category category = categoryService.getCategory(id);
+        return ResponseEntity
+                .ok()
+                .headers(resHeaders)
+                .body(modelMapper.map(category, CategoryDto.class));
     }
 
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto newCategory) {
-        Category savedCategory = categoryService.createCategory(modelMapper.map(newCategory, Category.class));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<CategoryDto>(modelMapper.map(savedCategory, CategoryDto.class), resHeaders, HttpStatus.CREATED);
+        Category savedCategory = categoryService.createCategory(modelMapper.map(newCategory, Category.class));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .headers(resHeaders)
+                .body(modelMapper.map(savedCategory, CategoryDto.class));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto updatedCategoryValues) {
         HttpHeaders resHeaders = new HttpHeaders();
-        try {
-            Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));
-            return new ResponseEntity<CategoryDto>(modelMapper.map(savedUpdatedCategory, CategoryDto.class), resHeaders, HttpStatus.OK);
-        } catch(EntityNotFoundException e) {
-            return new ResponseEntity<>(resHeaders, HttpStatus.NOT_FOUND);
-        }
+        Category savedUpdatedCategory = categoryService.updateCategory(id, modelMapper.map(updatedCategoryValues, Category.class));
+        return ResponseEntity
+                .ok()
+                .headers(resHeaders)
+                .body(modelMapper.map(savedUpdatedCategory, CategoryDto.class));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long id) {
-        return categoryService.getCategory(id)
-                .map(category -> {
-                    categoryService.deleteCategory(id);
-                    return new ResponseEntity<CategoryDto>(modelMapper.map(category, CategoryDto.class), HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+        HttpHeaders resHeaders = new HttpHeaders();
+        categoryService.deleteCategory(id);
+        return ResponseEntity
+                .ok()
+                .headers(resHeaders)
+                .build();
     }
 }
