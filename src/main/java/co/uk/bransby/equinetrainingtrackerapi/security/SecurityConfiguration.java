@@ -6,7 +6,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,13 +28,15 @@ public class SecurityConfiguration {
                 .cors()
                 .and().csrf().disable()
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                // configure an oauth2 resource server
                 .oauth2ResourceServer()
+                // configure oauth2 resource server to handle JWTs
                 .jwt()
                 .and()
                 // handles 401 exceptions thrown by Spring
-                .authenticationEntryPoint(new AppAuthenticationEntryPoint());
+                .authenticationEntryPoint(new AppAuthenticationEntryPoint())
                 // handles 403 exceptions thrown by Spring
-//                .accessDeniedHandler();
+                .accessDeniedHandler(new AccessDeniedHandlerImpl());
         return httpSecurity.build();
     }
 
