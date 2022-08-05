@@ -5,28 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
     ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
             .registerModule(new JavaTimeModule());
 
     @Override
-    public void commence(
-            HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException
-    ) throws IOException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
         RestApiError errorResponseBody = new RestApiError(
-               request.getRequestURL(),
-                HttpStatus.UNAUTHORIZED,
-                authenticationException.getMessage());
+                request.getRequestURL(),
+                HttpStatus.FORBIDDEN,
+                accessDeniedException.getMessage());
 
         response.addHeader("WWW-Authenticate", ""); // TODO - add www-Authenticate error values
         response.setStatus(401);
@@ -34,5 +33,4 @@ public class AppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
         response.getWriter().write(objectMapper.writeValueAsString(errorResponseBody));
 
     }
-
 }
