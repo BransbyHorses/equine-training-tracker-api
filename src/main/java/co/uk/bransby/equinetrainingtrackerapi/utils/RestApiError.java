@@ -17,7 +17,7 @@ public class RestApiError {
     private final LocalDateTime timestamp;
     private String errorMessage;
 
-    RestApiError(StringBuffer requestUrl, HttpStatus status, String errorMessage) {
+    public RestApiError(StringBuffer requestUrl, HttpStatus status, String errorMessage) {
         this.requestUrl = requestUrl;
         this.status = status;
         this.timestamp = LocalDateTime.now();

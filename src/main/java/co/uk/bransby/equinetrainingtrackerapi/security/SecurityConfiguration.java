@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,18 +28,22 @@ public class SecurityConfiguration {
         httpSecurity
                 .cors()
                 .and().csrf().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer().jwt();
-
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .oauth2ResourceServer()
+                .jwt()
+                .and()
+                // handles 401 exceptions thrown by Spring
+                .authenticationEntryPoint(new AppAuthenticationEntryPoint());
+                // handles 403 exceptions thrown by Spring
+//                .accessDeniedHandler();
         return httpSecurity.build();
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(
-                "https://cognito-idp.eu-west-2.amazonaws.com/" + env.getProperty("COGNITO_USER_POOL") + "/.well-known/jwks.json"
-        ).build();
+        return NimbusJwtDecoder
+                .withJwkSetUri("https://cognito-idp.eu-west-2.amazonaws.com/" + env.getProperty("COGNITO_USER_POOL") + "/.well-known/jwks.json")
+                .build();
     }
 
     @Bean

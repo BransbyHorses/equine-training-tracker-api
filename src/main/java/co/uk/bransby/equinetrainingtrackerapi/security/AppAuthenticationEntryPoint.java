@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -13,9 +12,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
@@ -32,8 +28,7 @@ public class AppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
         RestApiError errorResponseBody = new RestApiError(
                request.getRequestURL(),
                 HttpStatus.UNAUTHORIZED,
-                authenticationException.getMessage()
-        );
+                authenticationException.getMessage());
 
         response.addHeader("WWW-Authenticate", ""); // TODO - add www-Authenticate error values
         response.setStatus(401);
