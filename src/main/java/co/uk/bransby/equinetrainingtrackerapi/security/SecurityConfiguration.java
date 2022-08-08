@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,10 +17,10 @@ import java.util.List;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfiguration {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -33,24 +33,24 @@ public class SecurityConfiguration {
                 // configure oauth2 resource server to handle JWTs
                 .jwt()
                 .and()
-                // handles 401 exceptions thrown by Spring
+                // handles 401 unauthenticated exceptions
                 .authenticationEntryPoint(new AppAuthenticationEntryPoint())
-                // handles 403 exceptions thrown by Spring
-                .accessDeniedHandler(new AccessDeniedHandlerImpl());
+                // handles 403 unauthorised exceptions
+                .accessDeniedHandler(new AppAccessDeniedHandler());
         return httpSecurity.build();
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder
-                .withJwkSetUri("https://cognito-idp.eu-west-2.amazonaws.com/" + env.getProperty("COGNITO_USER_POOL") + "/.well-known/jwks.json")
+                .withJwkSetUri(env.getProperty("COGNITO_ENDPOINT") + "/" + env.getProperty("COGNITO_USER_POOL") + "/.well-known/jwks.json")
                 .build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
