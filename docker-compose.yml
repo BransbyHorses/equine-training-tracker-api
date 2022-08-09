@@ -14,9 +14,8 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data/
 
-  rest-api:
-    build:
-      context: ./
+  api:
+    build: .
     container_name: rest-api
     restart: always
     environment:
@@ -25,7 +24,7 @@ services:
       - DB_NAME=equine-training-tracker-db
       - DATASOURCE=jdbc:postgresql://rest-api-db:5432/
     env_file:
-      - .env
+      - ./.env
     ports:
       - "8080:8080"
     depends_on:
