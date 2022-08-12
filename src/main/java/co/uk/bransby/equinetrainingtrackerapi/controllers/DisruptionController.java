@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/data/disruptions")
 public class DisruptionController {
