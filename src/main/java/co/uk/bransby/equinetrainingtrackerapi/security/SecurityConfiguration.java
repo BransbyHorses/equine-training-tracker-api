@@ -16,6 +16,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors()
+                .and()
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 // configure an oauth2 resource server
                 .oauth2ResourceServer()
