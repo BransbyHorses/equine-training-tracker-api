@@ -14,6 +14,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableOpenApi
 public class EquineTrainingTrackerApiApplication {
 
+
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
