@@ -20,13 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SecurityConfiguration {
 
-    private final Environment env;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors()
-                .and().csrf().disable()
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 // configure an oauth2 resource server
                 .oauth2ResourceServer()
@@ -38,23 +34,6 @@ public class SecurityConfiguration {
                 // handles 403 unauthorised exceptions
                 .accessDeniedHandler(new AppAccessDeniedHandler());
         return httpSecurity.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder
-                .withJwkSetUri(env.getProperty("COGNITO_ENDPOINT") + "/" + env.getProperty("COGNITO_USER_POOL") + "/.well-known/jwks.json")
-                .build();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
 }
