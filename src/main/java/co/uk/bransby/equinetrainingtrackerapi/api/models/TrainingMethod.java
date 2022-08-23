@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-@Table(name = "methods")
-public class Method {
+@Table(name = "training_methods")
+public class TrainingMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
