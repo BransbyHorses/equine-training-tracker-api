@@ -21,7 +21,7 @@ public class TrainingMethodService {
 
     public TrainingMethod listMethod(Long id) {
         return trainingMethodRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No method found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No training method found with id: " + id));
     }
 
     public TrainingMethod createMethod(TrainingMethod newMethod) {
@@ -30,7 +30,7 @@ public class TrainingMethodService {
 
     public TrainingMethod updateMethod(Long id, TrainingMethod updatedMethod) {
         TrainingMethod method = trainingMethodRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No method found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No training method found with id: " + id));
         BeanUtils.copyProperties(updatedMethod, method, "id");
         return trainingMethodRepository.saveAndFlush(method);
     }
@@ -39,7 +39,7 @@ public class TrainingMethodService {
         if(trainingMethodRepository.existsById(id)) {
             trainingMethodRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("No method found with id: " + id);
+            throw new EntityNotFoundException("No training method found with id: " + id);
         }
     }
 
