@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/data/methods")
+@RequestMapping("/data/training-methods")
 public class TrainingMethodController {
 
     private final TrainingMethodService methodService;
@@ -42,7 +42,7 @@ public class TrainingMethodController {
     public ResponseEntity<TrainingMethodDto> createMethod(@RequestBody TrainingMethod method) {
         TrainingMethod createdMethod = methodService.createMethod(method);
         return ResponseEntity
-                .created(URI.create("/data/methods/" + createdMethod.getId()))
+                .created(URI.create("/data/training-methods/" + createdMethod.getId()))
                 .body(modelMapper.map(createdMethod, TrainingMethodDto.class));
     }
 
