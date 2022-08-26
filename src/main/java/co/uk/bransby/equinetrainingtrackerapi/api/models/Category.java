@@ -42,3 +42,4 @@ public class Category {
         this.equines.remove(equine);
     }
 }
+
