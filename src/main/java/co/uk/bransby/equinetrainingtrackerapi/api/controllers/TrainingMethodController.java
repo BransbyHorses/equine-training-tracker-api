@@ -39,16 +39,16 @@ public class TrainingMethodController {
     }
 
     @PostMapping
-    public ResponseEntity<TrainingMethodDto> createMethod(@RequestBody TrainingMethod method) {
-        TrainingMethod createdMethod = methodService.createMethod(method);
+    public ResponseEntity<TrainingMethodDto> createMethod(@RequestBody TrainingMethodDto method) {
+        TrainingMethod createdMethod = methodService.createMethod(modelMapper.map(method, TrainingMethod.class));
         return ResponseEntity
                 .created(URI.create("/data/training-methods/" + createdMethod.getId()))
                 .body(modelMapper.map(createdMethod, TrainingMethodDto.class));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<TrainingMethodDto> updateMethod(@PathVariable Long id, @RequestBody TrainingMethod updatedMethodValues) {
-        TrainingMethod updatedMethod = methodService.updateMethod(id, updatedMethodValues);
+    public ResponseEntity<TrainingMethodDto> updateMethod(@PathVariable Long id, @RequestBody TrainingMethodDto updatedMethodValues) {
+        TrainingMethod updatedMethod = methodService.updateMethod(id, modelMapper.map(updatedMethodValues, TrainingMethod.class));
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(updatedMethod, TrainingMethodDto.class));
