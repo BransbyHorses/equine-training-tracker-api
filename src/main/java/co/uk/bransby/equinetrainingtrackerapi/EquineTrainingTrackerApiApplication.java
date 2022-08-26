@@ -14,7 +14,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableOpenApi
 public class EquineTrainingTrackerApiApplication {
 
-//	This Bean enables Swagger UI. See - https://stackoverflow.com/questions/72301571/swagger-error-springboot-could-not-resolve-view-with-name-forward-swagger-ui-i
+
 	@Bean
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
