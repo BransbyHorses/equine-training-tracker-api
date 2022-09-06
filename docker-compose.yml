@@ -15,8 +15,7 @@ services:
       - database-data:/var/lib/postgresql/data/
 
   rest-api:
-    build:
-      context: ./
+    build: .
     container_name: rest-api
     restart: always
     environment:
