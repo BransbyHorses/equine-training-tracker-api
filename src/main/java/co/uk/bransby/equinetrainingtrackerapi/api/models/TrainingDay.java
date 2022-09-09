@@ -1,10 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +22,9 @@ public class TrainingDay {
     @ManyToOne
     @JoinColumn(name = "training_programme_id")
     private TrainingProgramme trainingProgramme;
+
+    @OneToMany(mappedBy = "trainingDay")
+    private List<TrainingDaySkillRecord> trainingDaySkillRecord;
 
     private LocalDateTime date;
 }
