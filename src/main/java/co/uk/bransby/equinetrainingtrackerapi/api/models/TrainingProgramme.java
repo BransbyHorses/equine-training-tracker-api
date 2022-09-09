@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -34,6 +35,10 @@ public class TrainingProgramme {
     )
     @ToString.Exclude
     private List<Skill> skills;
+
+    private Date startDate;
+
+    private Date endDate;
 
     @Override
     public boolean equals(Object o) {
