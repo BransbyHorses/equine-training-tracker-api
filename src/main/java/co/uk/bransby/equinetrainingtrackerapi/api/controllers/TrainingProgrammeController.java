@@ -85,6 +85,18 @@ public class TrainingProgrammeController {
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
     }
 
+    @DeleteMapping("{trainingProgrammeId}/skills/{skillId}")
+    public ResponseEntity<TrainingProgrammeDto> removeSkillFromTrainingProgramme(
+            @PathVariable Long trainingProgrammeId,
+            @PathVariable Long skillId
+    ) {
+        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillFromTrainingProgramme(
+                trainingProgrammeId, skillId
+        );
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
+    }
 }
 
 

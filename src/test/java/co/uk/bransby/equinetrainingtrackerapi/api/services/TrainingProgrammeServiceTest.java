@@ -73,4 +73,24 @@ class TrainingProgrammeServiceTest {
         assertEquals(updatedTrainingProgramme.getName(), trainingProgrammes.get(0).getName());
     }
 
+    @Test
+    void canAssignTrainingProgrammeToEquine() {
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new Date(), new Date());
+        Equine equine = new Equine(1L, "Equine", new Yard(), new Category(), List.of());
+        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.assignTrainingProgrammeToEquine(1L, 1L);
+        assertEquals(updatedTrainingProgramme.getEquine(), equine);
+    }
+
+    @Test
+    void canAddSkillToTrainingProgramme() {
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), new ArrayList<>(), new Date(), new Date());
+        Skill skill = new Skill(1L, "Skill", new ArrayList<>());
+        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
+        given(skillRepository.findById(1L)).willReturn(Optional.of(skill));
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(1L, 1L);
+        assertEquals(updatedTrainingProgramme.getSkills(), new ArrayList<>(List.of(skill)));
+    }
+
 }

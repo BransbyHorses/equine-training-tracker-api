@@ -90,4 +90,5 @@ class TrainingProgrammeControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/programmes/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
 }

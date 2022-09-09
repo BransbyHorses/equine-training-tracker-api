@@ -57,7 +57,8 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
 
         trainingProgramme.setEquine(equine);
-        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        return trainingProgramme;
     }
 
     public TrainingProgramme addSkillToTrainingProgramme(Long trainingProgrammeId, Long skillId) {
@@ -66,10 +67,17 @@ public class TrainingProgrammeService {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
         trainingProgramme.getSkills().add(skill);
-        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        return trainingProgramme;
     }
 
     public TrainingProgramme removeSkillFromTrainingProgramme(Long trainingProgrammeId, Long skillId) {
-        return null;
+        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
+
+        trainingProgramme.getSkills().remove(skill);
+        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
     }
 }
