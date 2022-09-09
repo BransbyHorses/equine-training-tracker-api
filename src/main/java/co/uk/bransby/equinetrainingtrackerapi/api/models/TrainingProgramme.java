@@ -1,5 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -7,7 +8,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +25,7 @@ public class TrainingProgramme {
 
     @ManyToOne
     @JoinColumn(name = "equine_id")
+    @JsonIgnoreProperties({"trainingProgrammes"})
     private Equine equine;
 
     @ManyToMany
@@ -33,7 +34,6 @@ public class TrainingProgramme {
             joinColumns = {@JoinColumn(name = "training_programme_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
-
     @ToString.Exclude
     private List<Skill> skills;
 

@@ -61,6 +61,29 @@ public class TrainingProgrammeController {
         return ResponseEntity.ok().headers(resHeaders).build();
     }
 
+    @PatchMapping("{trainingProgrammeId}/equines/{equineId}")
+    public ResponseEntity<TrainingProgrammeDto> assignTrainingProgrammeToEquine(
+            @PathVariable Long trainingProgrammeId,
+            @PathVariable Long equineId
+    ) {
+        TrainingProgramme trainingProgramme = trainingProgrammeService.assignTrainingProgrammeToEquine(trainingProgrammeId,  equineId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
+    }
+
+    @PatchMapping("{trainingProgrammeId}/skills/{skillId}")
+    public ResponseEntity<TrainingProgrammeDto> addSkillToTrainingProgramme(
+            @PathVariable Long trainingProgrammeId,
+            @PathVariable Long skillId
+    ) {
+        TrainingProgramme trainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(
+                trainingProgrammeId, skillId
+        );
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
+    }
 
 }
 
