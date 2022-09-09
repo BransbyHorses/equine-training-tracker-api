@@ -98,4 +98,14 @@ class TrainingProgrammeServiceTest {
         assertEquals(updatedTrainingProgramme.getSkills(), new ArrayList<>(List.of(skill)));
     }
 
+    @Test
+    void canAddTrainingDayToTrainingProgramme() {
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
+        given(trainingProgrammeRepository.findById(1L))
+                .willReturn(Optional.of(trainingProgramme));
+
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.addTrainingDayToTrainingProgramme(1L);
+        assertEquals(1, updatedTrainingProgramme.getTrainingDayRecord().size());
+    }
+
 }

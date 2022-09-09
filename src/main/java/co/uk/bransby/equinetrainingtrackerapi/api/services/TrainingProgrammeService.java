@@ -93,6 +93,8 @@ public class TrainingProgrammeService {
         trainingDay.setDate(LocalDateTime.now());
         trainingDay.setTrainingProgramme(trainingProgramme);
         trainingDayRepository.saveAndFlush(trainingDay);
+        trainingProgramme.getTrainingDayRecord().add(trainingDay);
+        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
         return trainingProgramme;
     }
 }
