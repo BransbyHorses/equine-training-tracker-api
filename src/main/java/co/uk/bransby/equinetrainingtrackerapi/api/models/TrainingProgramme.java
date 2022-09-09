@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,6 +25,15 @@ public class TrainingProgramme {
     @ManyToOne
     @JoinColumn(name = "equine_id")
     private Equine equine;
+
+    @ManyToMany
+    @JoinTable(
+            name = "training_programme_skill",
+            joinColumns = {@JoinColumn(name = "training_programme_id")},
+            inverseJoinColumns = {@JoinColumn(name = "skill_id")}
+    )
+    @ToString.Exclude
+    private List<Skill> skills;
 
     @Override
     public boolean equals(Object o) {
