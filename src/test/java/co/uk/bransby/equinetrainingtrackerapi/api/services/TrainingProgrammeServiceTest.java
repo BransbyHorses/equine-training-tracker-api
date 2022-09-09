@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingDayRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +29,8 @@ class TrainingProgrammeServiceTest {
     EquineRepository equineRepository;
     @Mock
     SkillRepository skillRepository;
+    @Mock
+    TrainingDayRepository trainingDayRepository;
     @InjectMocks
     TrainingProgrammeService trainingProgrammeService;
 
@@ -33,13 +38,13 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, equineRepository, skillRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, trainingDayRepository, equineRepository, skillRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
-                new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new Date(), new Date()),
-                new TrainingProgramme(2L, "Programme 2", new Equine(), List.of(new Skill()), new Date(), new Date()),
-                new TrainingProgramme(3L, "Programme 3", new Equine(), List.of(new Skill()), new Date(), new Date()),
-                new TrainingProgramme(4L, "Programme 3", new Equine(), List.of(new Skill()), new Date(), new Date()),
-                new TrainingProgramme(5L, "Programme 3", new Equine(), List.of(new Skill()), new Date(), new Date())
+                new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(2L, "Programme 2", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(3L, "Programme 3", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(4L, "Programme 4", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(5L, "Programme 5", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now())
         ));
     }
 
@@ -67,7 +72,7 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canUpdateProgramme() {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Programme 1 Updated", new Equine(), List.of(new Skill()), new Date(), new Date());
+        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Programme 1 Updated", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
         TrainingProgramme trainingProgramme = trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme);
         assertEquals(updatedTrainingProgramme.getName(), trainingProgrammes.get(0).getName());
@@ -75,7 +80,7 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canAssignTrainingProgrammeToEquine() {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new Date(), new Date());
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         Equine equine = new Equine(1L, "Equine", new Yard(), new Category(), List.of());
         given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
         given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
@@ -85,7 +90,7 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canAddSkillToTrainingProgramme() {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), new ArrayList<>(), new Date(), new Date());
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         Skill skill = new Skill(1L, "Skill", new ArrayList<>());
         given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
         given(skillRepository.findById(1L)).willReturn(Optional.of(skill));

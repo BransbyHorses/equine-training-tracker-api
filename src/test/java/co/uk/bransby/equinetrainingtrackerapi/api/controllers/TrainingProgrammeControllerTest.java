@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,11 +37,11 @@ class TrainingProgrammeControllerTest {
     @BeforeEach
     void setUp() {
         this.trainingProgrammes = new ArrayList<>();
-        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new Equine(), List.of(new Skill()), new Date(), new Date()));
-        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new Equine(), List.of(new Skill()), new Date(), new Date()));
-        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new Equine(), List.of(new Skill()), new Date(), new Date()));
-        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new Equine(), List.of(new Skill()), new Date(), new Date()));
-        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new Equine(), List.of(new Skill()), new Date(), new Date()));
+        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
     }
 
     @Test
@@ -62,7 +63,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canCreateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new Equine(), List.of(new Skill()), new Date(), new Date());
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeService.createProgramme(newTrainingProgramme)).willReturn(newTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/programmes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +75,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canUpdateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new Equine(), List.of(new Skill()), new Date(), new Date());
+        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme)).willReturn(updatedTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/programmes/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)

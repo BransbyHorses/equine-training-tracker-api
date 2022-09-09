@@ -3,15 +3,19 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingDay;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingDayRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,6 +23,7 @@ import java.util.List;
 public class TrainingProgrammeService {
 
     private final TrainingProgrammeRepository trainingProgrammeRepository;
+    private final TrainingDayRepository trainingDayRepository;
     private final EquineRepository equineRepository;
     private final SkillRepository skillRepository;
 
@@ -79,5 +84,15 @@ public class TrainingProgrammeService {
 
         trainingProgramme.getSkills().remove(skill);
         return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+    }
+
+    public TrainingProgramme addTrainingDayToTrainingProgramme(Long trainingProgrammeId) {
+        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
+        TrainingDay trainingDay = new TrainingDay();
+        trainingDay.setDate(LocalDateTime.now());
+        trainingDay.setTrainingProgramme(trainingProgramme);
+        trainingDayRepository.saveAndFlush(trainingDay);
+        return trainingProgramme;
     }
 }

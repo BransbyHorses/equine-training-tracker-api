@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,6 @@ public class TrainingProgramme {
 
     @ManyToOne
     @JoinColumn(name = "equine_id")
-    @JsonIgnoreProperties({"trainingProgrammes"})
     private Equine equine;
 
     @ManyToMany
@@ -37,9 +37,12 @@ public class TrainingProgramme {
     @ToString.Exclude
     private List<Skill> skills;
 
-    private Date startDate;
+    @OneToMany(mappedBy = "trainingProgramme")
+    private List<TrainingDay> trainingDayRecord;
 
-    private Date endDate;
+    private LocalDateTime startDate;
+
+    private LocalDateTime endDate;
 
     @Override
     public boolean equals(Object o) {

@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
@@ -13,8 +12,8 @@ public class TrainingProgrammeDto {
     private String name;
     @JsonIgnoreProperties({"trainingProgrammes"})
     private EquineDto equine;
-    @JsonIgnoreProperties({"trainingProgrammes"})
-    private List<Skill> skills;
+    private List<SkillDto> skills;
+    private List<TrainingDayDto> trainingDayRecord;
     private Date startDate;
     private Date endDate;
 }

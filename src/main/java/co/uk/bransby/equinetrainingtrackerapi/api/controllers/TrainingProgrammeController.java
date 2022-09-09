@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingDay;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingDayService;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingProgrammeService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -93,6 +96,14 @@ public class TrainingProgrammeController {
         TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillFromTrainingProgramme(
                 trainingProgrammeId, skillId
         );
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
+    }
+
+    @PostMapping("{trainingProgrammeId}/training-days")
+    public ResponseEntity<TrainingProgrammeDto> addTrainingDayToTrainingProgramme(@PathVariable Long trainingProgrammeId) {
+        TrainingProgramme trainingProgramme = trainingProgrammeService.addTrainingDayToTrainingProgramme(trainingProgrammeId);
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
