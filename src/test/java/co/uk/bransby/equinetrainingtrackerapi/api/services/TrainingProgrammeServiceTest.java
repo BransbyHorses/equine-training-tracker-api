@@ -17,20 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class ProgrammeServiceTest {
+class TrainingProgrammeServiceTest {
 
     @Mock
     ProgrammeRepository programmeRepository;
     @Mock
     EquineRepository equineRepository;
     @InjectMocks
-    ProgrammeService programmeService;
+    TrainingProgrammeService trainingProgrammeService;
 
     List<TrainingProgramme> trainingProgrammes;
 
     @BeforeEach
     void setUp() {
-        this.programmeService = new ProgrammeService(programmeRepository, equineRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(programmeRepository, equineRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
                 new TrainingProgramme(1L, "Programme 1", new HashSet<>()),
                 new TrainingProgramme(2L, "Programme 2", new HashSet<>()),
@@ -43,14 +43,14 @@ class ProgrammeServiceTest {
     @Test
     void canGetAllProgrammes() {
         given(programmeRepository.findAll()).willReturn(trainingProgrammes);
-        List<TrainingProgramme> returnedTrainingProgrammes = programmeService.getAllProgrammes();
+        List<TrainingProgramme> returnedTrainingProgrammes = trainingProgrammeService.getAllProgrammes();
         assertEquals(trainingProgrammes, returnedTrainingProgrammes);
     }
 
     @Test
     void canGetProgrammeById() {
         given(programmeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
-        TrainingProgramme trainingProgramme = programmeService.getProgramme(1L);
+        TrainingProgramme trainingProgramme = trainingProgrammeService.getProgramme(1L);
         assertNotNull(trainingProgramme);
         assertEquals(trainingProgrammes.get(0).getName(), trainingProgramme.getName());
     }
@@ -58,7 +58,7 @@ class ProgrammeServiceTest {
     @Test
     void canCreateProgramme() {
         given(programmeRepository.saveAndFlush(trainingProgrammes.get(0))).willReturn(trainingProgrammes.get(0));
-        TrainingProgramme trainingProgramme = programmeService.createProgramme(trainingProgrammes.get(0));
+        TrainingProgramme trainingProgramme = trainingProgrammeService.createProgramme(trainingProgrammes.get(0));
         assertEquals(trainingProgramme, trainingProgrammes.get(0));
     }
 
@@ -66,7 +66,7 @@ class ProgrammeServiceTest {
     void canUpdateProgramme() {
         TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Programme 1 Updated", new HashSet<>());
         given(programmeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
-        TrainingProgramme trainingProgramme = programmeService.updateProgramme(1L, updatedTrainingProgramme);
+        TrainingProgramme trainingProgramme = trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme);
         assertEquals(updatedTrainingProgramme.getName(), trainingProgrammes.get(0).getName());
     }
 
@@ -75,7 +75,7 @@ class ProgrammeServiceTest {
         Equine equine = new Equine(1L, "Test Horse", new Yard(), new Category(), trainingProgrammes.get(0), new HashSet<Skill>());
         trainingProgrammes.get(0).setEquines(new HashSet<>(Set.of(equine)));
         given(programmeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
-        programmeService.deleteProgramme(1L);
+        trainingProgrammeService.deleteProgramme(1L);
         assertNull(equine.getTrainingProgramme());
         Mockito.verify(programmeRepository).deleteById(1L);
     }

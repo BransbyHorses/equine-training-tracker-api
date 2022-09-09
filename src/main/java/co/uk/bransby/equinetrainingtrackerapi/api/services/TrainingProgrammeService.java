@@ -14,7 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class ProgrammeService {
+public class TrainingProgrammeService {
 
     private final ProgrammeRepository programmeRepository;
     private final EquineRepository equineRepository;

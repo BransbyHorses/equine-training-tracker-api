@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.ProgrammeService;
+import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingProgrammeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,14 +19,14 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 
-@WebMvcTest(controllers = ProgrammeController.class)
-class ProgrammeControllerTest {
+@WebMvcTest(controllers = TrainingProgrammeController.class)
+class TrainingProgrammeControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    ProgrammeService programmeService;
+    TrainingProgrammeService trainingProgrammeService;
 
     private List<TrainingProgramme> trainingProgrammes;
 
@@ -42,7 +42,7 @@ class ProgrammeControllerTest {
 
     @Test
     void canFindAllProgrammesAndReturnOkResponse() throws Exception {
-        given(programmeService.getAllProgrammes()).willReturn(trainingProgrammes);
+        given(trainingProgrammeService.getAllProgrammes()).willReturn(trainingProgrammes);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/programmes"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(trainingProgrammes.size()));
@@ -50,7 +50,7 @@ class ProgrammeControllerTest {
 
     @Test
     void canFindProgrammeAndReturnOkResponse() throws Exception {
-        given(programmeService.getProgramme(1L)).willReturn(trainingProgrammes.get(0));
+        given(trainingProgrammeService.getProgramme(1L)).willReturn(trainingProgrammes.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/data/programmes/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(trainingProgrammes.get(0).getId()))
@@ -60,7 +60,7 @@ class ProgrammeControllerTest {
     @Test
     void canCreateProgrammeAndReturnOkResponse() throws Exception {
         TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new HashSet<>());
-        given(programmeService.createProgramme(newTrainingProgramme)).willReturn(newTrainingProgramme);
+        given(trainingProgrammeService.createProgramme(newTrainingProgramme)).willReturn(newTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/programmes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(newTrainingProgramme)))
@@ -72,7 +72,7 @@ class ProgrammeControllerTest {
     @Test
     void canUpdateProgrammeAndReturnOkResponse() throws Exception {
         TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new HashSet<>());
-        given(programmeService.updateProgramme(1L, updatedTrainingProgramme)).willReturn(updatedTrainingProgramme);
+        given(trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme)).willReturn(updatedTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/programmes/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updatedTrainingProgramme)))
@@ -83,7 +83,7 @@ class ProgrammeControllerTest {
 
     @Test
     void canDeleteProgramme() throws Exception {
-        given(programmeService.getProgramme(1L)).willReturn(trainingProgrammes.get(0));
+        given(trainingProgrammeService.getProgramme(1L)).willReturn(trainingProgrammes.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/programmes/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

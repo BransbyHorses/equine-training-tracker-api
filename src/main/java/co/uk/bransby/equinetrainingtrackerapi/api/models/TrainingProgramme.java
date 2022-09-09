@@ -33,6 +33,7 @@ public class TrainingProgramme {
             joinColumns = {@JoinColumn(name = "training_programme_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
+
     @ToString.Exclude
     private List<Skill> skills;
 
