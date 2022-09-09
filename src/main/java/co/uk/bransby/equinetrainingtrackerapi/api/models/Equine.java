@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,18 +30,8 @@ public class Equine {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "programme_id", referencedColumnName = "id")
-    private TrainingProgramme trainingProgramme;
-
-    @ManyToMany
-    @JoinTable(
-            name = "equines_skills",
-            joinColumns = @JoinColumn(name = "equine_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Set<Skill> skills;
+    @OneToMany(mappedBy = "equine")
+    private List<TrainingProgramme> trainingProgrammes;
 
     @Override
     public boolean equals(Object o) {

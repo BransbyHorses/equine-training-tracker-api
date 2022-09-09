@@ -18,11 +18,12 @@ public class TrainingProgramme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    @OneToMany(mappedBy = "id")
 
-    @ToString.Exclude
-    private Set<Equine> equines;
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "equine_id")
+    private Equine equine;
 
     @Override
     public boolean equals(Object o) {
@@ -35,9 +36,5 @@ public class TrainingProgramme {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public void removeEquine(Equine equine) {
-        this.equines.remove(equine);
     }
 }
