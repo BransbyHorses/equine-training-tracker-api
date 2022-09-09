@@ -31,7 +31,7 @@ public class Equine {
 
     @ManyToOne
     @JoinColumn(name = "programme_id", referencedColumnName = "id")
-    private Programme programme;
+    private TrainingProgramme trainingProgramme;
 
     @ManyToMany
     @JoinTable(

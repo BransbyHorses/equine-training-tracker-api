@@ -46,7 +46,7 @@ public class EquineService {
                         .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
         // remove relationships before deleting
         equine.setCategory(null);
-        equine.setProgramme(null);
+        equine.setTrainingProgramme(null);
         equine.setYard(null);
         equine.setSkills(new HashSet<>());
         equineRepository.saveAndFlush(equine);
@@ -56,10 +56,10 @@ public class EquineService {
     public Equine assignEquineToProgramme(Long equineId, Long programmeId) {
         Optional<Equine> equine = equineRepository.findById(equineId);
         if(equine.isPresent()) {
-            Programme programme = programmeRepository.findById(programmeId)
+            TrainingProgramme trainingProgramme = programmeRepository.findById(programmeId)
                     .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + programmeId));
             Equine updatedEquine = equine.get();
-            updatedEquine.setProgramme(programme);
+            updatedEquine.setTrainingProgramme(trainingProgramme);
             return equineRepository.saveAndFlush(updatedEquine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);

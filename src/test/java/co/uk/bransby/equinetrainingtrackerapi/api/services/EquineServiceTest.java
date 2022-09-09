@@ -38,7 +38,7 @@ class EquineServiceTest {
     @BeforeEach
     void setUp() {
         equineServiceUnderTest = new EquineService(equineRepository, programmeRepository, yardRepository, categoryRepository, skillRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
+        equineInstance = new Equine(1L, "First Horse", new Yard(), new Category(), new TrainingProgramme(), new HashSet<Skill>());
     }
 
     @Test
@@ -74,7 +74,7 @@ class EquineServiceTest {
         given(equineRepository.saveAndFlush(equineInstance)).willReturn(equineInstance);
         equineServiceUnderTest.deleteEquine(1L);
         Assertions.assertNull(equineInstance.getCategory());
-        Assertions.assertNull(equineInstance.getProgramme());
+        Assertions.assertNull(equineInstance.getTrainingProgramme());
         Assertions.assertNull(equineInstance.getYard());
         Assertions.assertEquals(new HashSet<>(), equineInstance.getSkills());
     }
@@ -87,7 +87,7 @@ class EquineServiceTest {
     @Test
     void willAssignEquineToProgramme() {
         given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(programmeRepository.findById(1L)).willReturn(Optional.of(equineInstance.getProgramme()));
+        given(programmeRepository.findById(1L)).willReturn(Optional.of(equineInstance.getTrainingProgramme()));
         equineServiceUnderTest.assignEquineToProgramme(1L, 1L);
         Mockito.verify(equineRepository).saveAndFlush(equineInstance);
     }

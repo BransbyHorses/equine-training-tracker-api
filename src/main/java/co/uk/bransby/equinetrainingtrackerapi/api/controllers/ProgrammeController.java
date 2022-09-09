@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Programme;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.ProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.ProgrammeService;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class ProgrammeController {
     @GetMapping("{id}")
     public ResponseEntity<ProgrammeDto> findProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
-        Programme programme = programmeService.getProgramme(id);
-        return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(programme, ProgrammeDto.class));
+        TrainingProgramme trainingProgramme = programmeService.getProgramme(id);
+        return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(trainingProgramme, ProgrammeDto.class));
 
     }
 
@@ -39,19 +39,19 @@ public class ProgrammeController {
 
     @PostMapping
     public ResponseEntity<ProgrammeDto> createProgramme(@RequestBody ProgrammeDto newProgramme) {
-        Programme savedNewProgramme = programmeService.createProgramme(modelMapper.map(newProgramme, Programme.class));
+        TrainingProgramme savedNewTrainingProgramme = programmeService.createProgramme(modelMapper.map(newProgramme, TrainingProgramme.class));
         HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<>(modelMapper.map(savedNewProgramme, ProgrammeDto.class), resHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(modelMapper.map(savedNewTrainingProgramme, ProgrammeDto.class), resHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateProgramme(@PathVariable Long id, @RequestBody ProgrammeDto updatedProgrammeValues) {
         HttpHeaders resHeaders = new HttpHeaders();
-        Programme updatedProgramme = programmeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, Programme.class));
+        TrainingProgramme updatedTrainingProgramme = programmeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, TrainingProgramme.class));
             return ResponseEntity
                     .ok()
                     .headers(resHeaders)
-                    .body(modelMapper.map(updatedProgramme, ProgrammeDto.class));
+                    .body(modelMapper.map(updatedTrainingProgramme, ProgrammeDto.class));
     }
 
     @DeleteMapping ("{id}")

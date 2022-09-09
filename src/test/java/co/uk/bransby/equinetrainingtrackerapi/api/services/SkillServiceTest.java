@@ -87,7 +87,7 @@ class SkillServiceTest {
     @Test
     void canDeleteSkillById() {
         // given
-        Equine equine = new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>(List.of(skillTestInstance)));
+        Equine equine = new Equine(1L, "First Horse", new Yard(), new Category(), new TrainingProgramme(), new HashSet<Skill>(List.of(skillTestInstance)));
         Set<Equine> equines = new HashSet<>(List.of(equine));
         skillTestInstance.setEquines(equines);
         given(skillRepository.findById(1L)).willReturn(Optional.of(skillTestInstance));

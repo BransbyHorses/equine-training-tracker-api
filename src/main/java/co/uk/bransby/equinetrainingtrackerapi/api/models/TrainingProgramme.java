@@ -14,12 +14,13 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name = "programmes")
-public class Programme {
+public class TrainingProgramme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @OneToMany(mappedBy = "id")
+
     @ToString.Exclude
     private Set<Equine> equines;
 
@@ -27,8 +28,8 @@ public class Programme {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Programme programme = (Programme) o;
-        return id != null && Objects.equals(id, programme.id);
+        TrainingProgramme trainingProgramme = (TrainingProgramme) o;
+        return id != null && Objects.equals(id, trainingProgramme.id);
     }
 
     @Override

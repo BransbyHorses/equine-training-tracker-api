@@ -85,7 +85,7 @@ class CategoryServiceTest {
 
     @Test
     void canDeleteCategory() {
-        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new Programme(), new HashSet<Skill>());
+        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new TrainingProgramme(), new HashSet<Skill>());
         categoryInstance.setEquines(new HashSet<>(List.of(equine)));
         given(categoryRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
         categoryServiceUnderTest.deleteCategory(1L);
