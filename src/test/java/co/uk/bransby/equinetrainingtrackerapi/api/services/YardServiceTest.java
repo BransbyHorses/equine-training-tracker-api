@@ -68,7 +68,7 @@ class YardServiceTest {
 
     @Test
     void canDeleteYard() {
-        Equine equine = new Equine(1L, "First Horse", yardInstance, new Category(), new TrainingProgramme(), new HashSet<Skill>());
+        Equine equine = new Equine(1L, "First Horse", yardInstance, new Category(), List.of(new TrainingProgramme()));
         yardInstance.setEquines(new HashSet<>(List.of(equine)));
         // given
         given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));

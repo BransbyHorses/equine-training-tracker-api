@@ -1,5 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingProgrammeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -33,11 +36,11 @@ class TrainingProgrammeControllerTest {
     @BeforeEach
     void setUp() {
         this.trainingProgrammes = new ArrayList<>();
-        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new HashSet<>()));
-        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new HashSet<>()));
-        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new HashSet<>()));
-        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new HashSet<>()));
-        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new HashSet<>()));
+        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new Equine(), List.of(new Skill()), new Date(), new Date()));
+        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new Equine(), List.of(new Skill()), new Date(), new Date()));
+        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new Equine(), List.of(new Skill()), new Date(), new Date()));
+        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new Equine(), List.of(new Skill()), new Date(), new Date()));
+        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new Equine(), List.of(new Skill()), new Date(), new Date()));
     }
 
     @Test
@@ -59,7 +62,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canCreateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new HashSet<>());
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new Equine(), List.of(new Skill()), new Date(), new Date());
         given(trainingProgrammeService.createProgramme(newTrainingProgramme)).willReturn(newTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/programmes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +74,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canUpdateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new HashSet<>());
+        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new Equine(), List.of(new Skill()), new Date(), new Date());
         given(trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme)).willReturn(updatedTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/programmes/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
