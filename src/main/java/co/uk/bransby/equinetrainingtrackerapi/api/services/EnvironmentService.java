@@ -32,7 +32,8 @@ public class EnvironmentService {
         Environment environment = environmentRepository.findById(environmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No environment found with id: " + environmentId));
         BeanUtils.copyProperties(environmentValues, environment, "id");
-        return environmentRepository.saveAndFlush(environment);
+        environmentRepository.saveAndFlush(environment);
+        return environment;
     }
 
     public void deleteEnvironment(Long environmentId) {
