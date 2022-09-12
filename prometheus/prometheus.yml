@@ -9,9 +9,9 @@ scrape_configs:
   - job_name: 'Equine-Training-Tracker-Api'
     scrape_interval: 2s
     static_configs:
-      - targets: ['localhost:8080']
+      - targets: ['host.docker.internal:8080']
         labels:
           application: 'Equine Training Tracker'
-    metrics_path: "/data/yards"
+    metrics_path: "/actuator/prometheus"
 
 
