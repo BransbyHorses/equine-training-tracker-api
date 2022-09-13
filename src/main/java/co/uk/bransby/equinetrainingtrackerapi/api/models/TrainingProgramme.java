@@ -38,7 +38,8 @@ public class TrainingProgramme {
     private List<Skill> skills;
 
     @OneToMany(mappedBy = "trainingProgramme")
-    private List<TrainingDay> trainingDayRecord;
+    @ToString.Exclude
+    private List<SkillTrainingSession> skillTrainingSessions;
 
     private LocalDateTime startDate;
 

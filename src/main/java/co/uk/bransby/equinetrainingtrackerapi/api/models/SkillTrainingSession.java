@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.core.env.Environment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,17 +13,21 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-@Table(name = "training_day_skill_record")
-public class TrainingDaySkillRecord {
+@Table(name = "skill_training_session")
+public class SkillTrainingSession {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "training_day_id")
-    private TrainingDay trainingDay;
+    private LocalDateTime date;
 
+    @ManyToOne
+    @JoinColumn(name = "training_programme_id")
+    private TrainingProgramme trainingProgramme;
+
+    @ManyToOne
+    @JoinColumn(name = "skill_id")
     private Skill skill;
 
     @ManyToOne
@@ -32,7 +38,7 @@ public class TrainingDaySkillRecord {
 //    @JoinColumn(name = "environment_id")
 //    private TrainingEnvironment environment;
 
-    private Long timeInMinutes;
+    private Long trainingTime;
 
     private String notes;
 }

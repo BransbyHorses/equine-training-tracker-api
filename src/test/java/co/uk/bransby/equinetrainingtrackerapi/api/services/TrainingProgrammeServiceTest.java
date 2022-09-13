@@ -3,17 +3,14 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingDayRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,8 +26,6 @@ class TrainingProgrammeServiceTest {
     EquineRepository equineRepository;
     @Mock
     SkillRepository skillRepository;
-    @Mock
-    TrainingDayRepository trainingDayRepository;
     @InjectMocks
     TrainingProgrammeService trainingProgrammeService;
 
@@ -38,7 +33,7 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, trainingDayRepository, equineRepository, skillRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, equineRepository, skillRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
                 new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
                 new TrainingProgramme(2L, "Programme 2", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
@@ -96,16 +91,6 @@ class TrainingProgrammeServiceTest {
         given(skillRepository.findById(1L)).willReturn(Optional.of(skill));
         TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(1L, 1L);
         assertEquals(updatedTrainingProgramme.getSkills(), new ArrayList<>(List.of(skill)));
-    }
-
-    @Test
-    void canAddTrainingDayToTrainingProgramme() {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
-        given(trainingProgrammeRepository.findById(1L))
-                .willReturn(Optional.of(trainingProgramme));
-
-        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.addTrainingDayToTrainingProgramme(1L);
-        assertEquals(1, updatedTrainingProgramme.getTrainingDayRecord().size());
     }
 
 }

@@ -61,7 +61,7 @@ public class TrainingProgrammeController {
         return ResponseEntity.ok().headers(resHeaders).build();
     }
 
-    @PatchMapping("{trainingProgrammeId}/equines/{equineId}")
+    @PostMapping("{trainingProgrammeId}/equines/{equineId}")
     public ResponseEntity<TrainingProgrammeDto> assignTrainingProgrammeToEquine(
             @PathVariable Long trainingProgrammeId,
             @PathVariable Long equineId
@@ -72,14 +72,12 @@ public class TrainingProgrammeController {
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
     }
 
-    @PatchMapping("{trainingProgrammeId}/skills/{skillId}")
+    @PostMapping("{trainingProgrammeId}/skills/{skillId}")
     public ResponseEntity<TrainingProgrammeDto> addSkillToTrainingProgramme(
             @PathVariable Long trainingProgrammeId,
             @PathVariable Long skillId
     ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(
-                trainingProgrammeId, skillId
-        );
+        TrainingProgramme trainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(trainingProgrammeId, skillId);
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
@@ -90,21 +88,13 @@ public class TrainingProgrammeController {
             @PathVariable Long trainingProgrammeId,
             @PathVariable Long skillId
     ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillFromTrainingProgramme(
-                trainingProgrammeId, skillId
-        );
+        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillFromTrainingProgramme(trainingProgrammeId, skillId);
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
     }
 
-    @PostMapping("{trainingProgrammeId}/training-days")
-    public ResponseEntity<TrainingProgrammeDto> addTrainingDayToTrainingProgramme(@PathVariable Long trainingProgrammeId) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.addTrainingDayToTrainingProgramme(trainingProgrammeId);
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
-    }
+    // TODO - addSkillTrainingSessionToTrainingProgramme route
 }
 
 
