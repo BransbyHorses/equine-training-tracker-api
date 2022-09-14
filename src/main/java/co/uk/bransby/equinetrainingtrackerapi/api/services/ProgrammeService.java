@@ -34,7 +34,7 @@ public class ProgrammeService {
 
     public Programme updateProgramme(Long id, Programme updatedProgrammeValues) {
         Programme programmeToUpdate = programmeRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
         BeanUtils.copyProperties(updatedProgrammeValues, programmeToUpdate, "id");
         return programmeRepository.saveAndFlush(programmeToUpdate);
     }
