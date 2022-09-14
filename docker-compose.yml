@@ -32,11 +32,13 @@ services:
 
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
-    container_name: postgres-exporter
+    container_name: postgres_exporter
     ports:
       - "9187:9187"
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:password@postgres:5432/equine-training-tracker-db?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://postgres:password@postgresql_database:5432/equine-training-tracker-db?sslmode=disable"
+    depends_on:
+      - postgresql_database
     links:
       - postgresql_database
       - prometheus
