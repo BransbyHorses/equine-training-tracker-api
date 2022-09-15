@@ -83,28 +83,31 @@ $ docker-compose up -d
 
 Run the project as above and then check {API_URL}/swagger-ui/#/ or run [locally](http://localhost:8080/swagger-ui/#/).
 
-## Prometheus
+## Prometheus and Grafana
 
-Prometheus "scrapes" information about the app from HTTP endpoints.
+* Prometheus
+* Grafana
+* Spring-Boot-Actuator
+* Micrometer-Registry-Prometheus,
+* postgres-exporter
 
-It gathers, organises and stores these metrics to make it easier to understand how well the app is performing. 
+[Prometheus](http://localhost:9090) "scrapes" information about the app's health and performance from HTTP endpoints.
 
-Grafana visualises the info that Prometheus has scraped, generating graphs that represent the data.
+It connects to [Grafana]((http://localhost:9000)), which visualises that data in graphs, tables and guages. Grafana collates these on dashboards that can be pre-loaded or customised.
 
-### Dependencies
-    
-    * Prometheus 
-    * Grafana
-    * Spring-Boot-Actuator
-    * Micrometer-Registry-Prometheus,
+Spring-Boot-Actuator exposes a number of endpoints that provide metrics. A full list of endpoints is available in the [documentation](https://docs.spring.io/spring-boot/docs/2.1.7.RELEASE/reference/html/production-ready-endpoints.html). 
 
-Prometheus runs as a Docker container and is defined as a service in the docker-compose file.
+The Micrometer and Postgres-exporter present those metrics in a format that Prometheus can scrape.
 
-Spring-Boot-Starter-Actuator is added as a Maven dependency. 
+Grafana is configured with three example [dashboards](localhost:9000/dashboards). These are available on the [dashboards](http://localhost:9000/dashboards?query=) page.
 
-The actuator gathers metrics from the app and exposes that information via http. 
+    * JVM (Micrrometer) 
+    * Postgres Overview (change the Instance field on the top row to point to the postgres-exporter port, currently 9187)
+    * Spring-boot Application
 
-Micrometer-Registry-Prometheus, also added via Maven, converts the actuator data into a format that Prometheus can scrape.
+Prometheus, Grafana and Postgres-exporter run as Docker containers.
+
+Spring-Boot-Starter-Actuator and Micrometer-Registry-Prometheus are added as Maven dependencies. 
 
 ### application.properties config
 
@@ -112,25 +115,10 @@ A number of properties are required to configure prometheus and expose the endpo
 
 These are defined in the application.properties file.
 
-### /actuator endpoints
-
-Once configured, the app will expose a number of endpoints that provide performance/status data.
-
-These include:
-
-- http://localhost:8080/actuator/health
-- http://localhost:8080/actuator/metrics
-
-The data that prometheus will scrape can be found on:
-
-- http://localhost:8080/actuator/prometheus
-
-- A full list of actuator endpoints is available in the [spring-boot documentation](https://docs.spring.io/spring-boot/docs/2.1.7.RELEASE/reference/html/production-ready-endpoints.html)
-
 ### Actuator and Springfox incompatability workaround
 
-Release 3.0.0 of Springfox, which is used for Swagger implementation, is not directly compatible with the actuator.
+Release 3.0.0 of Springfox, which is used for Swagger, is not directly compatible with the actuator.
 
-A bean has been added to the app's main entry point to resolve this issue, but the problem requires further investigation.
+A bean has been added to the app's entry point to resolve this issue, but the problem requires further investigation.
 
 
