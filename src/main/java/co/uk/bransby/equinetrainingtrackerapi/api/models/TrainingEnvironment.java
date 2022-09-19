@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-@Table(name="environments")
-public class Environment {
+@Table(name="training_environments")
+public class TrainingEnvironment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

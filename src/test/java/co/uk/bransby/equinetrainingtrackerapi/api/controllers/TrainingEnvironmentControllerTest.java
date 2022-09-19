@@ -1,10 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Environment;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingMethod;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EnvironmentDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingEnvironment;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EnvironmentService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -22,11 +19,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @WebMvcTest(controllers = EnvironmentController.class)
-class EnvironmentControllerTest {
+class TrainingEnvironmentControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -37,14 +33,14 @@ class EnvironmentControllerTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    private List<Environment> environments = new ArrayList<>();
+    private List<TrainingEnvironment> environments = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        environments.add(new Environment(1L, "New Environment"));
-        environments.add(new Environment(2L, "New Environment"));
-        environments.add(new Environment(3L, "New Environment"));
+        environments.add(new TrainingEnvironment(1L, "New Environment"));
+        environments.add(new TrainingEnvironment(2L, "New Environment"));
+        environments.add(new TrainingEnvironment(3L, "New Environment"));
     }
 
     @Test
@@ -65,8 +61,8 @@ class EnvironmentControllerTest {
 
     @Test
     void canCreateEnvironmentAndReturnOkResponse() throws Exception {
-        Environment newEnvironment = new Environment(4L, "New Environment");
-        given(environmentService.createEnvironment(ArgumentMatchers.any(Environment.class))).willAnswer((invocation -> invocation.getArgument(0)));
+        TrainingEnvironment newEnvironment = new TrainingEnvironment(4L, "New Environment");
+        given(environmentService.createEnvironment(ArgumentMatchers.any(TrainingEnvironment.class))).willAnswer((invocation -> invocation.getArgument(0)));
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/environments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newEnvironment)))

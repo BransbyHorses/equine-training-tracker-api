@@ -1,6 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Environment;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingEnvironment;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EnvironmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class EnvironmentServiceTest {
+class TrainingEnvironmentServiceTest {
 
     @Mock
     EnvironmentRepository environmentRepository;
@@ -27,12 +26,12 @@ class EnvironmentServiceTest {
     @InjectMocks
     EnvironmentService environmentService;
 
-    Environment environmentInstance;
+    TrainingEnvironment environmentInstance;
 
     @BeforeEach
     void setUp() {
         environmentService = new EnvironmentService(environmentRepository);
-        environmentInstance = new Environment(1L, "Test Environment");
+        environmentInstance = new TrainingEnvironment(1L, "Test Environment");
     }
 
     @Test
@@ -40,7 +39,7 @@ class EnvironmentServiceTest {
         given(environmentRepository.findAll()).willReturn(
                 new ArrayList<>(List.of(environmentInstance))
         );
-        List<Environment> environments = environmentService.getEnvironments();
+        List<TrainingEnvironment> environments = environmentService.getEnvironments();
         assertEquals(1, environments.size());
         assertEquals(new ArrayList<>(List.of(environmentInstance)), environments);
     }
@@ -48,23 +47,23 @@ class EnvironmentServiceTest {
     @Test
     void willGetEnvironment() {
         given(environmentRepository.findById(1L)).willReturn(Optional.of(environmentInstance));
-        Environment environmentFromId = environmentService.getEnvironment(1L);
+        TrainingEnvironment environmentFromId = environmentService.getEnvironment(1L);
         assertEquals(environmentInstance, environmentFromId);
     }
 
     @Test
     void willCreateEnvironment() {
-        Environment newEnvironment = new Environment(2L, "New Environment");
+        TrainingEnvironment newEnvironment = new TrainingEnvironment(2L, "New Environment");
         given(environmentRepository.saveAndFlush(environmentInstance)).willReturn(newEnvironment);
-        Environment environment = environmentService.createEnvironment(environmentInstance);
+        TrainingEnvironment environment = environmentService.createEnvironment(environmentInstance);
         assertEquals("New Environment", environment.getName());
     }
 
     @Test
     void updateEnvironment() {
-        Environment updatedEnvironmentValues = new Environment(1L, "Updated Environment");
+        TrainingEnvironment updatedEnvironmentValues = new TrainingEnvironment(1L, "Updated Environment");
         given(environmentRepository.findById(1L)).willReturn(Optional.ofNullable(environmentInstance));
-        Environment updatedEnvironment = environmentService.updateEnvironment(1L, updatedEnvironmentValues);
+        TrainingEnvironment updatedEnvironment = environmentService.updateEnvironment(1L, updatedEnvironmentValues);
         assertEquals("Updated Environment", updatedEnvironment.getName());
     }
 
