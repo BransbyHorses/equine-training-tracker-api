@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +18,16 @@ public class SkillProgressRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "training_programme_id")
+    private TrainingProgramme trainingProgramme;
+    @OneToOne
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
 
-    // TODO - create SkillProgressRecord entity (with associations) and SkillProgressRecordDto entity
+//    private ProgressCode progressCode; TODO - create ProgressCode enum (confirm with charity)
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private Long time; // in minutes
 }

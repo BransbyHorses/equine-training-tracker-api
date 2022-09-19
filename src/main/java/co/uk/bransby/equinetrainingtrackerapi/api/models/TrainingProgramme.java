@@ -38,6 +38,9 @@ public class TrainingProgramme {
     private List<Skill> skills;
 
     @OneToMany(mappedBy = "trainingProgramme")
+    private List<SkillProgressRecord> skillProgress;
+
+    @OneToMany(mappedBy = "trainingProgramme")
     @ToString.Exclude
     private List<SkillTrainingSession> skillTrainingSessions;
 
@@ -48,7 +51,6 @@ public class TrainingProgramme {
     public void addSkillTrainingSession(SkillTrainingSession newSkillTrainingSession) {
         skillTrainingSessions.add(newSkillTrainingSession);
     }
-
 
     @Override
     public boolean equals(Object o) {
