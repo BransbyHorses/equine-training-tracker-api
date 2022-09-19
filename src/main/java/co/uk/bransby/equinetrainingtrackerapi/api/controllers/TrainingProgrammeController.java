@@ -95,6 +95,12 @@ public class TrainingProgrammeController {
     }
 
     // TODO - addSkillTrainingSessionToTrainingProgramme route
+    @PostMapping
+    public ResponseEntity<TrainingProgrammeDto> addSkillTrainingSessionToTrainingProgramme(
+
+    ) {
+        return null;
+    }
 }
 
 
