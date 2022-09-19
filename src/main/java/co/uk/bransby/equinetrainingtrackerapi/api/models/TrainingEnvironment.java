@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="training_environments")
 public class TrainingEnvironment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

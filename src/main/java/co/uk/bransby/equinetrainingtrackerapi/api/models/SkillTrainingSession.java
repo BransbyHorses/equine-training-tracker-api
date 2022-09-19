@@ -33,11 +33,10 @@ public class SkillTrainingSession {
     @JoinColumn(name = "training_method_id")
     private TrainingMethod trainingMethod;
 
-//    @ManyToOne
-//    @JoinColumn(name = "environment_id")
-//    private Environment environment;
+    @ManyToOne
+    @JoinColumn(name = "training_environment_id")
+    private TrainingEnvironment environment;
 
     private Long trainingTime;
-
     private String notes;
 }
