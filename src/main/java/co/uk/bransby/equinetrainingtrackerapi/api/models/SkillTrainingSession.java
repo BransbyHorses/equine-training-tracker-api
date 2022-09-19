@@ -1,7 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
 import lombok.*;
-import org.springframework.core.env.Environment;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ public class SkillTrainingSession {
 
 //    @ManyToOne
 //    @JoinColumn(name = "environment_id")
-//    private TrainingEnvironment environment;
+//    private Environment environment;
 
     private Long trainingTime;
 

@@ -9,7 +9,7 @@ public class SkillTrainingSessionDto {
     private TrainingProgrammeDto trainingProgramme;
     private List<SkillDto> skills;
     private TrainingMethodDto trainingMethodDto;
-//    private EnvironmentDto environment;
+    private EnvironmentDto environment;
     private Long trainingTime;
     private String notes;
 }
