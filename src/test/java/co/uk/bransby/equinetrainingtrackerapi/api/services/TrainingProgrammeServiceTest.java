@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillTrainingSessionRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,8 @@ class TrainingProgrammeServiceTest {
     EquineRepository equineRepository;
     @Mock
     SkillRepository skillRepository;
+    @Mock
+    SkillTrainingSessionRepository skillTrainingSessionRepository;
     @InjectMocks
     TrainingProgrammeService trainingProgrammeService;
 
@@ -33,7 +36,7 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, equineRepository, skillRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, equineRepository, skillRepository, skillTrainingSessionRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
                 new TrainingProgramme(1L, "Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
                 new TrainingProgramme(2L, "Programme 2", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),

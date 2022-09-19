@@ -3,9 +3,11 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.SkillTrainingSession;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillTrainingSessionRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +23,7 @@ public class TrainingProgrammeService {
     private final TrainingProgrammeRepository trainingProgrammeRepository;
     private final EquineRepository equineRepository;
     private final SkillRepository skillRepository;
+    private final SkillTrainingSessionRepository skillTrainingSessionRepository;
 
     public List<TrainingProgramme> getAllProgrammes() {
         return trainingProgrammeRepository.findAll();
@@ -43,10 +46,7 @@ public class TrainingProgrammeService {
     }
 
     public void deleteProgramme(Long id) {
-        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
-        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
-        trainingProgrammeRepository.deleteById(id);
+        // TODO - handle delete programme
     }
 
     public TrainingProgramme assignTrainingProgrammeToEquine(Long trainingProgrammeId, Long equineId) {
@@ -76,7 +76,22 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-        trainingProgramme.getSkills().remove(skill);
+        trainingProgramme
+                .getSkills()
+                .remove(skill);
+        return trainingProgrammeRepository
+                .saveAndFlush(trainingProgramme);
+    }
+
+    public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(
+            Long trainingProgrammeId,
+            SkillTrainingSession newSkillTrainingSession
+            ) {
+        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
+                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
+        SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository
+                .saveAndFlush(newSkillTrainingSession);
+        trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
         return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
     }
 }

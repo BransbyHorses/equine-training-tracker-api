@@ -13,6 +13,7 @@ public class TrainingProgrammeDto {
     @JsonIgnoreProperties({"trainingProgrammes"})
     private EquineDto equine;
     private List<SkillDto> skills;
+    @JsonIgnoreProperties({"trainingProgramme"})
     private List<SkillTrainingSessionDto> skillTrainingSessions;
     private Date startDate;
     private Date endDate;

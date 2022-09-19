@@ -1,6 +1,8 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.SkillTrainingSession;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.SkillTrainingSessionDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingProgrammeService;
 import lombok.AllArgsConstructor;
@@ -94,13 +96,18 @@ public class TrainingProgrammeController {
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
     }
 
-    // TODO - addSkillTrainingSessionToTrainingProgramme route
-    @PostMapping
+    @PostMapping("{trainingProgrammeId}/skill-training-session")
     public ResponseEntity<TrainingProgrammeDto> addSkillTrainingSessionToTrainingProgramme(
-
+            @PathVariable Long trainingProgrammeId,
+            @RequestBody SkillTrainingSessionDto newSkillTrainingSession
     ) {
-        return null;
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.addSkillTrainingSessionToTrainingProgramme(
+                trainingProgrammeId,
+                modelMapper.map(newSkillTrainingSession, SkillTrainingSession.class)
+        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));
     }
 }
-
 

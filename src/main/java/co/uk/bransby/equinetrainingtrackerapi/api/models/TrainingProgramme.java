@@ -45,6 +45,11 @@ public class TrainingProgramme {
 
     private LocalDateTime endDate;
 
+    public void addSkillTrainingSession(SkillTrainingSession newSkillTrainingSession) {
+        skillTrainingSessions.add(newSkillTrainingSession);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
