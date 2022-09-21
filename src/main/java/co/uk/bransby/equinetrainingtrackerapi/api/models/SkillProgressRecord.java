@@ -17,7 +17,6 @@ public class SkillProgressRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
     @ManyToOne
     @JoinColumn(name = "training_programme_id")
     private TrainingProgramme trainingProgramme;
@@ -27,5 +26,5 @@ public class SkillProgressRecord {
     private ProgressCode progressCode; // TODO - create ProgressCode enum (confirm with charity)
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Long time; // in minutes
+    private Integer time; // in minutes
 }

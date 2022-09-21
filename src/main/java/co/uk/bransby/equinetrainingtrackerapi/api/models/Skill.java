@@ -22,9 +22,6 @@ public class Skill {
     private Long id;
     private String name;
 
-    @ManyToMany
-    private List<TrainingProgramme> trainingProgrammes;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

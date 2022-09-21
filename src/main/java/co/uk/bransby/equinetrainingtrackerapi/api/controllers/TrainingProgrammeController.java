@@ -75,22 +75,22 @@ public class TrainingProgrammeController {
     }
 
     @PostMapping("{trainingProgrammeId}/skills/{skillId}")
-    public ResponseEntity<TrainingProgrammeDto> addSkillToTrainingProgramme(
+    public ResponseEntity<TrainingProgrammeDto> createSkillProgressRecordInTrainingProgramme(
             @PathVariable Long trainingProgrammeId,
             @PathVariable Long skillId
     ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.addSkillToTrainingProgramme(trainingProgrammeId, skillId);
+        TrainingProgramme trainingProgramme = trainingProgrammeService.createSkillProgressRecordInTrainingProgramme(trainingProgrammeId, skillId);
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
     }
 
     @DeleteMapping("{trainingProgrammeId}/skills/{skillId}")
-    public ResponseEntity<TrainingProgrammeDto> removeSkillFromTrainingProgramme(
+    public ResponseEntity<TrainingProgrammeDto> removeSkillProgressRecordFromTrainingProgramme(
             @PathVariable Long trainingProgrammeId,
             @PathVariable Long skillId
     ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillFromTrainingProgramme(trainingProgrammeId, skillId);
+        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillProgressRecordFromTrainingProgramme(trainingProgrammeId, skillId);
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));

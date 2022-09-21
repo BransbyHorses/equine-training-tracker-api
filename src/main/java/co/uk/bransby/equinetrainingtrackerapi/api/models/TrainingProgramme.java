@@ -28,17 +28,8 @@ public class TrainingProgramme {
     @JoinColumn(name = "equine_id")
     private Equine equine;
 
-    @ManyToMany
-    @JoinTable(
-            name = "training_programme_skill",
-            joinColumns = {@JoinColumn(name = "training_programme_id")},
-            inverseJoinColumns = {@JoinColumn(name = "skill_id")}
-    )
-    @ToString.Exclude
-    private List<Skill> skills;
-
     @OneToMany(mappedBy = "trainingProgramme")
-    private List<SkillProgressRecord> skillProgress;
+    private List<SkillProgressRecord> skillProgressRecords;
 
     @OneToMany(mappedBy = "trainingProgramme")
     @ToString.Exclude
@@ -50,6 +41,10 @@ public class TrainingProgramme {
 
     public void addSkillTrainingSession(SkillTrainingSession newSkillTrainingSession) {
         skillTrainingSessions.add(newSkillTrainingSession);
+    }
+
+    public void addSkillProgressRecord(SkillProgressRecord skillProgressRecord) {
+        skillProgressRecords.add(skillProgressRecord);
     }
 
     @Override

@@ -1,20 +1,18 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.SkillTrainingSession;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillTrainingSessionRepository;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -24,6 +22,7 @@ public class TrainingProgrammeService {
     private final EquineRepository equineRepository;
     private final SkillRepository skillRepository;
     private final SkillTrainingSessionRepository skillTrainingSessionRepository;
+    private final SkillProgressRecordRepository skillProgressRecordRepository;
 
     public List<TrainingProgramme> getAllProgrammes() {
         return trainingProgrammeRepository.findAll();
@@ -61,26 +60,49 @@ public class TrainingProgrammeService {
         return trainingProgramme;
     }
 
-    public TrainingProgramme addSkillToTrainingProgramme(Long trainingProgrammeId, Long skillId) {
+    public TrainingProgramme createSkillProgressRecordInTrainingProgramme(Long trainingProgrammeId, Long skillId) {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-        trainingProgramme.getSkills().add(skill);
+
+        if(trainingProgramme
+                .getSkillProgressRecords()
+                .stream()
+                .anyMatch(record -> record.getSkill().getId().equals(skillId))
+        ) {
+            throw new EntityExistsException(
+                    "A skill progress record with skill of id: " + skillId + " already exists on training programme: " + trainingProgrammeId
+            );
+        }
+
+        SkillProgressRecord newSkillProgressRecord = new SkillProgressRecord();
+        newSkillProgressRecord.setTrainingProgramme(trainingProgramme);
+        newSkillProgressRecord.setSkill(skill);
+        newSkillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
+        newSkillProgressRecord.setStartDate(LocalDateTime.now());
+        newSkillProgressRecord.setTime(0);
+        SkillProgressRecord savedSkillProgressRecord = skillProgressRecordRepository.saveAndFlush(newSkillProgressRecord);
+
+        trainingProgramme.addSkillProgressRecord(savedSkillProgressRecord);
         trainingProgrammeRepository.saveAndFlush(trainingProgramme);
         return trainingProgramme;
     }
 
-    public TrainingProgramme removeSkillFromTrainingProgramme(Long trainingProgrammeId, Long skillId) {
+    public TrainingProgramme removeSkillProgressRecordFromTrainingProgramme(Long trainingProgrammeId, Long skillId) {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
-        Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-        trainingProgramme
-                .getSkills()
-                .remove(skill);
-        return trainingProgrammeRepository
+
+        List<SkillProgressRecord> skillProgressRecords = trainingProgramme
+                .getSkillProgressRecords()
+                .stream()
+                .filter(record -> !Objects.equals(record.getId(), skillId))
+                .collect(Collectors.toList());
+
+        trainingProgramme.setSkillProgressRecords(skillProgressRecords);
+        trainingProgrammeRepository
                 .saveAndFlush(trainingProgramme);
+        return trainingProgramme;
     }
 
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(
