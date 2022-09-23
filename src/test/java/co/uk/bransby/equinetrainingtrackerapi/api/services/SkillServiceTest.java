@@ -36,7 +36,7 @@ class SkillServiceTest {
     @BeforeEach
     void setUp() {
         skillServiceTest = new SkillService(skillRepository);
-        skillTestInstance = new Skill(1L, "Skill service can service skills", List.of(new TrainingProgramme()));
+        skillTestInstance = new Skill(1L, "Skill service can service skills");
     }
 
     @Test
