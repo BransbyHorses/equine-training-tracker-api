@@ -23,7 +23,7 @@ public class TrainingProgrammeController {
     private final ModelMapper modelMapper;
 
     @GetMapping("{id}")
-    public ResponseEntity<TrainingProgrammeDto> findProgramme(@PathVariable Long id) {
+    public ResponseEntity<TrainingProgrammeDto> findTrainingProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         TrainingProgramme trainingProgramme = trainingProgrammeService.getProgramme(id);
         return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
@@ -31,7 +31,7 @@ public class TrainingProgrammeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TrainingProgrammeDto>> findAllProgrammes() {
+    public ResponseEntity<List<TrainingProgrammeDto>> findTrainingAllProgrammes() {
         HttpHeaders resHeaders = new HttpHeaders();
         List<TrainingProgrammeDto> allProgrammes = trainingProgrammeService.getAllProgrammes()
                 .stream()
@@ -40,14 +40,14 @@ public class TrainingProgrammeController {
     }
 
     @PostMapping
-    public ResponseEntity<TrainingProgrammeDto> createProgramme(@RequestBody TrainingProgrammeDto newProgramme) {
+    public ResponseEntity<TrainingProgrammeDto> createTrainingProgramme(@RequestBody TrainingProgrammeDto newProgramme) {
         TrainingProgramme savedNewTrainingProgramme = trainingProgrammeService.createProgramme(modelMapper.map(newProgramme, TrainingProgramme.class));
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(modelMapper.map(savedNewTrainingProgramme, TrainingProgrammeDto.class), resHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateProgramme(@PathVariable Long id, @RequestBody TrainingProgrammeDto updatedProgrammeValues) {
+    public ResponseEntity<?> updateTrainingProgramme(@PathVariable Long id, @RequestBody TrainingProgrammeDto updatedProgrammeValues) {
         HttpHeaders resHeaders = new HttpHeaders();
         TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, TrainingProgramme.class));
             return ResponseEntity
@@ -57,7 +57,7 @@ public class TrainingProgrammeController {
     }
 
     @DeleteMapping ("{id}")
-    public ResponseEntity<?> deleteProgramme(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTrainingProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         trainingProgrammeService.deleteProgramme(id);
         return ResponseEntity.ok().headers(resHeaders).build();
@@ -73,8 +73,8 @@ public class TrainingProgrammeController {
                 modelMapper.map(newSkillTrainingSession, SkillTrainingSession.class)
         );
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .ok()
                 .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));
     }
-}
 
+}

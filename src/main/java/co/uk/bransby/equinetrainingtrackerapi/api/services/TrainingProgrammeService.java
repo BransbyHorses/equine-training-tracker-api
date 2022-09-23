@@ -48,7 +48,6 @@ public class TrainingProgrammeService {
                     skillProgressRecord.setStartDate(null);
                     skillProgressRecord.setEndDate(null);
                     skillProgressRecord.setTime(0);
-
                     skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
                     skillProgressRecords.add(skillProgressRecord);
                 });
@@ -70,16 +69,26 @@ public class TrainingProgrammeService {
         // TODO - handle delete programme
     }
 
-    public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(
-            Long trainingProgrammeId,
-            SkillTrainingSession newSkillTrainingSession
-    ) {
+    public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(Long trainingProgrammeId, SkillTrainingSession newSkillTrainingSession) {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
+
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository
                 .saveAndFlush(newSkillTrainingSession);
+
         trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
-        // TODO - check if the ProgressCode has changed and set the new ProgressCode in the training programme skill progress record
-        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+
+        SkillProgressRecord skillProgressRecord = trainingProgramme.getSkillProgressRecords()
+                .stream()
+                .filter(s -> Objects.equals(s.getSkill().getId(), savedSkillTrainingSession.getSkill().getId()))
+                .collect(Collectors.toList())
+                .get(0);
+
+        skillProgressRecord.setProgressCode(savedSkillTrainingSession.getProgressCode());
+        skillProgressRecord.logTime(savedSkillTrainingSession.getTrainingTime());
+        skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
+
+        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        return trainingProgramme;
     }
 }

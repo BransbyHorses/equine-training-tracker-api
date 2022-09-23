@@ -39,6 +39,6 @@ public class SkillTrainingSession {
 
     private ProgressCode progressCode;
 
-    private Long trainingTime;
+    private Integer trainingTime;
     private String notes;
 }

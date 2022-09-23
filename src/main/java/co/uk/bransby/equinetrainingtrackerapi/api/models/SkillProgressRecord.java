@@ -27,4 +27,8 @@ public class SkillProgressRecord {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer time;
+
+    public void logTime(Integer t) {
+        setTime(time + t);
+    }
 }
