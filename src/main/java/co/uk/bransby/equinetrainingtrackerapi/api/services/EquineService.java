@@ -18,7 +18,7 @@ public class EquineService {
     private final EquineRepository equineRepository;
     private final ProgrammeRepository programmeRepository;
     private final YardRepository yardRepository;
-    private final CategoryRepository categoryRepository;
+    private final EquineStatusRepository equineStatusRepository;
     private final SkillRepository skillRepository;
 
     public List<Equine> getAllEquines(){
@@ -82,7 +82,7 @@ public class EquineService {
     public Equine assignEquineToCategory(Long equineId, Long categoryId) {
         Optional<Equine> equineInDb = equineRepository.findById(equineId);
         if(equineInDb.isPresent()) {
-            Category category = categoryRepository.findById(categoryId)
+            EquineStatus category = equineStatusRepository.findById(categoryId)
                     .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
             Equine equine = equineInDb.get();
             equine.setCategory(category);

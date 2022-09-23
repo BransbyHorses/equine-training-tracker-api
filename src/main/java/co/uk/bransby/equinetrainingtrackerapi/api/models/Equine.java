@@ -27,7 +27,7 @@ public class Equine {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    private EquineStatus category;
 
     @ManyToOne
     @JoinColumn(name = "programme_id", referencedColumnName = "id")

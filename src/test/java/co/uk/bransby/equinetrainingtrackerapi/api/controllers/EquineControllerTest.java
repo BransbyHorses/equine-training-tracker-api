@@ -5,11 +5,8 @@ import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +19,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -40,11 +36,11 @@ class EquineControllerTest {
     @BeforeEach
     void setUp() {
         this.equineList = new ArrayList<>();
-        equineList.add(new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
-        equineList.add(new Equine(2L, "Second Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
-        equineList.add(new Equine(3L, "Third Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
-        equineList.add(new Equine(4L, "Fourth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
-        equineList.add(new Equine(5L, "Fifth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(2L, "Second Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(3L, "Third Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(4L, "Fourth Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>()));
+        equineList.add(new Equine(5L, "Fifth Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>()));
     }
 
     @Test
@@ -69,7 +65,7 @@ class EquineControllerTest {
     void createEquine() throws Exception {
         BDDMockito.given(equineService.createEquine(ArgumentMatchers.any(Equine.class))).willAnswer((invocation -> invocation.getArgument(0)));
 
-        Equine newEquine = new Equine(6L, "Sixth Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
+        Equine newEquine = new Equine(6L, "Sixth Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>());
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +76,7 @@ class EquineControllerTest {
 
     @Test
     void updateEquine() throws Exception {
-        Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
+        Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>());
 
         BDDMockito.given(equineService.updateEquine(EquineToUpdate.getId(), EquineToUpdate)).willReturn(EquineToUpdate);
 
@@ -106,7 +102,7 @@ class EquineControllerTest {
 
     @Test
     void returnsNotFoundIfEquineAbsentWhenUpdated() throws Exception {
-        Equine invalidEquine = new Equine(9L, "Invalid Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>());
+        Equine invalidEquine = new Equine(9L, "Invalid Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>());
 
         BDDMockito.given(equineService.updateEquine(invalidEquine.getId(), invalidEquine)).willThrow((new EntityNotFoundException()));
 

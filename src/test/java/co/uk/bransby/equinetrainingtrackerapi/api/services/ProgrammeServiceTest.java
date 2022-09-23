@@ -3,23 +3,18 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.ProgrammeRepository;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.swing.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class ProgrammeServiceTest {
@@ -77,7 +72,7 @@ class ProgrammeServiceTest {
 
     @Test
     void canDeleteProgramme() {
-        Equine equine = new Equine(1L, "Test Horse", new Yard(), new Category(), programmes.get(0), new HashSet<Skill>());
+        Equine equine = new Equine(1L, "Test Horse", new Yard(), new EquineStatus(), programmes.get(0), new HashSet<Skill>());
         programmes.get(0).setEquines(new HashSet<>(Set.of(equine)));
         given(programmeRepository.findById(1L)).willReturn(Optional.ofNullable(programmes.get(0)));
         programmeService.deleteProgramme(1L);
