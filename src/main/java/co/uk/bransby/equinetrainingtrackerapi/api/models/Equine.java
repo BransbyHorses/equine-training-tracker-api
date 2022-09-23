@@ -19,6 +19,7 @@ public class Equine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @ManyToOne
@@ -30,7 +31,12 @@ public class Equine {
     private Category category;
 
     @OneToMany(mappedBy = "equine")
+    @ToString.Exclude
     private List<TrainingProgramme> trainingProgrammes;
+
+    @ManyToOne
+    @JoinColumn(name = "learner_type_id")
+    private LearnerType learnerType;
 
     @Override
     public boolean equals(Object o) {
