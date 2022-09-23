@@ -37,11 +37,11 @@ class TrainingProgrammeControllerTest {
     @BeforeEach
     void setUp() {
         this.trainingProgrammes = new ArrayList<>();
-        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
-        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
-        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
-        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
-        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(1L, "Test Programme 1", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(2L, "Test Programme 2", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(3L, "Test Programme 3", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(4L, "Test Programme 4", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
+        trainingProgrammes.add(new TrainingProgramme(5L, "Test Programme 5", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()));
     }
 
     @Test
@@ -63,7 +63,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canCreateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme(6L, "Test Programme 6", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeService.createProgramme(newTrainingProgramme)).willReturn(newTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/programmes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canUpdateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new Equine(), List.of(new Skill()), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
+        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, "Test Programme 1 Updated", new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme)).willReturn(updatedTrainingProgramme);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/programmes/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)

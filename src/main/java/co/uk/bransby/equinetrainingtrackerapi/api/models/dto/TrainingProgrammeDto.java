@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 public class TrainingProgrammeDto {
     private Long id;
-    private String name;
     @JsonIgnoreProperties({"trainingProgrammes"})
     private EquineDto equine;
     @JsonIgnoreProperties({"trainingProgramme"})

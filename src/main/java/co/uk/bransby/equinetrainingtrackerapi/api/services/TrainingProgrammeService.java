@@ -108,7 +108,7 @@ public class TrainingProgrammeService {
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(
             Long trainingProgrammeId,
             SkillTrainingSession newSkillTrainingSession
-            ) {
+    ) {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository

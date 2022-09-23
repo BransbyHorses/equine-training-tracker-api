@@ -22,8 +22,6 @@ public class TrainingProgramme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
     @ManyToOne
     @JoinColumn(name = "equine_id")
     private Equine equine;
