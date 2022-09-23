@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.CategoryRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineStatusRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,35 +18,35 @@ import java.util.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryServiceTest {
+class EquineStatusServiceTest {
 
     @Mock
-    CategoryRepository categoryRepository;
+    EquineStatusRepository equineStatusRepository;
     @Mock
     EquineRepository equineRepository;
 
     @InjectMocks
-    CategoryService categoryServiceUnderTest;
-    Category categoryInstance;
+    EquineStatusService equineStatusServiceUnderTest;
+    EquineStatus categoryInstance;
 
     @BeforeEach
     void setup() {
-        categoryServiceUnderTest = new CategoryService(categoryRepository, equineRepository);
-        categoryInstance = new Category(1L, "Test Category", new HashSet<>());
+        equineStatusServiceUnderTest = new EquineStatusService(equineStatusRepository, equineRepository);
+        categoryInstance = new EquineStatus(1L, "Test Category", new HashSet<>());
     }
 
     @Test
     void canGetCategories() {
-        List<Category> categoryList = new ArrayList<>(List.of(new Category(), new Category()));
-        given(categoryRepository.findAll()).willReturn(categoryList);
-        List<Category> categories = categoryServiceUnderTest.getCategories();
+        List<EquineStatus> categoryList = new ArrayList<>(List.of(new EquineStatus(), new EquineStatus()));
+        given(equineStatusRepository.findAll()).willReturn(categoryList);
+        List<EquineStatus> categories = equineStatusServiceUnderTest.getCategories();
         Assertions.assertEquals(categories, categoryList);
     }
 
     @Test
     void canGetCategory() {
-        given(categoryRepository.findById(1L)).willReturn(Optional.ofNullable(categoryInstance));
-        Category category = categoryServiceUnderTest.getCategory(1L);
+        given(equineStatusRepository.findById(1L)).willReturn(Optional.ofNullable(categoryInstance));
+        EquineStatus category = equineStatusServiceUnderTest.getCategory(1L);
         Assertions.assertEquals(category.getId(), categoryInstance.getId());
         Assertions.assertEquals(category.getName(), categoryInstance.getName());
         Assertions.assertEquals(category.getEquines(), categoryInstance.getEquines());
@@ -54,8 +54,8 @@ class CategoryServiceTest {
 
     @Test
     void canCreateCategory() {
-        given(categoryRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
-        Category category = categoryServiceUnderTest.createCategory(categoryInstance);
+        given(equineStatusRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
+        EquineStatus category = equineStatusServiceUnderTest.createCategory(categoryInstance);
         Assertions.assertEquals(category.getId(), categoryInstance.getId());
         Assertions.assertEquals(category.getName(), categoryInstance.getName());
         Assertions.assertEquals(category.getEquines(), categoryInstance.getEquines());
@@ -63,10 +63,10 @@ class CategoryServiceTest {
 
     @Test
     void canUpdateCategory() {
-        Category updatedCategoryValues = new Category(1L, "Updated Category Value", new HashSet<>());
-        given(categoryRepository.findById(categoryInstance.getId())).willReturn(Optional.ofNullable(categoryInstance));
-        given(categoryRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
-        Category updatedCategory = categoryServiceUnderTest.updateCategory(categoryInstance.getId(), updatedCategoryValues);
+        EquineStatus updatedCategoryValues = new EquineStatus(1L, "Updated Category Value", new HashSet<>());
+        given(equineStatusRepository.findById(categoryInstance.getId())).willReturn(Optional.ofNullable(categoryInstance));
+        given(equineStatusRepository.saveAndFlush(categoryInstance)).willReturn(categoryInstance);
+        EquineStatus updatedCategory = equineStatusServiceUnderTest.updateCategory(categoryInstance.getId(), updatedCategoryValues);
         Assertions.assertEquals(updatedCategoryValues.getId(), 1L);
         Assertions.assertEquals(updatedCategoryValues.getName(), updatedCategory.getName());
         Assertions.assertEquals(updatedCategoryValues.getEquines(), updatedCategory.getEquines());
@@ -74,12 +74,12 @@ class CategoryServiceTest {
 
     @Test
     void willThrowExceptionWhenCategoryWasNotFoundAndUpdated() {
-        given(categoryRepository.findById(1L)).willReturn(Optional.empty());
+        given(equineStatusRepository.findById(1L)).willReturn(Optional.empty());
         Exception exception = Assertions.assertThrows(
                 EntityNotFoundException.class,
-                () -> categoryServiceUnderTest.updateCategory(1L, categoryInstance)
+                () -> equineStatusServiceUnderTest.updateCategory(1L, categoryInstance)
         );
-        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryServiceUnderTest.updateCategory(1L, categoryInstance));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> equineStatusServiceUnderTest.updateCategory(1L, categoryInstance));
         Assertions.assertEquals("No category found with id: " + categoryInstance.getId(), exception.getMessage());
     }
 
@@ -87,9 +87,9 @@ class CategoryServiceTest {
     void canDeleteCategory() {
         Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, List.of(new TrainingProgramme()));
         categoryInstance.setEquines(new HashSet<>(List.of(equine)));
-        given(categoryRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
-        categoryServiceUnderTest.deleteCategory(1L);
+        given(equineStatusRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
+        equineStatusServiceUnderTest.deleteCategory(1L);
         Assertions.assertNull(equine.getCategory());
-        Mockito.verify(categoryRepository).deleteById(1L);
+        Mockito.verify(equineStatusRepository).deleteById(1L);
     }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class CategoryDto {
+public class EquineStatusDto {
     Long id;
     String name;
 }

@@ -28,7 +28,7 @@ public class Equine {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    private EquineStatus category;
 
     @OneToMany(mappedBy = "equine")
     @ToString.Exclude

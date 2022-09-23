@@ -1,8 +1,8 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Category;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.EquineStatus;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.CategoryRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineStatusRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -13,41 +13,41 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class CategoryService {
+public class EquineStatusService {
 
-    private final CategoryRepository categoryRepository;
+    private final EquineStatusRepository equineStatusRepository;
     private final EquineRepository equineRepository;
 
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
+    public List<EquineStatus> getCategories() {
+        return equineStatusRepository.findAll();
     }
 
-    public Category getCategory(Long id) {
-        return categoryRepository.findById(id)
+    public EquineStatus getCategory(Long id) {
+        return equineStatusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
     }
 
-    public Category createCategory(Category category) {
-        return categoryRepository.saveAndFlush(category);
+    public EquineStatus createCategory(EquineStatus category) {
+        return equineStatusRepository.saveAndFlush(category);
     }
 
-    public Category updateCategory(Long id, Category updatedCategoryValues) {
-        Category categoryToUpdate = categoryRepository.findById(id)
+    public EquineStatus updateCategory(Long id, EquineStatus updatedCategoryValues) {
+        EquineStatus categoryToUpdate = equineStatusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
         BeanUtils.copyProperties(updatedCategoryValues, categoryToUpdate, "id");
-        return categoryRepository.saveAndFlush(categoryToUpdate);
+        return equineStatusRepository.saveAndFlush(categoryToUpdate);
     }
 
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id)
+        EquineStatus category = equineStatusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
         for(Equine equine : category.getEquines()) {
             category.removeEquine(equine);
             equine.setCategory(null);
             equineRepository.saveAndFlush(equine);
         }
-        categoryRepository.saveAndFlush(category);
-        categoryRepository.deleteById(id);
+        equineStatusRepository.saveAndFlush(category);
+        equineStatusRepository.deleteById(id);
     }
 }
 
