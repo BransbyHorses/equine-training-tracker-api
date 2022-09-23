@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,8 +34,31 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
     }
 
-    public TrainingProgramme createProgramme(TrainingProgramme TrainingProgramme){
-        return trainingProgrammeRepository.saveAndFlush(TrainingProgramme);
+    public TrainingProgramme createProgramme(TrainingProgramme trainingProgramme){
+        TrainingProgramme newTrainingProgramme = trainingProgrammeRepository
+                .saveAndFlush(trainingProgramme);
+
+        List<Skill> allSkills = skillRepository.findAll();
+
+        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
+        allSkills
+                .forEach(skill -> {
+                    SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
+                    skillProgressRecord.setTrainingProgramme(trainingProgramme);
+                    skillProgressRecord.setSkill(skill);
+                    skillProgressRecord.setTime(0);
+                    skillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
+                    skillProgressRecord.setStartDate(null);
+                    skillProgressRecord.setEndDate(null);
+                    skillProgressRecord.setTime(0);
+
+                    skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
+                    skillProgressRecords.add(skillProgressRecord);
+                });
+        newTrainingProgramme
+                .setSkillProgressRecords(skillProgressRecords);
+        return trainingProgrammeRepository
+                .saveAndFlush(newTrainingProgramme);
     }
 
     public TrainingProgramme updateProgramme(Long id, TrainingProgramme updatedTrainingProgrammeValues) {
@@ -48,63 +72,6 @@ public class TrainingProgrammeService {
         // TODO - handle delete programme
     }
 
-    public TrainingProgramme assignTrainingProgrammeToEquine(Long trainingProgrammeId, Long equineId) {
-        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
-                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
-
-        Equine equine = equineRepository.findById(equineId)
-                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
-
-        trainingProgramme.setEquine(equine);
-        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
-        return trainingProgramme;
-    }
-
-    public TrainingProgramme createSkillProgressRecordInTrainingProgramme(Long trainingProgrammeId, Long skillId) {
-        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
-                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
-        Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-
-        if(trainingProgramme
-                .getSkillProgressRecords()
-                .stream()
-                .anyMatch(record -> record.getSkill().getId().equals(skillId))
-        ) {
-            throw new EntityExistsException(
-                    "A skill progress record with skill of id: " + skillId + " already exists on training programme: " + trainingProgrammeId
-            );
-        }
-
-        SkillProgressRecord newSkillProgressRecord = new SkillProgressRecord();
-        newSkillProgressRecord.setTrainingProgramme(trainingProgramme);
-        newSkillProgressRecord.setSkill(skill);
-        newSkillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
-        newSkillProgressRecord.setStartDate(LocalDateTime.now());
-        newSkillProgressRecord.setTime(0);
-        SkillProgressRecord savedSkillProgressRecord = skillProgressRecordRepository.saveAndFlush(newSkillProgressRecord);
-
-        trainingProgramme.addSkillProgressRecord(savedSkillProgressRecord);
-        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
-        return trainingProgramme;
-    }
-
-    public TrainingProgramme removeSkillProgressRecordFromTrainingProgramme(Long trainingProgrammeId, Long skillId) {
-        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
-                .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
-
-        List<SkillProgressRecord> skillProgressRecords = trainingProgramme
-                .getSkillProgressRecords()
-                .stream()
-                .filter(record -> !Objects.equals(record.getId(), skillId))
-                .collect(Collectors.toList());
-
-        trainingProgramme.setSkillProgressRecords(skillProgressRecords);
-        trainingProgrammeRepository
-                .saveAndFlush(trainingProgramme);
-        return trainingProgramme;
-    }
-
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(
             Long trainingProgrammeId,
             SkillTrainingSession newSkillTrainingSession
@@ -114,6 +81,7 @@ public class TrainingProgrammeService {
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository
                 .saveAndFlush(newSkillTrainingSession);
         trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
+        // TODO - check if the ProgressCode has changed and set the new ProgressCode in the training programme skill progress record
         return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
     }
 }

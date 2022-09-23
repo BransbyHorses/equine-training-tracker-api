@@ -63,39 +63,6 @@ public class TrainingProgrammeController {
         return ResponseEntity.ok().headers(resHeaders).build();
     }
 
-    @PostMapping("{trainingProgrammeId}/equines/{equineId}")
-    public ResponseEntity<TrainingProgrammeDto> assignTrainingProgrammeToEquine(
-            @PathVariable Long trainingProgrammeId,
-            @PathVariable Long equineId
-    ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.assignTrainingProgrammeToEquine(trainingProgrammeId,  equineId);
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
-    }
-
-    @PostMapping("{trainingProgrammeId}/skills/{skillId}")
-    public ResponseEntity<TrainingProgrammeDto> createSkillProgressRecordInTrainingProgramme(
-            @PathVariable Long trainingProgrammeId,
-            @PathVariable Long skillId
-    ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.createSkillProgressRecordInTrainingProgramme(trainingProgrammeId, skillId);
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
-    }
-
-    @DeleteMapping("{trainingProgrammeId}/skills/{skillId}")
-    public ResponseEntity<TrainingProgrammeDto> removeSkillProgressRecordFromTrainingProgramme(
-            @PathVariable Long trainingProgrammeId,
-            @PathVariable Long skillId
-    ) {
-        TrainingProgramme trainingProgramme = trainingProgrammeService.removeSkillProgressRecordFromTrainingProgramme(trainingProgrammeId, skillId);
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
-    }
-
     @PostMapping("{trainingProgrammeId}/skill-training-session")
     public ResponseEntity<TrainingProgrammeDto> addSkillTrainingSessionToTrainingProgramme(
             @PathVariable Long trainingProgrammeId,
