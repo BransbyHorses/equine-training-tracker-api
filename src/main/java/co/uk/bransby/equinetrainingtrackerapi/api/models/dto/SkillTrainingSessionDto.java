@@ -1,13 +1,12 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class SkillTrainingSessionDto {
     private Long id;
     private LocalDateTime date;
     private TrainingProgrammeDto trainingProgramme;
-    private List<SkillDto> skills;
+    private SkillDto skill;
     private TrainingMethodDto trainingMethodDto;
     private TrainingEnvironmentDto environment;
     private Long trainingTime;

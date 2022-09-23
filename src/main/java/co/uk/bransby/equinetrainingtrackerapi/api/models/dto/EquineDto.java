@@ -11,4 +11,5 @@ public class EquineDto {
     private YardDto yard;
     private CategoryDto category;
     private List<TrainingProgrammeDto> trainingProgrammes;
+    private LearnerTypeDto learnerType;
 }

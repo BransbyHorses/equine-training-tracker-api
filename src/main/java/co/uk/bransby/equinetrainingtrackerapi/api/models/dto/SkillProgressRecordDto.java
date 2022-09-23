@@ -5,9 +5,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class SkillProgressRecord {
+public class SkillProgressRecordDto {
     private Long id;
-    private String name;
     private TrainingProgrammeDto trainingProgramme;
     private SkillDto skill;
     private LocalDateTime startDate;
