@@ -85,11 +85,11 @@ class EquineStatusServiceTest {
 
     @Test
     void canDeleteCategory() {
-        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, List.of(new TrainingProgramme()));
+        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new ArrayList<>(), new LearnerType());
         categoryInstance.setEquines(new HashSet<>(List.of(equine)));
         given(equineStatusRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
         equineStatusServiceUnderTest.deleteCategory(1L);
-        Assertions.assertNull(equine.getCategory());
+        Assertions.assertNull(equine.getEquineStatus());
         Mockito.verify(equineStatusRepository).deleteById(1L);
     }
 }

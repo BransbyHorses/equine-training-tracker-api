@@ -39,15 +39,7 @@ public class EquineStatusService {
     }
 
     public void deleteCategory(Long id) {
-        EquineStatus category = equineStatusRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
-        for(Equine equine : category.getEquines()) {
-            category.removeEquine(equine);
-            equine.setCategory(null);
-            equineRepository.saveAndFlush(equine);
-        }
-        equineStatusRepository.saveAndFlush(category);
-        equineStatusRepository.deleteById(id);
+        // TODO - handle delete equineStatus
     }
 }
 

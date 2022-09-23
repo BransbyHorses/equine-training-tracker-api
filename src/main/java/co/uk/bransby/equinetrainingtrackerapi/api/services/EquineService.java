@@ -43,7 +43,6 @@ public class EquineService {
         Equine equine = equineRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
         // remove relationships before deleting
-        equine.setCategory(null);
         equine.setYard(null);
         equineRepository.saveAndFlush(equine);
         equineRepository.deleteById(id);
@@ -68,7 +67,6 @@ public class EquineService {
             EquineStatus category = equineStatusRepository.findById(categoryId)
                     .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
             Equine equine = equineInDb.get();
-            equine.setCategory(category);
             return equineRepository.saveAndFlush(equine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);

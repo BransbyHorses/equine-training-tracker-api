@@ -33,11 +33,12 @@ class TrainingEnvironmentControllerTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    private List<TrainingEnvironment> environments = new ArrayList<>();
+    private List<TrainingEnvironment> environments;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
+        this.environments = new ArrayList<>();
         environments.add(new TrainingEnvironment(1L, "New Environment"));
         environments.add(new TrainingEnvironment(2L, "New Environment"));
         environments.add(new TrainingEnvironment(3L, "New Environment"));

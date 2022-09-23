@@ -21,8 +21,6 @@ class TrainingProgrammeServiceTest {
     @Mock
     TrainingProgrammeRepository trainingProgrammeRepository;
     @Mock
-    EquineRepository equineRepository;
-    @Mock
     SkillRepository skillRepository;
     @Mock
     SkillTrainingSessionRepository skillTrainingSessionRepository;
@@ -35,13 +33,13 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, equineRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
-                new TrainingProgramme(1L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
-                new TrainingProgramme(2L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
-                new TrainingProgramme(3L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
-                new TrainingProgramme(4L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
-                new TrainingProgramme(5L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now())
+                new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(2L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(3L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(4L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new TrainingProgramme(5L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now())
         ));
     }
 
@@ -69,34 +67,10 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canUpdateProgramme() {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
+        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
         given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
         TrainingProgramme trainingProgramme = trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme);
         // TODO - assert entity has updated
-    }
-
-    @Test
-    void canAssignTrainingProgrammeToEquine() {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
-        Equine equine = new Equine(1L, "Equine", new Yard(), new Category(), List.of());
-        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
-        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.assignTrainingProgrammeToEquine(1L, 1L);
-        assertEquals(updatedTrainingProgramme.getEquine(), equine);
-    }
-
-    @Test
-    void canCreateSkillProgressRecordInTrainingProgramme() {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
-        Skill skill = new Skill(1L, "Test Skill");
-        SkillProgressRecord skillProgressRecord = new SkillProgressRecord(1L, trainingProgramme, skill, ProgressCode.NOT_ABLE, LocalDateTime.now(), null, 0);
-        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
-        given(skillRepository.findById(1L)).willReturn(Optional.of(skill));
-
-        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService
-                .createSkillProgressRecordInTrainingProgramme(1L, 1L);
-        assertEquals(trainingProgramme.getSkillProgressRecords().size(), 1);
-        // TODO - add testing for adding skill progress record to training programme
     }
 
 }
