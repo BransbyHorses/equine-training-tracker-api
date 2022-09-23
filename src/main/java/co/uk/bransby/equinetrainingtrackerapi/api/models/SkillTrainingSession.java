@@ -37,6 +37,8 @@ public class SkillTrainingSession {
     @JoinColumn(name = "training_environment_id")
     private TrainingEnvironment environment;
 
+    private ProgressCode progressCode;
+
     private Long trainingTime;
     private String notes;
 }
