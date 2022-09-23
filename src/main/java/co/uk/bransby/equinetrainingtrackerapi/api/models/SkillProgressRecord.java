@@ -23,8 +23,8 @@ public class SkillProgressRecord {
     @OneToOne
     @JoinColumn(name = "skill_id")
     private Skill skill;
-    private ProgressCode progressCode; // TODO - create ProgressCode enum (confirm with charity)
+    private ProgressCode progressCode;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Integer time; // in minutes
+    private Integer time;
 }

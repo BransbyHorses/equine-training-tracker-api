@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,10 +24,15 @@ public class TrainingProgramme {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "training_category_id")
+    private TrainingCategory trainingCategory;
+
+    @ManyToOne
     @JoinColumn(name = "equine_id")
     private Equine equine;
 
     @OneToMany(mappedBy = "trainingProgramme")
+    @ToString.Exclude
     private List<SkillProgressRecord> skillProgressRecords;
 
     @OneToMany(mappedBy = "trainingProgramme")
@@ -36,6 +42,8 @@ public class TrainingProgramme {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    // TODO - add EndTrainingReason enum
 
     public void addSkillTrainingSession(SkillTrainingSession newSkillTrainingSession) {
         skillTrainingSessions.add(newSkillTrainingSession);
