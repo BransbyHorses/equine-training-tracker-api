@@ -1,5 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.EquineStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public class EquineDto {
     private Long id;
     private String name;
     private YardDto yard;
-    private CategoryDto category;
+    private EquineStatusDto equineStatus;
     private List<TrainingProgrammeDto> trainingProgrammes;
     private LearnerTypeDto learnerType;
 }

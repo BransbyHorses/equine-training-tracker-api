@@ -25,7 +25,7 @@ class EquineServiceTest {
     @Mock
     EquineRepository equineRepository;
     @Mock
-    CategoryRepository categoryRepository;
+    EquineStatusRepository equineStatusRepository;
     @Mock
     YardRepository yardRepository;
     @InjectMocks
@@ -34,8 +34,8 @@ class EquineServiceTest {
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, categoryRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new Category(), List.of(new TrainingProgramme()));
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType());
     }
 
     @Test
@@ -106,7 +106,7 @@ class EquineServiceTest {
     @Test
     void willAssignEquineToCategory() {
         given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(categoryRepository.findById(1L)).willReturn(Optional.of(equineInstance.getCategory()));
+        given(equineStatusRepository.findById(1L)).willReturn(Optional.of(equineInstance.getEquineStatus()));
         equineServiceUnderTest.assignEquineToCategory(1L, 1L);
         Mockito.verify(equineRepository).saveAndFlush(equineInstance);
     }
@@ -124,7 +124,7 @@ class EquineServiceTest {
     @Test
     void willThrowCategoryNotFoundExceptionWhenAssigningEquineToCategory() {
         given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(categoryRepository.findById(1L)).willReturn(Optional.empty());
+        given(equineStatusRepository.findById(1L)).willReturn(Optional.empty());
         Exception exception = Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)

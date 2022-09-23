@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class TrainingProgrammeService {
 
     private final TrainingProgrammeRepository trainingProgrammeRepository;
-    private final EquineRepository equineRepository;
     private final SkillRepository skillRepository;
     private final SkillTrainingSessionRepository skillTrainingSessionRepository;
     private final SkillProgressRecordRepository skillProgressRecordRepository;
@@ -38,10 +37,8 @@ public class TrainingProgrammeService {
         TrainingProgramme newTrainingProgramme = trainingProgrammeRepository
                 .saveAndFlush(trainingProgramme);
 
-        List<Skill> allSkills = skillRepository.findAll();
-
         List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
-        allSkills
+        skillRepository.findAll()
                 .forEach(skill -> {
                     SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
                     skillProgressRecord.setTrainingProgramme(trainingProgramme);
@@ -55,6 +52,7 @@ public class TrainingProgrammeService {
                     skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
                     skillProgressRecords.add(skillProgressRecord);
                 });
+
         newTrainingProgramme
                 .setSkillProgressRecords(skillProgressRecords);
         return trainingProgrammeRepository
