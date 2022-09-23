@@ -44,7 +44,7 @@ class EquineStatusControllerTest {
     @Test
     void willGetCategoriesAndReturnOkResponse() throws Exception {
         given(equineStatusService.getCategories()).willReturn(categories);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equine-statuses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(categories.size()));
     }
@@ -52,7 +52,7 @@ class EquineStatusControllerTest {
     @Test
     void willGetCategoryAndReturnOkResponse() throws Exception {
         given(equineStatusService.getCategory(1L)).willReturn(categories.get(0));
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/categories/{id}", 1))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equine-statuses/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Category 1"));
@@ -62,7 +62,7 @@ class EquineStatusControllerTest {
     void willCreateCategoryAndReturnCreatedResponse() throws Exception {
         EquineStatus newCategory =  new EquineStatus(6L, "New Category", new HashSet<>());
         given(equineStatusService.createCategory(newCategory)).willReturn(newCategory);
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/categories")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equine-statuses")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(newCategory)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -74,7 +74,7 @@ class EquineStatusControllerTest {
     void willUpdateCategoryAndReturnOkResponse() throws Exception {
         EquineStatus updatedCategory = new EquineStatus(7L, "Updated Category", new HashSet<>());
         given(equineStatusService.updateCategory(7L, updatedCategory)).willReturn(updatedCategory);
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/equine-statuses/{id}", updatedCategory.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(updatedCategory)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -87,7 +87,7 @@ class EquineStatusControllerTest {
         EquineStatus updatedCategory = new EquineStatus(7L, "Updated Category", new HashSet<>());
         given(equineStatusService.updateCategory(7L, updatedCategory))
                 .willThrow(new EntityNotFoundException());
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/categories/{id}", updatedCategory.getId())
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/equine-statuses/{id}", updatedCategory.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updatedCategory)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -97,7 +97,7 @@ class EquineStatusControllerTest {
     void willDeleteCategoryAndReturnOkResponse() throws Exception {
         given(equineStatusService.getCategory(1L)).willReturn(categories.get(0));
         Mockito.doNothing().when(equineStatusService).deleteCategory(1L);
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/categories/{id}", 1))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/equine-statuses/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
