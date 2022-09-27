@@ -34,9 +34,6 @@ class TrainingProgrammeControllerTest {
     @MockBean
     TrainingProgrammeService trainingProgrammeService;
 
-    @MockBean
-    ModelMapper modelMapper;
-
     ObjectMapper mapper = new ObjectMapper()
             .registerModule(new ParameterNamesModule())
             .registerModule(new Jdk8Module())
@@ -57,7 +54,7 @@ class TrainingProgrammeControllerTest {
     @Test
     void canFindAllProgrammesAndReturnOkResponse() throws Exception {
         given(trainingProgrammeService.getAllProgrammes()).willReturn(trainingProgrammes);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/programmes"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/training-programmes"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(trainingProgrammes.size()));
     }
@@ -101,27 +98,6 @@ class TrainingProgrammeControllerTest {
 
     @Test
     void canAddSkillTrainingSessionToTrainingProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme trainingProgramme = new TrainingProgramme(1L,  new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
-        SkillTrainingSession skillTrainingSession = new SkillTrainingSession();
-        skillTrainingSession.setId(1L);
-        skillTrainingSession.setSkill(new Skill());
-        skillTrainingSession.setTrainingMethod(new TrainingMethod());
-        skillTrainingSession.setDate(LocalDateTime.now());
-        skillTrainingSession.setProgressCode(ProgressCode.NOT_ABLE);
-        skillTrainingSession.setEnvironment(new TrainingEnvironment());
-        skillTrainingSession.setTrainingTime(10);
-        skillTrainingSession.setNotes("");
-
-        given(trainingProgrammeService.addSkillTrainingSessionToTrainingProgramme(
-                1L,
-                skillTrainingSession)
-        ).willReturn(trainingProgramme);
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/training-programmes/{id}/skill-training-session", 1)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(skillTrainingSession)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        // TODO - test json body
+        // TODO - test controller response
     }
-
 }
