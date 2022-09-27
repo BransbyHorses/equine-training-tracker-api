@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -60,9 +62,22 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canCreateProgramme() {
-        given(trainingProgrammeRepository.saveAndFlush(trainingProgrammes.get(0))).willReturn(trainingProgrammes.get(0));
-        TrainingProgramme trainingProgramme = trainingProgrammeService.createProgramme(trainingProgrammes.get(0));
-        assertEquals(trainingProgramme, trainingProgrammes.get(0));
+        List<Skill> skills = new ArrayList<>(List.of(new Skill(1L, "Skill 1")));
+        TrainingProgramme trainingProgramme = new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
+        given(trainingProgrammeRepository.saveAndFlush(trainingProgramme)).willReturn(trainingProgramme);
+        given(skillRepository.findAll()).willReturn(skills);
+
+        TrainingProgramme savedTrainingProgramme = trainingProgrammeService.createProgramme(trainingProgramme);
+        assertEquals(savedTrainingProgramme.getId(), 1L);
+        assertEquals(savedTrainingProgramme.getSkillProgressRecords().size(), 1);
+
+        SkillProgressRecord skillProgressRecord = savedTrainingProgramme.getSkillProgressRecords().get(0);
+        assertEquals(skillProgressRecord.getSkill().getName(), "Skill 1");
+        assertEquals(skillProgressRecord.getTrainingProgramme(), trainingProgramme);
+        assertEquals(skillProgressRecord.getProgressCode(), ProgressCode.NOT_ABLE);
+        assertEquals(skillProgressRecord.getTime(), 0);
+        assertNull(skillProgressRecord.getStartDate());
+        assertNull(skillProgressRecord.getEndDate());
     }
 
     @Test
@@ -71,6 +86,12 @@ class TrainingProgrammeServiceTest {
         given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
         TrainingProgramme trainingProgramme = trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme);
         // TODO - assert entity has updated
+    }
+
+    @Test
+    @Disabled
+    void canAddSkillTrainingSessionToTrainingProgramme() {
+        // TODO - write test
     }
 
 }

@@ -73,22 +73,22 @@ public class TrainingProgrammeService {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
 
-        SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository
-                .saveAndFlush(newSkillTrainingSession);
+        newSkillTrainingSession.setTrainingProgramme(trainingProgramme);
+        SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository.saveAndFlush(newSkillTrainingSession);
 
-        trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
-
-        SkillProgressRecord skillProgressRecord = trainingProgramme.getSkillProgressRecords()
+        trainingProgramme.getSkillProgressRecords()
                 .stream()
-                .filter(s -> Objects.equals(s.getSkill().getId(), savedSkillTrainingSession.getSkill().getId()))
-                .collect(Collectors.toList())
-                .get(0);
+                .filter(s -> s.getSkill().getId().equals(savedSkillTrainingSession.getSkill().getId()))
+                .findFirst()
+                .ifPresent(record -> {
+                    if(record.getStartDate() == null) {
+                        record.setStartDate(LocalDateTime.now());
+                    }
+                    record.setProgressCode(savedSkillTrainingSession.getProgressCode());
+                    record.logTime(savedSkillTrainingSession.getTrainingTime());
+                });
 
-        skillProgressRecord.setProgressCode(savedSkillTrainingSession.getProgressCode());
-        skillProgressRecord.logTime(savedSkillTrainingSession.getTrainingTime());
-        skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
-
-        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
-        return trainingProgramme;
+        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
     }
+
 }

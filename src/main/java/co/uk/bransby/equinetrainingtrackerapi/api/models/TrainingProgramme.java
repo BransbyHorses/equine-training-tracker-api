@@ -1,15 +1,13 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name = "programmes")
+@Table(name = "training_programmes")
 public class TrainingProgramme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
