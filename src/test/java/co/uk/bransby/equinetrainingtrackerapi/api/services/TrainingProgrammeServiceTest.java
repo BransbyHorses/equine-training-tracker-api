@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -89,9 +90,40 @@ class TrainingProgrammeServiceTest {
     }
 
     @Test
-    @Disabled
     void canAddSkillTrainingSessionToTrainingProgramme() {
         // TODO - write test
+        // given
+        Skill skill = new Skill(1L, "Test Skill");
+        TrainingProgramme trainingProgramme = new TrainingProgramme();
+        trainingProgramme.setId(1L);
+        trainingProgramme.setSkillTrainingSessions(new ArrayList<>());
+        trainingProgramme.setSkillProgressRecords(new ArrayList<>());
+
+        SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
+        skillProgressRecord.setTrainingProgramme(trainingProgramme);
+        skillProgressRecord.setSkill(skill);
+        skillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
+        skillProgressRecord.setStartDate(null);
+        skillProgressRecord.setTime(0);
+
+        SkillTrainingSession skillTrainingSession = new SkillTrainingSession();
+        skillTrainingSession.setDate(LocalDateTime.now());
+        skillTrainingSession.setSkill(skill);
+        skillTrainingSession.setTrainingMethod(new TrainingMethod());
+        skillTrainingSession.setEnvironment(new TrainingEnvironment());
+        skillTrainingSession.setProgressCode(ProgressCode.CONFIDENT);
+        skillTrainingSession.setTrainingTime(10);
+
+        trainingProgramme.addSkillProgressRecord(skillProgressRecord);
+
+        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.of(trainingProgramme));
+        given(skillTrainingSessionRepository.saveAndFlush(skillTrainingSession)).willReturn(skillTrainingSession);
+
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService
+                .addSkillTrainingSessionToTrainingProgramme(1L, skillTrainingSession);
+
+        assertEquals(skillTrainingSession, updatedTrainingProgramme.getSkillTrainingSessions().get(0));
+        assertEquals(10, updatedTrainingProgramme.getSkillProgressRecords().get(0).getTime());
     }
 
 }

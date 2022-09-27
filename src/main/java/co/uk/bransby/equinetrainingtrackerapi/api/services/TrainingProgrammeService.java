@@ -76,6 +76,7 @@ public class TrainingProgrammeService {
         newSkillTrainingSession.setTrainingProgramme(trainingProgramme);
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository.saveAndFlush(newSkillTrainingSession);
 
+        trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
         trainingProgramme.getSkillProgressRecords()
                 .stream()
                 .filter(s -> s.getSkill().getId().equals(savedSkillTrainingSession.getSkill().getId()))
@@ -88,7 +89,8 @@ public class TrainingProgrammeService {
                     record.logTime(savedSkillTrainingSession.getTrainingTime());
                 });
 
-        return trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        trainingProgrammeRepository.saveAndFlush(trainingProgramme);
+        return trainingProgramme;
     }
 
 }
