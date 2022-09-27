@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.EquineStatus;
 import lombok.Data;
 
 import java.util.List;
