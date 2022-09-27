@@ -1,8 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class TrainingProgrammeDto {
     private List<SkillProgressRecordDto> skillProgressRecords;
     @JsonIgnoreProperties({"trainingProgramme"})
     private List<SkillTrainingSessionDto> skillTrainingSessions;
-    private Date startDate;
-    private Date endDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime endDate;
 }
