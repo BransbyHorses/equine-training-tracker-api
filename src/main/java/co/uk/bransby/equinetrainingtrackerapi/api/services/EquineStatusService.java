@@ -39,7 +39,7 @@ public class EquineStatusService {
     }
 
     public void deleteCategory(Long id) {
-        // TODO - handle delete equineStatus
+        equineStatusRepository.deleteById(id);
     }
 }
 
