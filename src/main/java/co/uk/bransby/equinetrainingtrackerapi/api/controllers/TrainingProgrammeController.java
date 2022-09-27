@@ -16,7 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/data/programmes")
+@RequestMapping("/data/training-programmes")
 public class TrainingProgrammeController {
 
     private final TrainingProgrammeService trainingProgrammeService;
