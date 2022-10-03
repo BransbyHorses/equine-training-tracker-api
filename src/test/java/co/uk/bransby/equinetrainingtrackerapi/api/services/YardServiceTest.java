@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +69,7 @@ class YardServiceTest {
 
     @Test
     void canDeleteYard() {
-        Equine equine = new Equine(1L, "First Horse", yardInstance, new EquineStatus(), new Programme(), new HashSet<Skill>());
+        Equine equine = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType());
         yardInstance.setEquines(new HashSet<>(List.of(equine)));
         // given
         given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));

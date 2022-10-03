@@ -4,8 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +19,7 @@ public class Equine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @ManyToOne
@@ -27,20 +28,15 @@ public class Equine {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private EquineStatus category;
+    private EquineStatus equineStatus;
+
+    @OneToMany(mappedBy = "equine")
+    @ToString.Exclude
+    private List<TrainingProgramme> trainingProgrammes;
 
     @ManyToOne
-    @JoinColumn(name = "programme_id", referencedColumnName = "id")
-    private Programme programme;
-
-    @ManyToMany
-    @JoinTable(
-            name = "equines_skills",
-            joinColumns = @JoinColumn(name = "equine_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Set<Skill> skills;
+    @JoinColumn(name = "learner_type_id")
+    private LearnerType learnerType;
 
     @Override
     public boolean equals(Object o) {

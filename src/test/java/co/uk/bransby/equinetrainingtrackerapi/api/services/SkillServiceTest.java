@@ -28,8 +28,6 @@ class SkillServiceTest {
     @Mock
     private SkillRepository skillRepository;
 
-    @Mock
-    private EquineRepository equineRepository;
 
     @InjectMocks
     private SkillService skillServiceTest;
@@ -37,8 +35,8 @@ class SkillServiceTest {
 
     @BeforeEach
     void setUp() {
-        skillServiceTest = new SkillService(skillRepository, equineRepository);
-        skillTestInstance = new Skill(1L, "Skill service can service skills", new HashSet<>());
+        skillServiceTest = new SkillService(skillRepository);
+        skillTestInstance = new Skill(1L, "Skill service can service skills");
     }
 
     @Test
@@ -82,20 +80,6 @@ class SkillServiceTest {
         Skill skill = skillServiceTest.findById(1L);
         assertThat(skill.getId()).isEqualTo(skillTestInstance.getId());
         Mockito.verify(skillRepository).findById(1L);
-    }
-
-    @Test
-    void canDeleteSkillById() {
-        // given
-        Equine equine = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new Programme(), new HashSet<Skill>(List.of(skillTestInstance)));
-        Set<Equine> equines = new HashSet<>(List.of(equine));
-        skillTestInstance.setEquines(equines);
-        given(skillRepository.findById(1L)).willReturn(Optional.of(skillTestInstance));
-        // when
-        skillServiceTest.deleteById(1L);
-        // then
-        assertThat(skillTestInstance.getEquines()).hasSize(0);
-        assertThat(equine.getSkills()).hasSize(0);
     }
 
 }

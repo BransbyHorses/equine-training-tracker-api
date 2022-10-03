@@ -1,12 +1,12 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
-public class EnvironmentDto {
+public class TrainingEnvironmentDto {
     private Long id;
     private String name;
 
-    public EnvironmentDto() {}
+    public TrainingEnvironmentDto() {}
 
-    public EnvironmentDto(Long id, String name) {
+    public TrainingEnvironmentDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }

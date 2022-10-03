@@ -75,12 +75,6 @@ public class EquineController {
                 .build();
     }
 
-    @PatchMapping("{equineId}/programmes/{programmeId}")
-    public ResponseEntity<?> assignProgrammeToEquine(@PathVariable Long equineId, @PathVariable Long programmeId) {
-        Equine equine = equineService.assignEquineToProgramme(equineId, programmeId);
-        return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
-    }
-
     @PatchMapping("{equineId}/yards/{yardId}")
     public ResponseEntity<?> assignYardToEquine(@PathVariable Long equineId, @PathVariable Long yardId) {
         Equine equine = equineService.assignEquineToYard(equineId, yardId);
@@ -91,17 +85,5 @@ public class EquineController {
     public ResponseEntity<?> assignCategoryToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
         Equine equine = equineService.assignEquineToCategory(equineId, categoryId);
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
-    }
-
-    @PatchMapping("{equineId}/skills/{skillId}")
-    public ResponseEntity<?> assignSkillToEquine(@PathVariable Long equineId, @PathVariable Long skillId) {
-        Equine equine = equineService.assignEquineASkill(equineId, skillId);
-        return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
-    }
-
-    @DeleteMapping("{equineId}/skills/{skillId}")
-    public ResponseEntity<?> deleteEquineSkill(@PathVariable Long equineId, @PathVariable Long skillId) {
-        equineService.deleteEquineSkill(equineId, skillId);
-        return ResponseEntity.ok().build();
     }
 }

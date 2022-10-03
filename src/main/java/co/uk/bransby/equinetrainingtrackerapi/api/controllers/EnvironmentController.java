@@ -1,7 +1,7 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.Environment;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EnvironmentDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingEnvironment;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingEnvironmentDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EnvironmentService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,38 +20,38 @@ public class EnvironmentController {
     private  final ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<EnvironmentDto>> getEnvironments() {
-        List<EnvironmentDto> environments = environmentService.getEnvironments()
+    public ResponseEntity<List<TrainingEnvironmentDto>> getEnvironments() {
+        List<TrainingEnvironmentDto> environments = environmentService.getEnvironments()
                 .stream()
-                .map(environment -> modelMapper.map(environment, EnvironmentDto.class))
+                .map(environment -> modelMapper.map(environment, TrainingEnvironmentDto.class))
                 .toList();
         return ResponseEntity.ok().body(environments);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EnvironmentDto> getEnvironment(@PathVariable Long id) {
-        Environment environment = environmentService.getEnvironment(id);
-        return ResponseEntity.ok().body(modelMapper.map(environment, EnvironmentDto.class));
+    public ResponseEntity<TrainingEnvironmentDto> getEnvironment(@PathVariable Long id) {
+        TrainingEnvironment environment = environmentService.getEnvironment(id);
+        return ResponseEntity.ok().body(modelMapper.map(environment, TrainingEnvironmentDto.class));
     }
 
     @PostMapping
-    public ResponseEntity<EnvironmentDto> createEnvironment(@RequestBody EnvironmentDto environment) {
-        Environment newEnvironment = environmentService
-                .createEnvironment(modelMapper.map(environment, Environment.class));
+    public ResponseEntity<TrainingEnvironmentDto> createEnvironment(@RequestBody TrainingEnvironmentDto environment) {
+        TrainingEnvironment newEnvironment = environmentService
+                .createEnvironment(modelMapper.map(environment, TrainingEnvironment.class));
         return ResponseEntity
                 .created(URI.create("/data/environments" + newEnvironment.getId()))
-                .body(modelMapper.map(newEnvironment, EnvironmentDto.class));
+                .body(modelMapper.map(newEnvironment, TrainingEnvironmentDto.class));
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<EnvironmentDto> updateEnvironment(@PathVariable Long id, @RequestBody EnvironmentDto environment) {
-        Environment updatedEnvironment = environmentService.updateEnvironment(
+    public ResponseEntity<TrainingEnvironmentDto> updateEnvironment(@PathVariable Long id, @RequestBody TrainingEnvironmentDto environment) {
+        TrainingEnvironment updatedEnvironment = environmentService.updateEnvironment(
                 id,
-                modelMapper.map(environment, Environment.class)
+                modelMapper.map(environment, TrainingEnvironment.class)
         );
         return ResponseEntity
                 .ok()
-                .body(modelMapper.map(updatedEnvironment, EnvironmentDto.class));
+                .body(modelMapper.map(updatedEnvironment, TrainingEnvironmentDto.class));
     }
 
     @DeleteMapping("{id}")

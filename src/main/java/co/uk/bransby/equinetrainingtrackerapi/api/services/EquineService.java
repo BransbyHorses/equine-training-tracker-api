@@ -16,10 +16,8 @@ import java.util.stream.Collectors;
 public class EquineService {
 
     private final EquineRepository equineRepository;
-    private final ProgrammeRepository programmeRepository;
     private final YardRepository yardRepository;
     private final EquineStatusRepository equineStatusRepository;
-    private final SkillRepository skillRepository;
 
     public List<Equine> getAllEquines(){
         return equineRepository.findAll();
@@ -45,25 +43,9 @@ public class EquineService {
         Equine equine = equineRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
         // remove relationships before deleting
-        equine.setCategory(null);
-        equine.setProgramme(null);
         equine.setYard(null);
-        equine.setSkills(new HashSet<>());
         equineRepository.saveAndFlush(equine);
         equineRepository.deleteById(id);
-    }
-
-    public Equine assignEquineToProgramme(Long equineId, Long programmeId) {
-        Optional<Equine> equine = equineRepository.findById(equineId);
-        if(equine.isPresent()) {
-            Programme programme = programmeRepository.findById(programmeId)
-                    .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + programmeId));
-            Equine updatedEquine = equine.get();
-            updatedEquine.setProgramme(programme);
-            return equineRepository.saveAndFlush(updatedEquine);
-        } else {
-            throw new EntityNotFoundException("No equine found with id: " + equineId);
-        }
     }
 
     public Equine assignEquineToYard(Long equineId, Long yardId) {
@@ -85,40 +67,9 @@ public class EquineService {
             EquineStatus category = equineStatusRepository.findById(categoryId)
                     .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
             Equine equine = equineInDb.get();
-            equine.setCategory(category);
             return equineRepository.saveAndFlush(equine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
         }
-    }
-
-    public Equine assignEquineASkill(Long equineId, Long skillId) {
-        Optional<Equine> equineInDb = equineRepository.findById(equineId);
-        if(equineInDb.isPresent()) {
-            Skill skill = skillRepository.findById(skillId)
-                    .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + skillId));
-            Equine equine = equineInDb.get();
-            Set<Skill> equineSkills = equine.getSkills();
-            if(equineSkills.contains(skill)) {
-                throw new EntityExistsException("Skill with id " + skillId + " already exists on equine " + equineId);
-            } else {
-                equineSkills.add(skill);
-                equine.setSkills(equineSkills);
-                return equineRepository.saveAndFlush(equine);
-            }
-        } else {
-            throw new EntityNotFoundException("No equine found with id: " + equineId);
-        }
-    }
-
-    public void deleteEquineSkill(Long equineId, Long skillId) {
-        Equine equine = equineRepository.findById(equineId)
-                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
-        Set<Skill> skills = equine.getSkills()
-                .stream()
-                .filter(skill -> !skill.getId().equals(skillId))
-                .collect(Collectors.toSet());
-        equine.setSkills(skills);
-        equineRepository.saveAndFlush(equine);
     }
 }

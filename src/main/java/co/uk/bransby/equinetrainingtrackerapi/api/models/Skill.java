@@ -5,7 +5,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,9 +19,6 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "skills")
-    @ToString.Exclude
-    private Set<Equine> equines;
 
     @Override
     public boolean equals(Object o) {
@@ -37,7 +33,4 @@ public class Skill {
         return getClass().hashCode();
     }
 
-    public void removeEquine(Equine equine) {
-        this.equines.remove(equine);
-    }
 }

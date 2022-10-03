@@ -82,14 +82,4 @@ class EquineStatusServiceTest {
         Assertions.assertThrows(EntityNotFoundException.class, () -> equineStatusServiceUnderTest.updateCategory(1L, categoryInstance));
         Assertions.assertEquals("No category found with id: " + categoryInstance.getId(), exception.getMessage());
     }
-
-    @Test
-    void canDeleteCategory() {
-        Equine equine = new Equine(1L, "First Horse", new Yard(), categoryInstance, new Programme(), new HashSet<Skill>());
-        categoryInstance.setEquines(new HashSet<>(List.of(equine)));
-        given(equineStatusRepository.findById(1L)).willReturn(Optional.of(categoryInstance));
-        equineStatusServiceUnderTest.deleteCategory(1L);
-        Assertions.assertNull(equine.getCategory());
-        Mockito.verify(equineStatusRepository).deleteById(1L);
-    }
 }
