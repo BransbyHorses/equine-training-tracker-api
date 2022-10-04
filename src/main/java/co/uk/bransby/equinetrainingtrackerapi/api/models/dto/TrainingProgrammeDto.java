@@ -17,8 +17,8 @@ public class TrainingProgrammeDto {
     private List<SkillProgressRecordDto> skillProgressRecords;
     @JsonIgnoreProperties({"trainingProgramme"})
     private List<SkillTrainingSessionDto> skillTrainingSessions;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private LocalDateTime startDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private LocalDateTime endDate;
 }

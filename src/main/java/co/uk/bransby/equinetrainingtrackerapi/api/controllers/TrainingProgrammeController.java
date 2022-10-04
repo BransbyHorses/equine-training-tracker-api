@@ -27,7 +27,6 @@ public class TrainingProgrammeController {
         HttpHeaders resHeaders = new HttpHeaders();
         TrainingProgramme trainingProgramme = trainingProgrammeService.getProgramme(id);
         return ResponseEntity.ok().headers(resHeaders).body(modelMapper.map(trainingProgramme, TrainingProgrammeDto.class));
-
     }
 
     @GetMapping
