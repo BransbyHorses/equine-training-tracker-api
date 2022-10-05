@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,6 +24,7 @@ public class TrainingProgrammeService {
     private final SkillRepository skillRepository;
     private final SkillTrainingSessionRepository skillTrainingSessionRepository;
     private final SkillProgressRecordRepository skillProgressRecordRepository;
+    private final EquineRepository equineRepository;
 
     public List<TrainingProgramme> getAllProgrammes() {
         return trainingProgrammeRepository.findAll();
@@ -33,15 +35,41 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
     }
 
-    public TrainingProgramme createProgramme(TrainingProgramme trainingProgramme){
-        TrainingProgramme newTrainingProgramme = trainingProgrammeRepository
-                .saveAndFlush(trainingProgramme);
+    public TrainingProgramme createProgramme(TrainingProgramme newTrainingProgramme){
 
-        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
-        skillRepository.findAll()
+        Optional<TrainingProgramme> liveTrainingProgramme =
+                equineRepository.getById(newTrainingProgramme.getEquine().getId())
+                        .getTrainingProgrammes()
+                        .stream()
+                        .filter(tp -> tp.getEndDate() == null)
+                        .findFirst();
+
+        TrainingProgramme savedTrainingProgramme = trainingProgrammeRepository.saveAndFlush(newTrainingProgramme);
+        List<SkillProgressRecord> newSkillProgressRecords = new ArrayList<>();
+
+        if(liveTrainingProgramme.isPresent()) {
+            liveTrainingProgramme.get().setEndDate(LocalDateTime.now());
+            trainingProgrammeRepository.saveAndFlush(liveTrainingProgramme.get());
+            List<SkillProgressRecord> skillProgressRecords = liveTrainingProgramme.get().getSkillProgressRecords();
+            skillProgressRecords
+                    .forEach(spr -> {
+                        SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
+                        skillProgressRecord.setTrainingProgramme(savedTrainingProgramme);
+                        skillProgressRecord.setSkill(spr.getSkill());
+                        skillProgressRecord.setProgressCode(spr.getProgressCode());
+                        skillProgressRecord.setStartDate(null);
+                        skillProgressRecord.setEndDate(null);
+                        skillProgressRecord.setTime(0);
+                        skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
+                        newSkillProgressRecords.add(skillProgressRecord);
+                    });
+        }
+
+        if(liveTrainingProgramme.isEmpty()) {
+            skillRepository.findAll()
                 .forEach(skill -> {
                     SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
-                    skillProgressRecord.setTrainingProgramme(trainingProgramme);
+                    skillProgressRecord.setTrainingProgramme(savedTrainingProgramme);
                     skillProgressRecord.setSkill(skill);
                     skillProgressRecord.setTime(0);
                     skillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
@@ -49,20 +77,12 @@ public class TrainingProgrammeService {
                     skillProgressRecord.setEndDate(null);
                     skillProgressRecord.setTime(0);
                     skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
-                    skillProgressRecords.add(skillProgressRecord);
+                    newSkillProgressRecords.add(skillProgressRecord);
                 });
+        }
 
-        newTrainingProgramme
-                .setSkillProgressRecords(skillProgressRecords);
-        return trainingProgrammeRepository
-                .saveAndFlush(newTrainingProgramme);
-    }
-
-    public TrainingProgramme updateProgramme(Long id, TrainingProgramme updatedTrainingProgrammeValues) {
-        TrainingProgramme trainingProgrammeToUpdate = trainingProgrammeRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-        BeanUtils.copyProperties(updatedTrainingProgrammeValues, trainingProgrammeToUpdate, "id");
-        return trainingProgrammeRepository.saveAndFlush(trainingProgrammeToUpdate);
+        savedTrainingProgramme.setSkillProgressRecords(newSkillProgressRecords);
+        return trainingProgrammeRepository.saveAndFlush(savedTrainingProgramme);
     }
 
     public void deleteProgramme(Long id) {
@@ -72,6 +92,10 @@ public class TrainingProgrammeService {
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(Long trainingProgrammeId, SkillTrainingSession newSkillTrainingSession) {
         TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(trainingProgrammeId)
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + trainingProgrammeId));
+
+        if(trainingProgramme.getStartDate() == null) {
+            trainingProgramme.setStartDate(LocalDateTime.now());
+        }
 
         newSkillTrainingSession.setTrainingProgramme(trainingProgramme);
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository.saveAndFlush(newSkillTrainingSession);

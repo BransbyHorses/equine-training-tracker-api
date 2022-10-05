@@ -79,17 +79,6 @@ class TrainingProgrammeControllerTest {
     }
 
     @Test
-    void canUpdateProgrammeAndReturnOkResponse() throws Exception {
-        TrainingProgramme updatedProgramme = new TrainingProgramme(1L,  new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), null);
-        given(trainingProgrammeService.updateProgramme(1L, updatedProgramme)).willReturn(updatedProgramme);
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/training-programmes/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(updatedProgramme)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L));
-    }
-
-    @Test
     void canDeleteProgramme() throws Exception {
         given(trainingProgrammeService.getProgramme(1L)).willReturn(trainingProgrammes.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/training-programmes/{id}", 1))

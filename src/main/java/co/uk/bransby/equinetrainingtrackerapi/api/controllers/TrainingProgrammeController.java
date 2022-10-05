@@ -45,16 +45,6 @@ public class TrainingProgrammeController {
         return new ResponseEntity<>(modelMapper.map(savedNewTrainingProgramme, TrainingProgrammeDto.class), resHeaders, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> updateTrainingProgramme(@PathVariable Long id, @RequestBody TrainingProgrammeDto updatedProgrammeValues) {
-        HttpHeaders resHeaders = new HttpHeaders();
-        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.updateProgramme(id, modelMapper.map(updatedProgrammeValues, TrainingProgramme.class));
-            return ResponseEntity
-                    .ok()
-                    .headers(resHeaders)
-                    .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));
-    }
-
     @DeleteMapping ("{id}")
     public ResponseEntity<?> deleteTrainingProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();

@@ -29,6 +29,8 @@ class TrainingProgrammeServiceTest {
     SkillTrainingSessionRepository skillTrainingSessionRepository;
     @Mock
     SkillProgressRecordRepository skillProgressRecordRepository;
+    @Mock
+    EquineRepository equineRepository;
     @InjectMocks
     TrainingProgrammeService trainingProgrammeService;
 
@@ -36,7 +38,7 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository, equineRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
                 new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
                 new TrainingProgramme(2L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
@@ -79,14 +81,6 @@ class TrainingProgrammeServiceTest {
         assertEquals(skillProgressRecord.getTime(), 0);
         assertNull(skillProgressRecord.getStartDate());
         assertNull(skillProgressRecord.getEndDate());
-    }
-
-    @Test
-    void canUpdateProgramme() {
-        TrainingProgramme updatedTrainingProgramme = new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now());
-        given(trainingProgrammeRepository.findById(1L)).willReturn(Optional.ofNullable(trainingProgrammes.get(0)));
-        TrainingProgramme trainingProgramme = trainingProgrammeService.updateProgramme(1L, updatedTrainingProgramme);
-        // TODO - assert entity has updated
     }
 
     @Test
