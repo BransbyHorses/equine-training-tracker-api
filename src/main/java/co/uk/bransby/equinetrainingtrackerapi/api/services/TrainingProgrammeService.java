@@ -3,6 +3,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,8 @@ public class TrainingProgrammeService {
         }
 
         savedTrainingProgramme.setSkillProgressRecords(newSkillProgressRecords);
-        return trainingProgrammeRepository.saveAndFlush(savedTrainingProgramme);
+        trainingProgrammeRepository.saveAndFlush(savedTrainingProgramme);
+        return savedTrainingProgramme;
     }
 
     public void deleteProgramme(Long id) {
