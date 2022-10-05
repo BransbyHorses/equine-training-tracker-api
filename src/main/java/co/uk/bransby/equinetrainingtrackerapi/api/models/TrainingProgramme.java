@@ -29,11 +29,11 @@ public class TrainingProgramme {
     @JoinColumn(name = "equine_id")
     private Equine equine;
 
-    @OneToMany(mappedBy = "trainingProgramme")
+    @OneToMany(mappedBy = "trainingProgramme", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<SkillProgressRecord> skillProgressRecords;
 
-    @OneToMany(mappedBy = "trainingProgramme")
+    @OneToMany(mappedBy = "trainingProgramme", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<SkillTrainingSession> skillTrainingSessions;
 

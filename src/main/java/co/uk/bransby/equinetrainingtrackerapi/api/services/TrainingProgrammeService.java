@@ -37,6 +37,8 @@ public class TrainingProgrammeService {
         TrainingProgramme newTrainingProgramme = trainingProgrammeRepository
                 .saveAndFlush(trainingProgramme);
 
+        // TODO - check if the equine already has an active training programme, if true, end that trainingProgramme (add endDate)
+
         List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
         skillRepository.findAll()
                 .forEach(skill -> {
@@ -66,7 +68,7 @@ public class TrainingProgrammeService {
     }
 
     public void deleteProgramme(Long id) {
-        // TODO - handle delete programme
+        trainingProgrammeRepository.deleteById(id);
     }
 
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(Long trainingProgrammeId, SkillTrainingSession newSkillTrainingSession) {
