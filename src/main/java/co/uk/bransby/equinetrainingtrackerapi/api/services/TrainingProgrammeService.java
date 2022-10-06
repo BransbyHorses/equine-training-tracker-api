@@ -88,7 +88,7 @@ public class TrainingProgrammeService {
     }
 
     public void deleteProgramme(Long id) {
-        // TODO - handle delete programme
+        trainingProgrammeRepository.deleteById(id);
     }
 
     public TrainingProgramme addSkillTrainingSessionToTrainingProgramme(Long trainingProgrammeId, SkillTrainingSession newSkillTrainingSession) {
