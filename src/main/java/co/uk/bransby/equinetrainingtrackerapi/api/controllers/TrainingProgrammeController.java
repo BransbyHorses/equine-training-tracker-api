@@ -30,7 +30,7 @@ public class TrainingProgrammeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TrainingProgrammeDto>> findTrainingAllProgrammes() {
+    public ResponseEntity<List<TrainingProgrammeDto>> findAllTrainingProgrammes() {
         HttpHeaders resHeaders = new HttpHeaders();
         List<TrainingProgrammeDto> allProgrammes = trainingProgrammeService.getAllProgrammes()
                 .stream()
