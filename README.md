@@ -25,6 +25,10 @@ DATASOURCE=
 Run a postgres database and PGAdmin in Docker:
 ```bash
 $ docker-compose up -d
+
+If updating from main repository, run following command to update docker instance:
+```bash
+$ docker-compose up --build
 ```
 or run the postgres database only:
 ```bash
