@@ -131,4 +131,39 @@ class EquineServiceTest {
         );
         Assertions.assertEquals("No category found with id: 1", exception.getMessage());
     }
+
+    @Test
+    void willGetAllTrainingProgrammesOfAnEquine() {
+        Equine testEquine = new Equine();
+        TrainingProgramme trainingProgramme1 = new TrainingProgramme();
+        TrainingProgramme trainingProgramme2 = new TrainingProgramme();
+
+        trainingProgramme1.setId(1L);
+        trainingProgramme1.setEquine(new Equine());
+        trainingProgramme1.setStartDate(null);
+        trainingProgramme1.setEndDate(null);
+        trainingProgramme1.setSkillProgressRecords(new ArrayList<>());
+        trainingProgramme1.setSkillTrainingSessions(new ArrayList<>());
+
+        trainingProgramme2.setId(2L);
+        trainingProgramme2.setEquine(new Equine());
+        trainingProgramme2.setStartDate(null);
+        trainingProgramme2.setEndDate(null);
+        trainingProgramme2.setSkillProgressRecords(new ArrayList<>());
+        trainingProgramme2.setSkillTrainingSessions(new ArrayList<>());
+
+        testEquine.setId(1L);
+        testEquine.setTrainingProgrammes(new ArrayList<>(
+                List.of(trainingProgramme1, trainingProgramme2)
+        ));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+
+        List<TrainingProgramme> equineTrainingProgrammes = equineServiceUnderTest
+                .getEquineTrainingProgrammes(1L);
+        Assertions.assertEquals(2, equineTrainingProgrammes.size());
+        Assertions.assertEquals(1L, equineTrainingProgrammes.get(0).getId());
+        Assertions.assertEquals(2L, equineTrainingProgrammes.get(1).getId());
+
+    }
 }

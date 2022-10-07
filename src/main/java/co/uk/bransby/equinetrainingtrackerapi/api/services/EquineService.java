@@ -42,7 +42,7 @@ public class EquineService {
     public void deleteEquine(Long id){
         Equine equine = equineRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
-        // remove relationships before deleting
+        // TODO - remove relationships before deleting
         equine.setYard(null);
         equineRepository.saveAndFlush(equine);
         equineRepository.deleteById(id);
@@ -71,5 +71,11 @@ public class EquineService {
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
         }
+    }
+
+    public List<TrainingProgramme> getEquineTrainingProgrammes(Long id) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+        return equine.getTrainingProgrammes();
     }
 }
