@@ -100,6 +100,7 @@ public class TrainingProgrammeService {
         }
 
         newSkillTrainingSession.setTrainingProgramme(trainingProgramme);
+        newSkillTrainingSession.setDate(LocalDateTime.now());
         SkillTrainingSession savedSkillTrainingSession = skillTrainingSessionRepository.saveAndFlush(newSkillTrainingSession);
 
         trainingProgramme.addSkillTrainingSession(savedSkillTrainingSession);
