@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -75,12 +76,6 @@ public class EquineController {
                 .build();
     }
 
-    @PatchMapping("{equineId}/programmes/{programmeId}")
-    public ResponseEntity<?> assignProgrammeToEquine(@PathVariable Long equineId, @PathVariable Long programmeId) {
-        Equine equine = equineService.assignEquineToProgramme(equineId, programmeId);
-        return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
-    }
-
     @PatchMapping("{equineId}/yards/{yardId}")
     public ResponseEntity<?> assignYardToEquine(@PathVariable Long equineId, @PathVariable Long yardId) {
         Equine equine = equineService.assignEquineToYard(equineId, yardId);
@@ -88,20 +83,21 @@ public class EquineController {
     }
 
     @PatchMapping("{equineId}/categories/{categoryId}")
-    public ResponseEntity<?> assignCategoryToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
+    public ResponseEntity<?> assignEquineStatusToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
         Equine equine = equineService.assignEquineToCategory(equineId, categoryId);
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
     }
 
-    @PatchMapping("{equineId}/skills/{skillId}")
-    public ResponseEntity<?> assignSkillToEquine(@PathVariable Long equineId, @PathVariable Long skillId) {
-        Equine equine = equineService.assignEquineASkill(equineId, skillId);
-        return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
-    }
+    @GetMapping("{equineId}/training-programmes")
+    public ResponseEntity<List<TrainingProgrammeDto>> getEquineTrainingProgrammes(@PathVariable Long equineId) {
+        List<TrainingProgrammeDto> trainingProgrammes = equineService
+                .getEquineTrainingProgrammes(equineId)
+                .stream()
+                .map(trainingProgramme -> modelMapper.map(trainingProgramme, TrainingProgrammeDto.class))
+                .collect(Collectors.toList());
 
-    @DeleteMapping("{equineId}/skills/{skillId}")
-    public ResponseEntity<?> deleteEquineSkill(@PathVariable Long equineId, @PathVariable Long skillId) {
-        equineService.deleteEquineSkill(equineId, skillId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .ok()
+                .body(trainingProgrammes);
     }
 }

@@ -13,8 +13,8 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name = "programmes")
-public class Programme {
+@Table(name="equine_statuses")
+public class EquineStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +27,8 @@ public class Programme {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Programme programme = (Programme) o;
-        return id != null && Objects.equals(id, programme.id);
+        EquineStatus category = (EquineStatus) o;
+        return id != null && Objects.equals(id, category.id);
     }
 
     @Override
@@ -40,3 +40,4 @@ public class Programme {
         this.equines.remove(equine);
     }
 }
+

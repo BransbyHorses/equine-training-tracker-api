@@ -5,6 +5,7 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingMethod;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingMethodService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -70,16 +71,10 @@ class TrainingMethodControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Training Method 6"));
     }
 
-//    @Test
-//    void willUpdateMethodAndReturnOkResponse() throws Exception {
-//        TrainingMethod updatedTrainingMethod = new TrainingMethod(1L, "Updated Training Method 1", "New description...");
-//
-//        given(trainingMethodService.updateMethod(1L, updatedTrainingMethod)).willReturn(updatedTrainingMethod);
-//        this.mockMvc.perform(MockMvcRequestBuilders.put("/data/training-methods/{id}", updatedTrainingMethod.getId())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(new ObjectMapper().writeValueAsString(updatedTrainingMethod)))
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
+    @Test
+    @Disabled
+    void willUpdateMethodAndReturnOkResponse() throws Exception {
+    }
 
     @Test
     void willDeleteMethodAndReturnOkResponse() throws Exception {
