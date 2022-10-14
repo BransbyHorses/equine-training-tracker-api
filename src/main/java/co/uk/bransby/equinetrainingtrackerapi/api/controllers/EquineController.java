@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.HealthAndSafetyFlag;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.HealthAndSafetyFlagDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import lombok.AllArgsConstructor;
@@ -11,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -99,5 +98,15 @@ public class EquineController {
         return ResponseEntity
                 .ok()
                 .body(trainingProgrammes);
+    }
+
+    @PostMapping("{equineId}/health-and-safety-flags")
+    public ResponseEntity<HealthAndSafetyFlagDto> createEquineHealthAndSafetyFlag(@PathVariable Long equineId, @RequestBody HealthAndSafetyFlagDto newHealthAndSafetyFlag) {
+        HealthAndSafetyFlag savedHealthAndSafetyFlag = equineService.createEquineHealthAndSafetyFlag(
+                equineId, modelMapper.map(newHealthAndSafetyFlag, HealthAndSafetyFlag.class)
+        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(modelMapper.map(savedHealthAndSafetyFlag, HealthAndSafetyFlagDto.class));
     }
 }
