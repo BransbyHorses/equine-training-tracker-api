@@ -2,6 +2,7 @@ package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -82,8 +83,21 @@ public class EquineController {
     }
 
     @PatchMapping("{equineId}/categories/{categoryId}")
-    public ResponseEntity<?> assignCategoryToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
+    public ResponseEntity<?> assignEquineStatusToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
         Equine equine = equineService.assignEquineToCategory(equineId, categoryId);
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
+    }
+
+    @GetMapping("{equineId}/training-programmes")
+    public ResponseEntity<List<TrainingProgrammeDto>> getEquineTrainingProgrammes(@PathVariable Long equineId) {
+        List<TrainingProgrammeDto> trainingProgrammes = equineService
+                .getEquineTrainingProgrammes(equineId)
+                .stream()
+                .map(trainingProgramme -> modelMapper.map(trainingProgramme, TrainingProgrammeDto.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity
+                .ok()
+                .body(trainingProgrammes);
     }
 }

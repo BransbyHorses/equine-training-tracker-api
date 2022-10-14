@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.assertj.core.api.BDDAssumptions.given;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(controllers = EquineController.class)
@@ -87,6 +88,19 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(EquineToUpdate.getId()));
     }
 
+    @Test
+    void canFindEquineTrainingProgrammesAndReturnOkResponse() throws Exception {
+        TrainingProgramme trainingProgramme1 = new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), null, null);
+
+        BDDMockito.given(equineService.getEquineTrainingProgrammes(1L)).willReturn(new ArrayList<>(
+                List.of(trainingProgramme1)
+        ));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/1/training-programmes"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+                .andExpect((MockMvcResultMatchers.jsonPath("$.[0].id").value(1L)));
+    }
 
     @Test
     void deleteEquine() throws Exception {
