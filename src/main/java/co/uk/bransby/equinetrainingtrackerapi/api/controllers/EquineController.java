@@ -109,4 +109,16 @@ public class EquineController {
                 .status(HttpStatus.CREATED)
                 .body(modelMapper.map(savedHealthAndSafetyFlag, HealthAndSafetyFlagDto.class));
     }
+
+    @GetMapping("{equineId}/health-and-safety-flags")
+        public ResponseEntity<List<HealthAndSafetyFlagDto>> getEquineHealthAndSafetyFlags(@PathVariable Long equineId) {
+        List<HealthAndSafetyFlagDto> equineHealthAndSafetyFlags =
+                equineService.getEquineHealthAndSafetyFlags(equineId)
+                        .stream()
+                        .map(hsf -> modelMapper.map(hsf, HealthAndSafetyFlagDto.class))
+                        .toList();
+        return ResponseEntity
+                .ok()
+                .body(equineHealthAndSafetyFlags);
+    }
 }

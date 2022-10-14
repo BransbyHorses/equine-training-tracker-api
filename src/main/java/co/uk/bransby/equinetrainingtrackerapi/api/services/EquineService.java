@@ -85,6 +85,12 @@ public class EquineService {
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
         newHealthAndSafetyFlag.setEquine(equine);
         return healthAndSafetyFlagRepository.saveAndFlush(newHealthAndSafetyFlag);
-
     }
+
+    public List<HealthAndSafetyFlag> getEquineHealthAndSafetyFlags(Long id) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+        return equine.getHealthAndSafetyFlags();
+    }
+
 }
