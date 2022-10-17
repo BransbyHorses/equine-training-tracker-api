@@ -38,7 +38,7 @@ public class Equine {
     @JoinColumn(name = "learner_type_id")
     private LearnerType learnerType;
 
-    @OneToMany(mappedBy = "equine")
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
     private List<HealthAndSafetyFlag> healthAndSafetyFlags;
 
     @Override

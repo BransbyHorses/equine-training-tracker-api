@@ -1,5 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class EquineDto {
     private String name;
     private YardDto yard;
     private EquineStatusDto equineStatus;
+    @JsonIgnoreProperties({"equine"})
     private List<TrainingProgrammeDto> trainingProgrammes;
     private LearnerTypeDto learnerType;
     private List<HealthAndSafetyFlagDto> healthAndSafetyFlags;
