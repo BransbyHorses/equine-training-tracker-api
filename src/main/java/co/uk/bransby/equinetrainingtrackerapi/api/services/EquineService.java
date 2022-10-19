@@ -90,10 +90,8 @@ public class EquineService {
                 .stream()
                 .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
                 .findFirst();
-        if(activeTrainingProgramme.isEmpty()) {
-            return null;
-        };
-        return activeTrainingProgramme.get();
+
+        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
     }
 
     public List<SkillTrainingSession> getEquineSkillTrainingSessions(Long id) {
