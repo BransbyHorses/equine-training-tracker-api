@@ -186,6 +186,21 @@ class EquineServiceTest {
     }
 
     @Test
+    void willReturnNullIfEquineHasNoActiveTrainingProgramme () {
+        TrainingProgramme endedTrainingProgramme1 = new TrainingProgramme();
+        endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022,10,20,7,30));
+        endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022,12,20,7,30));
+        Equine testEquine = new Equine();
+        testEquine.setId(1L);
+        testEquine.setTrainingProgrammes(new ArrayList<>(List.of(endedTrainingProgramme1)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+
+        TrainingProgramme result = equineServiceUnderTest.getActiveTrainingProgramme(1L);
+        Assertions.assertNull(result);
+    }
+
+    @Test
     void willGetAllEquineSkillTrainingSessions() {
         TrainingProgramme trainingProgramme1 = new TrainingProgramme();
         TrainingProgramme trainingProgramme2 = new TrainingProgramme();
