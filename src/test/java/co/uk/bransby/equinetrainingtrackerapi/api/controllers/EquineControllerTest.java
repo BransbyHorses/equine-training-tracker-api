@@ -161,4 +161,36 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No category found with id: 1"));
     }
+
+    @Test
+    void willReturnActiveTrainingProgrammeAndOkResponse() throws Exception {
+        TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
+        activeTrainingProgramme.setId(1L);
+        BDDMockito.given(equineService.getActiveTrainingProgramme(1L)).willReturn(activeTrainingProgramme);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/1/training-programmes/latest"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void willReturnNoActiveTrainingProgrammeAndNoContentResponse() throws Exception {
+        BDDMockito.given(equineService.getActiveTrainingProgramme(1L)).willReturn(null);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/1/training-programmes/latest"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    void willReturnAllSkillTrainingSessionsAndOkResponse() throws Exception {
+        SkillTrainingSession skillTrainingSession1 = new SkillTrainingSession();
+        skillTrainingSession1.setId(1L);
+        SkillTrainingSession skillTrainingSession2 = new SkillTrainingSession();
+        skillTrainingSession2.setId(2L);
+        List<SkillTrainingSession> skillTrainingSessions = new ArrayList<>(List.of(skillTrainingSession1, skillTrainingSession2));
+        BDDMockito.given(equineService.getEquineSkillTrainingSessions(1L))
+                .willReturn(skillTrainingSessions);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/1/skill-training-sessions"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andExpect((MockMvcResultMatchers.jsonPath("$.[0].id").value(1L)))
+                .andExpect((MockMvcResultMatchers.jsonPath("$.[1].id").value(2L)));
+    }
+
 }

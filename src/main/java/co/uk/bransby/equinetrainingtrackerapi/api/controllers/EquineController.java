@@ -104,15 +104,13 @@ public class EquineController {
     public ResponseEntity<TrainingProgrammeDto> getActiveTrainingProgramme(@PathVariable Long equineId) {
         TrainingProgramme activeTrainingProgramme = equineService.getActiveTrainingProgramme(equineId);
 
-        if(activeTrainingProgramme == null) {
-            return ResponseEntity
-                    .noContent()
-                    .build();
-        }
-
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(activeTrainingProgramme, TrainingProgrammeDto.class));
+        return activeTrainingProgramme == null ?
+                ResponseEntity
+                        .noContent()
+                        .build()
+                : ResponseEntity
+                        .ok()
+                        .body(modelMapper.map(activeTrainingProgramme, TrainingProgrammeDto.class));
     }
 
     @GetMapping("{equineId}/skill-training-sessions")
