@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.HealthAndSafetyFlagDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -167,4 +169,27 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No category found with id: 1"));
     }
 
+    @Test
+    void willCreateHealthAndSafetyFlagAndReturnCreatedResponse() throws Exception {
+       HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag();
+       healthAndSafetyFlag.setId(1L);
+       healthAndSafetyFlag.setContent("Content");
+        BDDMockito.given(equineService.createEquineHealthAndSafetyFlag(1L, healthAndSafetyFlag)).willReturn(healthAndSafetyFlag);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines/1/health-and-safety-flags")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(healthAndSafetyFlag)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L));
+    }
+
+    @Test
+    void willGetEquineHealthAndSafetyFlagsAndReturnOkResponse() throws Exception {
+        HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag(1L, "", new Equine());
+        BDDMockito.given(equineService.getEquineHealthAndSafetyFlags(1L)).willReturn(new ArrayList<>(List.of(healthAndSafetyFlag)));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/data/equines/1/health-and-safety-flags"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(1L));
+    }
 }
