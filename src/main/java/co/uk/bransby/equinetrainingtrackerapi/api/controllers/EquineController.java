@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.SkillTrainingSessionDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import lombok.AllArgsConstructor;
@@ -11,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -100,4 +99,31 @@ public class EquineController {
                 .ok()
                 .body(trainingProgrammes);
     }
+
+    @GetMapping("{equineId}/training-programmes/latest")
+    public ResponseEntity<TrainingProgrammeDto> getActiveTrainingProgramme(@PathVariable Long equineId) {
+        TrainingProgramme activeTrainingProgramme = equineService.getActiveTrainingProgramme(equineId);
+
+        if(activeTrainingProgramme == null) {
+            return ResponseEntity
+                    .noContent()
+                    .build();
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(activeTrainingProgramme, TrainingProgrammeDto.class));
+    }
+
+    @GetMapping("{equineId}/skill-training-sessions")
+    public ResponseEntity<List<SkillTrainingSessionDto>> getEquineSkillTrainingSessions(@PathVariable Long equineId) {
+        List<SkillTrainingSessionDto> allSkillTrainingSessions = equineService.getEquineSkillTrainingSessions(equineId)
+                .stream()
+                .map(skillTrainingSession -> modelMapper.map(skillTrainingSession, SkillTrainingSessionDto.class))
+                .toList();
+        return ResponseEntity
+                .ok()
+                .body(allSkillTrainingSessions);
+    }
+
 }
