@@ -80,6 +80,11 @@ public class EquineService {
     public TrainingProgramme getActiveTrainingProgramme(Long id) {
         Equine equine = equineRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+
+        if(equine.getTrainingProgrammes() == null) {
+            return null;
+        }
+
         Optional<TrainingProgramme> activeTrainingProgramme = equine
                 .getTrainingProgrammes()
                 .stream()

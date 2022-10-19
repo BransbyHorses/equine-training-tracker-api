@@ -190,14 +190,21 @@ class EquineServiceTest {
         TrainingProgramme endedTrainingProgramme1 = new TrainingProgramme();
         endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022,10,20,7,30));
         endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022,12,20,7,30));
-        Equine testEquine = new Equine();
-        testEquine.setId(1L);
-        testEquine.setTrainingProgrammes(new ArrayList<>(List.of(endedTrainingProgramme1)));
+        Equine testEquine1 = new Equine();
+        testEquine1.setId(1L);
+        testEquine1.setTrainingProgrammes(new ArrayList<>(List.of(endedTrainingProgramme1)));
 
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+        Equine testEquine2 = new Equine();
+        testEquine1.setId(2L);
+        testEquine1.setTrainingProgrammes(new ArrayList<>());
 
-        TrainingProgramme result = equineServiceUnderTest.getActiveTrainingProgramme(1L);
-        Assertions.assertNull(result);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine1));
+        given(equineRepository.findById(2L)).willReturn(Optional.of(testEquine2));
+
+        TrainingProgramme result1 = equineServiceUnderTest.getActiveTrainingProgramme(1L);
+        TrainingProgramme result2 = equineServiceUnderTest.getActiveTrainingProgramme(2L);
+        Assertions.assertNull(result1);
+        Assertions.assertNull(result2);
     }
 
     @Test
