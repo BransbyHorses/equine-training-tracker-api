@@ -27,14 +27,16 @@ class EquineServiceTest {
     EquineStatusRepository equineStatusRepository;
     @Mock
     YardRepository yardRepository;
+    @Mock
+    HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
     @InjectMocks
     private EquineService equineServiceUnderTest;
     private Equine equineInstance;
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType());
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository, healthAndSafetyFlagRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
     }
 
     @Test
@@ -163,6 +165,27 @@ class EquineServiceTest {
     }
 
     @Test
+    void willCreateNewHealthAndSafetyFlagOnEquine() {
+        HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag(1L, "", null);
+        given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
+        given(healthAndSafetyFlagRepository.saveAndFlush(healthAndSafetyFlag)).willReturn(healthAndSafetyFlag);
+
+        HealthAndSafetyFlag savedHealthAndSafetyFlag = equineServiceUnderTest.createEquineHealthAndSafetyFlag(1L, healthAndSafetyFlag);
+        Assertions.assertEquals(savedHealthAndSafetyFlag, healthAndSafetyFlag);
+        Assertions.assertNotNull(savedHealthAndSafetyFlag.getDateCreated());
+        Assertions.assertEquals(savedHealthAndSafetyFlag.getEquine(), equineInstance);
+    }
+
+    @Test
+    void willGetEquineHealthAndSafetyFlags() {
+        HealthAndSafetyFlag healthAndSafetyFlag1 = new HealthAndSafetyFlag(1L, "", equineInstance);
+        HealthAndSafetyFlag healthAndSafetyFlag2 = new HealthAndSafetyFlag(2L, "", equineInstance);
+        equineInstance.setHealthAndSafetyFlags(new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
+        given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
+
+        List<HealthAndSafetyFlag> healthAndSafetyFlags = equineServiceUnderTest.getEquineHealthAndSafetyFlags(1L);
+        Assertions.assertEquals(healthAndSafetyFlags, new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
+
     void willGetActiveTrainingProgramme() {
         TrainingProgramme activeTrainingProgramme1 = new TrainingProgramme();
         activeTrainingProgramme1.setStartDate(LocalDateTime.of(2022,10,20,7,30));

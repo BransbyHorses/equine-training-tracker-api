@@ -1,8 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.HealthAndSafetyFlag;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.HealthAndSafetyFlagDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.SkillTrainingSessionDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
@@ -100,6 +102,28 @@ public class EquineController {
                 .body(trainingProgrammes);
     }
 
+    @PostMapping("{equineId}/health-and-safety-flags")
+    public ResponseEntity<HealthAndSafetyFlagDto> createEquineHealthAndSafetyFlag(@PathVariable Long equineId, @RequestBody HealthAndSafetyFlagDto newHealthAndSafetyFlag) {
+        HealthAndSafetyFlag savedHealthAndSafetyFlag = equineService.createEquineHealthAndSafetyFlag(
+                equineId, modelMapper.map(newHealthAndSafetyFlag, HealthAndSafetyFlag.class)
+        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(modelMapper.map(savedHealthAndSafetyFlag, HealthAndSafetyFlagDto.class));
+    }
+
+    @GetMapping("{equineId}/health-and-safety-flags")
+        public ResponseEntity<List<HealthAndSafetyFlagDto>> getEquineHealthAndSafetyFlags(@PathVariable Long equineId) {
+        List<HealthAndSafetyFlagDto> equineHealthAndSafetyFlags =
+                equineService.getEquineHealthAndSafetyFlags(equineId)
+                        .stream()
+                        .map(hsf -> modelMapper.map(hsf, HealthAndSafetyFlagDto.class))
+                        .toList();
+        return ResponseEntity
+                .ok()
+                .body(equineHealthAndSafetyFlags);
+    }
+    
     @GetMapping("{equineId}/training-programmes/latest")
     public ResponseEntity<TrainingProgrammeDto> getActiveTrainingProgramme(@PathVariable Long equineId) {
         TrainingProgramme activeTrainingProgramme = equineService.getActiveTrainingProgramme(equineId);

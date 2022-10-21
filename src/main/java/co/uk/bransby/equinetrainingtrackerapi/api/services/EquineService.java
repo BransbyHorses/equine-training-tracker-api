@@ -16,6 +16,7 @@ public class EquineService {
     private final EquineRepository equineRepository;
     private final YardRepository yardRepository;
     private final EquineStatusRepository equineStatusRepository;
+    private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
 
     public List<Equine> getAllEquines(){
         return equineRepository.findAll();
@@ -75,6 +76,19 @@ public class EquineService {
         Equine equine = equineRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
         return equine.getTrainingProgrammes();
+    }
+
+    public HealthAndSafetyFlag createEquineHealthAndSafetyFlag(Long id, HealthAndSafetyFlag newHealthAndSafetyFlag) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+        newHealthAndSafetyFlag.setEquine(equine);
+        return healthAndSafetyFlagRepository.saveAndFlush(newHealthAndSafetyFlag);
+    }
+
+    public List<HealthAndSafetyFlag> getEquineHealthAndSafetyFlags(Long id) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+        return equine.getHealthAndSafetyFlags();
     }
 
     public TrainingProgramme getActiveTrainingProgramme(Long id) {

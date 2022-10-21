@@ -38,6 +38,9 @@ public class Equine {
     @JoinColumn(name = "learner_type_id")
     private LearnerType learnerType;
 
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
+    private List<HealthAndSafetyFlag> healthAndSafetyFlags;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
