@@ -113,7 +113,7 @@ public class EquineController {
     }
 
     @GetMapping("{equineId}/health-and-safety-flags")
-        public ResponseEntity<List<HealthAndSafetyFlagDto>> getEquineHealthAndSafetyFlags(@PathVariable Long equineId) {
+    public ResponseEntity<List<HealthAndSafetyFlagDto>> getEquineHealthAndSafetyFlags(@PathVariable Long equineId) {
         List<HealthAndSafetyFlagDto> equineHealthAndSafetyFlags =
                 equineService.getEquineHealthAndSafetyFlags(equineId)
                         .stream()
