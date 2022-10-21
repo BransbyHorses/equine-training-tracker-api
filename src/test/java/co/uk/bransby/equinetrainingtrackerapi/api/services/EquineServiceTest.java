@@ -185,19 +185,21 @@ class EquineServiceTest {
 
         List<HealthAndSafetyFlag> healthAndSafetyFlags = equineServiceUnderTest.getEquineHealthAndSafetyFlags(1L);
         Assertions.assertEquals(healthAndSafetyFlags, new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
+    }
 
+    @Test
     void willGetActiveTrainingProgramme() {
         TrainingProgramme activeTrainingProgramme1 = new TrainingProgramme();
-        activeTrainingProgramme1.setStartDate(LocalDateTime.of(2022,10,20,7,30));
+        activeTrainingProgramme1.setStartDate(LocalDateTime.of(2022, 10, 20, 7, 30));
         activeTrainingProgramme1.setEndDate(null);
 
         TrainingProgramme endedTrainingProgramme1 = new TrainingProgramme();
-        endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022,9,20,7,30));
-        endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022,9,25,7,30));
+        endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022, 9, 20, 7, 30));
+        endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022, 9, 25, 7, 30));
 
         TrainingProgramme endedTrainingProgramme2 = new TrainingProgramme();
-        endedTrainingProgramme2.setStartDate(LocalDateTime.of(2022,8,20,7,30));
-        endedTrainingProgramme2.setEndDate(LocalDateTime.of(2022,8,25,7,30));
+        endedTrainingProgramme2.setStartDate(LocalDateTime.of(2022, 8, 20, 7, 30));
+        endedTrainingProgramme2.setEndDate(LocalDateTime.of(2022, 8, 25, 7, 30));
 
         Equine testEquine = new Equine();
         testEquine.setId(1L);
@@ -208,67 +210,68 @@ class EquineServiceTest {
         Assertions.assertEquals(result, activeTrainingProgramme1);
     }
 
+
     @Test
     void willReturnNullIfEquineHasNoActiveTrainingProgramme () {
-        TrainingProgramme endedTrainingProgramme1 = new TrainingProgramme();
-        endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022,10,20,7,30));
-        endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022,12,20,7,30));
-        Equine testEquine1 = new Equine();
-        testEquine1.setId(1L);
-        testEquine1.setTrainingProgrammes(new ArrayList<>(List.of(endedTrainingProgramme1)));
+            TrainingProgramme endedTrainingProgramme1 = new TrainingProgramme();
+            endedTrainingProgramme1.setStartDate(LocalDateTime.of(2022, 10, 20, 7, 30));
+            endedTrainingProgramme1.setEndDate(LocalDateTime.of(2022, 12, 20, 7, 30));
+            Equine testEquine1 = new Equine();
+            testEquine1.setId(1L);
+            testEquine1.setTrainingProgrammes(new ArrayList<>(List.of(endedTrainingProgramme1)));
 
-        Equine testEquine2 = new Equine();
-        testEquine1.setId(2L);
-        testEquine1.setTrainingProgrammes(new ArrayList<>());
+            Equine testEquine2 = new Equine();
+            testEquine1.setId(2L);
+            testEquine1.setTrainingProgrammes(new ArrayList<>());
 
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine1));
-        given(equineRepository.findById(2L)).willReturn(Optional.of(testEquine2));
+            given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine1));
+            given(equineRepository.findById(2L)).willReturn(Optional.of(testEquine2));
 
-        TrainingProgramme result1 = equineServiceUnderTest.getActiveTrainingProgramme(1L);
-        TrainingProgramme result2 = equineServiceUnderTest.getActiveTrainingProgramme(2L);
-        Assertions.assertNull(result1);
-        Assertions.assertNull(result2);
-    }
+            TrainingProgramme result1 = equineServiceUnderTest.getActiveTrainingProgramme(1L);
+            TrainingProgramme result2 = equineServiceUnderTest.getActiveTrainingProgramme(2L);
+            Assertions.assertNull(result1);
+            Assertions.assertNull(result2);
+        }
 
-    @Test
-    void willGetAllEquineSkillTrainingSessions() {
-        TrainingProgramme trainingProgramme1 = new TrainingProgramme();
-        TrainingProgramme trainingProgramme2 = new TrainingProgramme();
-        TrainingProgramme trainingProgramme3 = new TrainingProgramme();
+        @Test
+        void willGetAllEquineSkillTrainingSessions () {
+            TrainingProgramme trainingProgramme1 = new TrainingProgramme();
+            TrainingProgramme trainingProgramme2 = new TrainingProgramme();
+            TrainingProgramme trainingProgramme3 = new TrainingProgramme();
 
-        SkillTrainingSession skillTrainingSession1 = new SkillTrainingSession();
-        SkillTrainingSession skillTrainingSession2 = new SkillTrainingSession();
-        SkillTrainingSession skillTrainingSession3 = new SkillTrainingSession();
+            SkillTrainingSession skillTrainingSession1 = new SkillTrainingSession();
+            SkillTrainingSession skillTrainingSession2 = new SkillTrainingSession();
+            SkillTrainingSession skillTrainingSession3 = new SkillTrainingSession();
 
-        trainingProgramme1.setSkillTrainingSessions(new ArrayList<>(List.of(skillTrainingSession1)));
-        trainingProgramme2.setSkillTrainingSessions((new ArrayList<>(List.of(skillTrainingSession2))));
-        trainingProgramme3.setSkillTrainingSessions((new ArrayList<>(List.of(skillTrainingSession3))));
+            trainingProgramme1.setSkillTrainingSessions(new ArrayList<>(List.of(skillTrainingSession1)));
+            trainingProgramme2.setSkillTrainingSessions((new ArrayList<>(List.of(skillTrainingSession2))));
+            trainingProgramme3.setSkillTrainingSessions((new ArrayList<>(List.of(skillTrainingSession3))));
 
-        Equine testEquine = new Equine();
-        testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
-        List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions, new ArrayList<>(List.of(skillTrainingSession1, skillTrainingSession2, skillTrainingSession3)));
-    }
+            Equine testEquine = new Equine();
+            testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
+            given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+            List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
+            Assertions.assertEquals(skillTrainingSessions, new ArrayList<>(List.of(skillTrainingSession1, skillTrainingSession2, skillTrainingSession3)));
+        }
 
-    @Test
-    void willReturnEmptyListIfNoSkillTrainingSessionsAreFound() {
-        TrainingProgramme trainingProgramme1 = new TrainingProgramme();
-        TrainingProgramme trainingProgramme2 = new TrainingProgramme();
-        TrainingProgramme trainingProgramme3 = new TrainingProgramme();
-        Equine testEquine = new Equine();
-        testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
-        List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions.size(), 0);
-    }
+        @Test
+        void willReturnEmptyListIfNoSkillTrainingSessionsAreFound () {
+            TrainingProgramme trainingProgramme1 = new TrainingProgramme();
+            TrainingProgramme trainingProgramme2 = new TrainingProgramme();
+            TrainingProgramme trainingProgramme3 = new TrainingProgramme();
+            Equine testEquine = new Equine();
+            testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
+            given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+            List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
+            Assertions.assertEquals(skillTrainingSessions.size(), 0);
+        }
 
-    @Test
-    void willReturnEmptyListIfEquineHasNoTrainingProgrammes() {
-        Equine testEquine = new Equine();
-        testEquine.setTrainingProgrammes(null);
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
-        List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions.size(), 0);
-    }
+        @Test
+        void willReturnEmptyListIfEquineHasNoTrainingProgrammes () {
+            Equine testEquine = new Equine();
+            testEquine.setTrainingProgrammes(null);
+            given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+            List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
+            Assertions.assertEquals(skillTrainingSessions.size(), 0);
+        }
 }
