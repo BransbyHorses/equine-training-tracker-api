@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -93,4 +91,36 @@ public class EquineService {
         return equine.getHealthAndSafetyFlags();
     }
 
+    public TrainingProgramme getActiveTrainingProgramme(Long id) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+
+        if(equine.getTrainingProgrammes() == null) {
+            return null;
+        }
+
+        Optional<TrainingProgramme> activeTrainingProgramme = equine
+                .getTrainingProgrammes()
+                .stream()
+                .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
+                .findFirst();
+
+        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
+    }
+
+    public List<SkillTrainingSession> getEquineSkillTrainingSessions(Long id) {
+        Equine equine = equineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
+        List<SkillTrainingSession> allSkillTrainingSessions = new ArrayList<>();
+        if(equine.getTrainingProgrammes() == null) {
+            return new ArrayList<>();
+        }
+        equine.getTrainingProgrammes()
+                .forEach((trainingProgramme -> {
+                    if(trainingProgramme.getSkillTrainingSessions() != null) {
+                        allSkillTrainingSessions.addAll(trainingProgramme.getSkillTrainingSessions());
+                    }
+                }));
+        return allSkillTrainingSessions;
+    }
 }
