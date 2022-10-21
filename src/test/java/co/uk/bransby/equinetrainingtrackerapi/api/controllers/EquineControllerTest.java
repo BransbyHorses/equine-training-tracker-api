@@ -170,20 +170,6 @@ class EquineControllerTest {
     }
 
     @Test
-    void willCreateHealthAndSafetyFlagAndReturnCreatedResponse() throws Exception {
-       HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag();
-       healthAndSafetyFlag.setId(1L);
-       healthAndSafetyFlag.setContent("Content");
-        BDDMockito.given(equineService.createEquineHealthAndSafetyFlag(1L, healthAndSafetyFlag)).willReturn(healthAndSafetyFlag);
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines/1/health-and-safety-flags")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(healthAndSafetyFlag)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L));
-    }
-
-    @Test
     void willGetEquineHealthAndSafetyFlagsAndReturnOkResponse() throws Exception {
         HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag(1L, "", new Equine());
         BDDMockito.given(equineService.getEquineHealthAndSafetyFlags(1L)).willReturn(new ArrayList<>(List.of(healthAndSafetyFlag)));
