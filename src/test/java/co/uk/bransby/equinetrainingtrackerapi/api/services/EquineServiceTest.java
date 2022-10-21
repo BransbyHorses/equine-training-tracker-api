@@ -185,6 +185,7 @@ class EquineServiceTest {
 
         List<HealthAndSafetyFlag> healthAndSafetyFlags = equineServiceUnderTest.getEquineHealthAndSafetyFlags(1L);
         Assertions.assertEquals(healthAndSafetyFlags, new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
+    }
 
     void willGetActiveTrainingProgramme() {
         TrainingProgramme activeTrainingProgramme1 = new TrainingProgramme();
