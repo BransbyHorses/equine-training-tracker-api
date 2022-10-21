@@ -37,6 +37,6 @@ public class HealthAndSafetyFlagController {
         healthAndSafetyFlagService.deleteHealthAndSafetyFlag(id);
         return ResponseEntity
                 .ok()
-                .body("Healthy & safety flag with id " + id + " deleted");
+                .body("Healthy & safety flag with id " + id + " has been deleted");
     }
 }
