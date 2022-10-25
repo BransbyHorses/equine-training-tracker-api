@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ProgressCode {
     NOT_ABLE("Not able"),
-    JUST_STARTED("Limited"),
-    OK_WITH_LIMITS("Ok"),
+    LIMITED("Limited"),
+    OK("Ok"),
     CONFIDENT("Confident");
 
     private final String string;

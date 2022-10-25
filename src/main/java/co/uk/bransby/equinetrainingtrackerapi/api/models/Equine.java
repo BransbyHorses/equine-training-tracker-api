@@ -30,7 +30,7 @@ public class Equine {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private EquineStatus equineStatus;
 
-    @OneToMany(mappedBy = "equine")
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<TrainingProgramme> trainingProgrammes;
 
@@ -39,6 +39,7 @@ public class Equine {
     private LearnerType learnerType;
 
     @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<HealthAndSafetyFlag> healthAndSafetyFlags;
 
     @Override

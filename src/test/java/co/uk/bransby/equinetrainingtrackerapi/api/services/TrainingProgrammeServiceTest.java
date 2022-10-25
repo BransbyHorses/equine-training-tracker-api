@@ -3,7 +3,6 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,12 +10,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingProgrammeServiceTest {
@@ -31,6 +29,8 @@ class TrainingProgrammeServiceTest {
     SkillProgressRecordRepository skillProgressRecordRepository;
     @Mock
     EquineRepository equineRepository;
+    @Mock
+    TrainingCategoryRepository trainingCategoryRepository;
     @InjectMocks
     TrainingProgrammeService trainingProgrammeService;
 
@@ -38,7 +38,7 @@ class TrainingProgrammeServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository, equineRepository);
+        this.trainingProgrammeService = new TrainingProgrammeService(trainingProgrammeRepository, skillRepository, skillTrainingSessionRepository, skillProgressRecordRepository, equineRepository, trainingCategoryRepository);
         this.trainingProgrammes = new ArrayList<>(List.of(
                 new TrainingProgramme(1L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
                 new TrainingProgramme(2L, new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
@@ -65,91 +65,70 @@ class TrainingProgrammeServiceTest {
 
     @Test
     void canCreateFirstTrainingProgramme() {
-        Equine testEquine = new Equine();
-        testEquine.setId(1L);
-        testEquine.setTrainingProgrammes(new ArrayList<>());
-
-        Skill skill1 = new Skill(1L, "Skill 1");
-        Skill skill2 = new Skill(1L, "Skill 2");
-
+        Equine equine = new Equine();
+        equine.setId(1L);
+        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category", "");
         TrainingProgramme newTrainingProgramme = new TrainingProgramme();
-        newTrainingProgramme.setId(1L);
-        newTrainingProgramme.setTrainingCategory(new TrainingCategory(1L, "", ""));
-        newTrainingProgramme.setEquine(testEquine);
-        newTrainingProgramme.setSkillTrainingSessions(new ArrayList<>());
-        newTrainingProgramme.setSkillProgressRecords(new ArrayList<>());
-        newTrainingProgramme.setStartDate(null);
-        newTrainingProgramme.setEndDate(null);
 
-        given(equineRepository.getById(1L)).willReturn(testEquine);
-        given(trainingProgrammeRepository.saveAndFlush(newTrainingProgramme)).willReturn(newTrainingProgramme);
-        given(skillRepository.findAll()).willReturn(new ArrayList<>(List.of(skill1, skill2)));
+        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
 
-        TrainingProgramme savedTrainingProgramme = trainingProgrammeService.createProgramme(newTrainingProgramme);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        given(trainingCategoryRepository.findById(1L)).willReturn(Optional.of(trainingCategory));
+        when(trainingProgrammeService.createNewSkillProgressRecords(newTrainingProgramme)).thenReturn(skillProgressRecords);
 
-        assertEquals(1L, savedTrainingProgramme.getId());
-        assertEquals(2, savedTrainingProgramme.getSkillProgressRecords().size());
-        assertEquals("Skill 1", savedTrainingProgramme.getSkillProgressRecords().get(0).getSkill().getName());
-        assertEquals("Skill 2", savedTrainingProgramme.getSkillProgressRecords().get(1).getSkill().getName());
-        assertEquals(ProgressCode.NOT_ABLE, savedTrainingProgramme.getSkillProgressRecords().get(0).getProgressCode());
-        assertEquals(ProgressCode.NOT_ABLE, savedTrainingProgramme.getSkillProgressRecords().get(1).getProgressCode());
-        assertEquals(0, savedTrainingProgramme.getSkillProgressRecords().get(0).getTime());
-        assertEquals(0, savedTrainingProgramme.getSkillProgressRecords().get(1).getTime());
-        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(0).getStartDate());
-        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(0).getEndDate());
-        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(1).getStartDate());
-        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(1).getEndDate());
+        TrainingProgramme savedTrainingProgramme = trainingProgrammeService.createProgramme(1L, 1L);
+
+        assertEquals(trainingCategory, savedTrainingProgramme.getTrainingCategory());
+        assertEquals(skillProgressRecords, savedTrainingProgramme.getSkillProgressRecords());
+        assertEquals(equine, savedTrainingProgramme.getEquine());
+        assertNull(savedTrainingProgramme.getStartDate());
+        assertNotNull(savedTrainingProgramme.getCreatedOn());
+        assertNull(savedTrainingProgramme.getEndDate());
     }
 
     @Test
-    void canCreateNewTrainingProgrammeAndWillTransferSkillProgressRecords() {
-        // setup
-        Skill testSkill = new Skill(1L, "Skill 1");
-
-        SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
-        Equine testEquine = new Equine();
+    void canCreateNewTrainingProgramme() {
         TrainingProgramme oldTrainingProgramme = new TrainingProgramme();
+        Skill skill = new Skill(1L, "Skill");
+        SkillProgressRecord skillProgressRecord = new SkillProgressRecord(
+                1L,
+                oldTrainingProgramme,
+                skill,
+                ProgressCode.CONFIDENT,
+                LocalDateTime.of(2022,9,9, 7, 30),
+                null,
+                15
+        );
+        oldTrainingProgramme.setSkillProgressRecords(new ArrayList<>(List.of(skillProgressRecord)));
+
+        Equine equine = new Equine();
+        equine.setId(1L);
+        equine.setTrainingProgrammes(new ArrayList<>(List.of(oldTrainingProgramme)));
+
+        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category", "");
+
         TrainingProgramme newTrainingProgramme = new TrainingProgramme();
 
-        skillProgressRecord.setId(1L);
-        skillProgressRecord.setTrainingProgramme(oldTrainingProgramme);
-        skillProgressRecord.setSkill(testSkill);
-        skillProgressRecord.setProgressCode(ProgressCode.OK_WITH_LIMITS);
-        skillProgressRecord.setStartDate(LocalDateTime.of(2022, 9, 20, 10, 30));
-        skillProgressRecord.setEndDate(null);
-        skillProgressRecord.setTime(35);
+        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
 
-        oldTrainingProgramme.setId(2L);
-        oldTrainingProgramme.setEquine(testEquine);
-        oldTrainingProgramme.setSkillTrainingSessions(new ArrayList<>());
-        oldTrainingProgramme.setSkillProgressRecords(new ArrayList<>(List.of(skillProgressRecord)));
-        oldTrainingProgramme.setStartDate(LocalDateTime.of(2022, 9, 12, 21, 30));
-        oldTrainingProgramme.setEndDate(null);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        given(trainingCategoryRepository.findById(1L)).willReturn(Optional.of(trainingCategory));
+        lenient().when(trainingProgrammeService.transferSkillProgressRecords(oldTrainingProgramme, newTrainingProgramme)).thenReturn(skillProgressRecords);
 
-        testEquine.setId(1L);
-        testEquine.setTrainingProgrammes(new ArrayList<>(List.of(oldTrainingProgramme)));
+        TrainingProgramme savedTrainingProgramme = trainingProgrammeService.createProgramme(1L, 1L);
 
-        newTrainingProgramme.setId(2L);
-        newTrainingProgramme.setEquine(testEquine);
-        newTrainingProgramme.setSkillTrainingSessions(new ArrayList<>());
-        newTrainingProgramme.setSkillProgressRecords(new ArrayList<>());
-        newTrainingProgramme.setStartDate(null);
-        newTrainingProgramme.setEndDate(null);
-
-        given(equineRepository.getById(1L)).willReturn(testEquine);
-        given(trainingProgrammeRepository.saveAndFlush(newTrainingProgramme)).willReturn(newTrainingProgramme);
-
-        TrainingProgramme savedTrainingProgramme = trainingProgrammeService.createProgramme(newTrainingProgramme);
-
-        assertEquals(2L, savedTrainingProgramme.getId());
-        assertEquals(1, savedTrainingProgramme.getSkillProgressRecords().size());
         assertNotNull(oldTrainingProgramme.getEndDate());
-        assertEquals("Skill 1", savedTrainingProgramme.getSkillProgressRecords().get(0).getSkill().getName());
-        assertEquals(ProgressCode.OK_WITH_LIMITS, savedTrainingProgramme.getSkillProgressRecords().get(0).getProgressCode());
-        assertEquals(0, savedTrainingProgramme.getSkillProgressRecords().get(0).getTime());
-        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(0).getStartDate());
-    }
 
+        assertEquals(1, savedTrainingProgramme.getSkillProgressRecords().size());
+        assertEquals(ProgressCode.CONFIDENT, savedTrainingProgramme.getSkillProgressRecords().get(0).getProgressCode());
+        assertEquals(0, savedTrainingProgramme.getSkillProgressRecords().get(0).getTime());
+        assertEquals(skill, savedTrainingProgramme.getSkillProgressRecords().get(0).getSkill());
+        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(0).getEndDate());
+        assertNull(savedTrainingProgramme.getSkillProgressRecords().get(0).getStartDate());
+        assertNull(savedTrainingProgramme.getEndDate());
+        assertNull(savedTrainingProgramme.getStartDate());
+        assertNotNull(savedTrainingProgramme.getCreatedOn());
+    }
 
     @Test
     void canAddSkillTrainingSessionToTrainingProgramme() {
@@ -187,6 +166,53 @@ class TrainingProgrammeServiceTest {
         assertEquals(10, updatedTrainingProgramme.getSkillProgressRecords().get(0).getTime());
         assertEquals(ProgressCode.CONFIDENT, updatedTrainingProgramme.getSkillProgressRecords().get(0).getProgressCode());
         assertNotNull(updatedTrainingProgramme.getStartDate());
+    }
+
+    @Test
+    void willCreatNewSkillProgressRecords() {
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme();
+        newTrainingProgramme.setId(1L);
+        Skill skill1 = new Skill(1L, "");
+
+        given(skillRepository.findAll()).willReturn(List.of(skill1));
+
+        List<SkillProgressRecord> newSkillProgressRecords = trainingProgrammeService.createNewSkillProgressRecords(newTrainingProgramme);
+
+        assertEquals(1, newSkillProgressRecords.size());
+        assertEquals(skill1, newSkillProgressRecords.get(0).getSkill());
+        assertEquals(newTrainingProgramme, newSkillProgressRecords.get(0).getTrainingProgramme());
+        assertEquals(0, newSkillProgressRecords.get(0).getTime());
+        assertEquals(ProgressCode.NOT_ABLE, newSkillProgressRecords.get(0).getProgressCode());
+        assertNull(newSkillProgressRecords.get(0).getStartDate());
+        assertNull(newSkillProgressRecords.get(0).getEndDate());
+    }
+
+    @Test
+    void willTransferSkillProgressRecords() {
+        TrainingProgramme oldTrainingProgramme = new TrainingProgramme();
+        oldTrainingProgramme.setId(1L);
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme();
+        newTrainingProgramme.setId(2L);
+        Skill skill1 = new Skill(1L, "");
+
+        SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
+        skillProgressRecord.setSkill(skill1);
+        skillProgressRecord.setProgressCode(ProgressCode.OK);
+        skillProgressRecord.setTrainingProgramme(oldTrainingProgramme);
+
+        oldTrainingProgramme.setSkillProgressRecords(List.of(skillProgressRecord));
+
+        List<SkillProgressRecord> newSkillProgressRecords = trainingProgrammeService.transferSkillProgressRecords(
+                oldTrainingProgramme, newTrainingProgramme
+        );
+
+        assertEquals(1, newSkillProgressRecords.size());
+        assertEquals(skill1, newSkillProgressRecords.get(0).getSkill());
+        assertEquals(newTrainingProgramme, newSkillProgressRecords.get(0).getTrainingProgramme());
+        assertEquals(ProgressCode.OK, newSkillProgressRecords.get(0).getProgressCode());
+        assertNull(newSkillProgressRecords.get(0).getStartDate());
+        assertNull(newSkillProgressRecords.get(0).getEndDate());
+
     }
 
 }
