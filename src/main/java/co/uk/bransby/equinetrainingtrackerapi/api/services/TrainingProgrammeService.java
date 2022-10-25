@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -26,6 +23,7 @@ public class TrainingProgrammeService {
     private final SkillTrainingSessionRepository skillTrainingSessionRepository;
     private final SkillProgressRecordRepository skillProgressRecordRepository;
     private final EquineRepository equineRepository;
+    private final TrainingCategoryRepository trainingCategoryRepository;
 
     public List<TrainingProgramme> getAllProgrammes() {
         return trainingProgrammeRepository.findAll();
@@ -36,55 +34,41 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No programme found with id: " + id));
     }
 
-    public TrainingProgramme createProgramme(TrainingProgramme newTrainingProgramme){
+    public TrainingProgramme createProgramme(Long trainingCategoryId, Long equineId){
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
 
-        Optional<TrainingProgramme> liveTrainingProgramme =
-                equineRepository.getById(newTrainingProgramme.getEquine().getId())
-                        .getTrainingProgrammes()
-                        .stream()
-                        .filter(tp -> tp.getEndDate() == null)
-                        .findFirst();
+        TrainingCategory trainingCategory = trainingCategoryRepository.findById(trainingCategoryId)
+                .orElseThrow(() -> new EntityNotFoundException("No training category found with id: " + trainingCategoryId));
 
-        TrainingProgramme savedTrainingProgramme = trainingProgrammeRepository.saveAndFlush(newTrainingProgramme);
-        List<SkillProgressRecord> newSkillProgressRecords = new ArrayList<>();
+        TrainingProgramme lastTrainingProgramme =
+                equine.getTrainingProgrammes() == null || equine.getTrainingProgrammes().size() == 0 ?
+                        null
+                        :
+                        equine.getTrainingProgrammes()
+                                .stream()
+                                .sorted(Comparator.comparing(TrainingProgramme::getCreatedOn).reversed())
+                                .toList()
+                                .get(0);
 
-        if(liveTrainingProgramme.isPresent()) {
-            liveTrainingProgramme.get().setEndDate(LocalDateTime.now());
-            trainingProgrammeRepository.saveAndFlush(liveTrainingProgramme.get());
-            List<SkillProgressRecord> skillProgressRecords = liveTrainingProgramme.get().getSkillProgressRecords();
-            skillProgressRecords
-                    .forEach(spr -> {
-                        SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
-                        skillProgressRecord.setTrainingProgramme(savedTrainingProgramme);
-                        skillProgressRecord.setSkill(spr.getSkill());
-                        skillProgressRecord.setProgressCode(spr.getProgressCode());
-                        skillProgressRecord.setStartDate(null);
-                        skillProgressRecord.setEndDate(null);
-                        skillProgressRecord.setTime(0);
-                        skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
-                        newSkillProgressRecords.add(skillProgressRecord);
-                    });
+        TrainingProgramme newTrainingProgramme = new TrainingProgramme();
+        newTrainingProgramme.setEquine(equine);
+        newTrainingProgramme.setTrainingCategory(trainingCategory);
+        trainingProgrammeRepository.saveAndFlush(newTrainingProgramme);
+
+        List<SkillProgressRecord> newSkillProgressRecords;
+
+        if(lastTrainingProgramme == null) {
+            newSkillProgressRecords = createNewSkillProgressRecords(newTrainingProgramme);
+        } else {
+            lastTrainingProgramme.setEndDate(LocalDateTime.now());
+            trainingProgrammeRepository.saveAndFlush(lastTrainingProgramme);
+            newSkillProgressRecords = transferSkillProgressRecords(lastTrainingProgramme, newTrainingProgramme);
         }
 
-        if(liveTrainingProgramme.isEmpty()) {
-            skillRepository.findAll()
-                .forEach(skill -> {
-                    SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
-                    skillProgressRecord.setTrainingProgramme(savedTrainingProgramme);
-                    skillProgressRecord.setSkill(skill);
-                    skillProgressRecord.setTime(0);
-                    skillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
-                    skillProgressRecord.setStartDate(null);
-                    skillProgressRecord.setEndDate(null);
-                    skillProgressRecord.setTime(0);
-                    skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
-                    newSkillProgressRecords.add(skillProgressRecord);
-                });
-        }
-
-        savedTrainingProgramme.setSkillProgressRecords(newSkillProgressRecords);
-        trainingProgrammeRepository.saveAndFlush(savedTrainingProgramme);
-        return savedTrainingProgramme;
+        newTrainingProgramme.setSkillProgressRecords(newSkillProgressRecords);
+        trainingProgrammeRepository.saveAndFlush(newTrainingProgramme);
+        return newTrainingProgramme;
     }
 
     public void deleteProgramme(Long id) {
@@ -119,4 +103,43 @@ public class TrainingProgrammeService {
         return trainingProgramme;
     }
 
+    public List<SkillProgressRecord> createNewSkillProgressRecords(TrainingProgramme trainingProgramme) {
+        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
+        skillRepository
+                .findAll()
+                .forEach(skill -> {
+                    SkillProgressRecord skillProgressRecord = new SkillProgressRecord();
+                    skillProgressRecord.setTrainingProgramme(trainingProgramme);
+                    skillProgressRecord.setSkill(skill);
+                    skillProgressRecord.setProgressCode(ProgressCode.NOT_ABLE);
+                    skillProgressRecord.setStartDate(null);
+                    skillProgressRecord.setEndDate(null);
+                    skillProgressRecord.setTime(0);
+                    skillProgressRecordRepository.saveAndFlush(skillProgressRecord);
+                    skillProgressRecords.add(skillProgressRecord);
+                });
+        return skillProgressRecords;
+    }
+
+    public List<SkillProgressRecord> transferSkillProgressRecords(
+            TrainingProgramme oldTrainingProgramme,
+            TrainingProgramme newTrainingProgramme
+    ) {
+        List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
+        oldTrainingProgramme
+                .getSkillProgressRecords()
+                .forEach(skillProgressRecord -> {
+                    SkillProgressRecord newSkillProgressRecord = new SkillProgressRecord();
+                    newSkillProgressRecord.setTrainingProgramme(newTrainingProgramme);
+                    newSkillProgressRecord.setSkill(skillProgressRecord.getSkill());
+                    newSkillProgressRecord.setProgressCode(skillProgressRecord.getProgressCode());
+                    newSkillProgressRecord.setStartDate(null);
+                    newSkillProgressRecord.setEndDate(null);
+                    newSkillProgressRecord.setTime(0);
+                    skillProgressRecordRepository.saveAndFlush(newSkillProgressRecord);
+                    skillProgressRecords.add(newSkillProgressRecord);
+                });
+
+        return skillProgressRecords;
+    }
 }

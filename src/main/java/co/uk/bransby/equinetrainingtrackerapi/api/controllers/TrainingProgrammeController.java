@@ -38,9 +38,12 @@ public class TrainingProgrammeController {
         return ResponseEntity.ok().headers(resHeaders).body(allProgrammes);
     }
 
-    @PostMapping
-    public ResponseEntity<TrainingProgrammeDto> createTrainingProgramme(@RequestBody TrainingProgrammeDto newProgramme) {
-        TrainingProgramme savedNewTrainingProgramme = trainingProgrammeService.createProgramme(modelMapper.map(newProgramme, TrainingProgramme.class));
+    @PostMapping("{trainingCategoryId}/equine/{equineId}")
+    public ResponseEntity<TrainingProgrammeDto> createTrainingProgramme(
+            @PathVariable Long trainingCategoryId,
+            @PathVariable Long equineId
+    ) {
+        TrainingProgramme savedNewTrainingProgramme = trainingProgrammeService.createProgramme(trainingCategoryId, equineId);
         HttpHeaders resHeaders = new HttpHeaders();
         return new ResponseEntity<>(modelMapper.map(savedNewTrainingProgramme, TrainingProgrammeDto.class), resHeaders, HttpStatus.CREATED);
     }
