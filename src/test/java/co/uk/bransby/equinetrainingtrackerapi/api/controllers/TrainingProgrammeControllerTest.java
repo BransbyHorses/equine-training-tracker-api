@@ -71,7 +71,7 @@ class TrainingProgrammeControllerTest {
     void canCreateProgrammeAndReturnOkResponse() throws Exception {
         TrainingProgramme newProgramme = new TrainingProgramme(6L,  new TrainingCategory(), new Equine(), new ArrayList<>(), new ArrayList<>(), LocalDateTime.now(), null);
         given(trainingProgrammeService.createProgramme(1L, 1L)).willReturn(newProgramme);
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/training-programmes")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/training-programmes/1/equine/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(newProgramme)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
