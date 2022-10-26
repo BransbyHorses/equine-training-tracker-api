@@ -67,7 +67,7 @@ class TrainingProgrammeServiceTest {
     void canCreateFirstTrainingProgramme() {
         Equine equine = new Equine();
         equine.setId(1L);
-        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category", "");
+        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category");
         TrainingProgramme newTrainingProgramme = new TrainingProgramme();
 
         List<SkillProgressRecord> skillProgressRecords = new ArrayList<>();
@@ -105,7 +105,7 @@ class TrainingProgrammeServiceTest {
         equine.setId(1L);
         equine.setTrainingProgrammes(new ArrayList<>(List.of(oldTrainingProgramme)));
 
-        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category", "");
+        TrainingCategory trainingCategory = new TrainingCategory(1L, "Training Category");
 
         TrainingProgramme newTrainingProgramme = new TrainingProgramme();
 

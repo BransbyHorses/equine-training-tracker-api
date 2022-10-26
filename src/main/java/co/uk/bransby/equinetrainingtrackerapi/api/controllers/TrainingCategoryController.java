@@ -49,5 +49,19 @@ public class TrainingCategoryController {
                 .body(modelMapper.map(trainingCategory, TrainingCategoryDto.class));
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<TrainingCategoryDto> updateTrainingCategory(@PathVariable Long id, @RequestBody TrainingCategoryDto trainingCategoryUpdatedValues) {
+        TrainingCategory updatedTrainingCategory = trainingCategoryService.updateTrainingCategory(id,
+                modelMapper.map(trainingCategoryUpdatedValues, TrainingCategory.class));
 
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedTrainingCategory, TrainingCategoryDto.class));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteTrainingCategory(@PathVariable Long id) {
+        trainingCategoryService.deleteTrainingCategory(id);
+        return ResponseEntity.ok().body("Training category with id " + id + " deleted");
+    }
 }
