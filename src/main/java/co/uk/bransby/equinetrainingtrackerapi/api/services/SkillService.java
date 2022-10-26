@@ -50,12 +50,12 @@ public class SkillService {
 
     public Skill findById(Long id) {
         return skillRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + id));
     }
 
     public void deleteById(Long id) {
         Skill skill = skillRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No skill found with id: " + id));
         deleteSkillProgressRecords(skill);
         skillRepository.delete(skill);
     }
