@@ -34,4 +34,11 @@ public class TrainingCategoryService {
         BeanUtils.copyProperties(updatedTrainingCategory, trainingCategory, "id");
         return trainingCategoryRepository.saveAndFlush(trainingCategory);
     }
+
+    public void deleteTrainingCategory(Long id) {
+        TrainingCategory trainingCategory = trainingCategoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No training category found with id: " + id));
+
+        trainingCategoryRepository.deleteById(id);
+    }
 }
