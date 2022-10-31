@@ -305,59 +305,87 @@ class EquineServiceTest {
     }
 
     @Test
-    void willEndDisruption() {
-        Equine testEquine = new Equine();
-        testEquine.setId(1L);
+    void willEndVetReviewDisruption() {
+        Disruption disruption = new Disruption();
+        disruption.setId(1L);
+        disruption.setReason(DisruptionCode.VETINARY_REVIEW);
 
-        Disruption disruption1 = new Disruption();
-        disruption1.setId(1L);
-        disruption1.setReason(DisruptionCode.VETINARY_REVIEW);
-
-        Disruption disruption2 = new Disruption();
-        disruption2.setId(2L);
-        disruption2.setReason(DisruptionCode.TEAM_LOW);
-
-        Disruption disruption3 = new Disruption();
-        disruption3.setId(3L);
-        disruption3.setReason(DisruptionCode.WEATHER);
-
-        Disruption disruption4 = new Disruption();
-        disruption4.setId(1L);
-        disruption4.setReason(DisruptionCode.YARD_BUSY);
-
-        Disruption disruption5 = new Disruption();
-        disruption5.setId(1L);
-        disruption5.setReason(DisruptionCode.EQUINE_WELLBEING);
-
-
-        testEquine.setDisruptions(new ArrayList<>(List.of(disruption1, disruption2, disruption3, disruption4, disruption5)));
-
-        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+        given(disruptionRepository.findById(1L)).willReturn(Optional.of(disruption));
 
         when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
-        Disruption endedDisruption1 = equineServiceUnderTest.endDisruption(1L, 1);
-        Disruption endedDisruption2 = equineServiceUnderTest.endDisruption(1L, 2);
-        Disruption endedDisruption3 = equineServiceUnderTest.endDisruption(1L, 3);
-        Disruption endedDisruption4 = equineServiceUnderTest.endDisruption(1L, 4);
-        Disruption endedDisruption5 = equineServiceUnderTest.endDisruption(1L, 5);
-        Disruption endedDisruption6 = equineServiceUnderTest.endDisruption(1L, 6);
+        Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 1);
 
-        assertEquals(DisruptionCode.VETINARY_REVIEW, endedDisruption1.getReason());
-        assertNotNull(endedDisruption1.getEndDate());
+        assertEquals(DisruptionCode.VETINARY_REVIEW, endedDisruption.getReason());
+        assertNotNull(endedDisruption.getEndDate());
+    }
 
-        assertEquals(DisruptionCode.TEAM_LOW, endedDisruption2.getReason());
-        assertNotNull(endedDisruption1.getEndDate());
+    @Test
+    void willEndTeamLowDisruption() {
+        Disruption disruption = new Disruption();
+        disruption.setId(2L);
+        disruption.setReason(DisruptionCode.TEAM_LOW);
 
-        assertEquals(DisruptionCode.WEATHER, endedDisruption3.getReason());
-        assertNotNull(endedDisruption1.getEndDate());
+        given(disruptionRepository.findById(2L)).willReturn(Optional.of(disruption));
 
-        assertEquals(DisruptionCode.YARD_BUSY, endedDisruption4.getReason());
-        assertNotNull(endedDisruption1.getEndDate());
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
 
-        assertEquals(DisruptionCode.EQUINE_WELLBEING, endedDisruption5.getReason());
-        assertNotNull(endedDisruption1.getEndDate());
+        Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 2);
 
+        assertEquals(DisruptionCode.TEAM_LOW, endedDisruption.getReason());
+        assertNotNull(endedDisruption.getEndDate());
+    }
+
+    @Test
+    void willEndWeatherDisruption() {
+        Disruption disruption = new Disruption();
+        disruption.setId(2L);
+        disruption.setReason(DisruptionCode.WEATHER);
+
+        given(disruptionRepository.findById(2L)).willReturn(Optional.of(disruption));
+
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 2);
+
+        assertEquals(DisruptionCode.WEATHER, endedDisruption.getReason());
+        assertNotNull(endedDisruption.getEndDate());
+    }
+
+    @Test
+    void willEndYardBusyDisruption() {
+        Disruption disruption = new Disruption();
+        disruption.setId(2L);
+        disruption.setReason(DisruptionCode.YARD_BUSY);
+
+        given(disruptionRepository.findById(2L)).willReturn(Optional.of(disruption));
+
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 2);
+
+        assertEquals(DisruptionCode.YARD_BUSY, endedDisruption.getReason());
+        assertNotNull(endedDisruption.getEndDate());
+    }
+
+    @Test
+    void willEndEquineWellBeingDisruption() {
+        Disruption disruption = new Disruption();
+        disruption.setId(2L);
+        disruption.setReason(DisruptionCode.EQUINE_WELLBEING);
+
+        given(disruptionRepository.findById(2L)).willReturn(Optional.of(disruption));
+
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 2);
+
+        assertEquals(DisruptionCode.EQUINE_WELLBEING, endedDisruption.getReason());
+        assertNotNull(endedDisruption.getEndDate());
     }
 }
