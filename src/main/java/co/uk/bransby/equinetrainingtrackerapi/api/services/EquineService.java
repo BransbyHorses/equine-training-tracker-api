@@ -147,15 +147,8 @@ public class EquineService {
     }
 
     public Disruption endDisruption(Long equineId, int disruptionId) {
-        Equine equine = equineRepository.findById(equineId)
-                .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + equineId)));
-
-        Disruption disruptionToEnd = equine.getDisruptions()
-                .stream()
-                .filter(disruption -> disruption.getReason().getId() == disruptionId)
-                .toList()
-                .get(0);
-
+        Disruption disruptionToEnd = disruptionRepository.findById((long) disruptionId)
+                        .orElseThrow(() -> new EntityNotFoundException(("No disruption found with id: " + disruptionId)));
         disruptionToEnd.setEndDate(LocalDateTime.now());
         return disruptionRepository.saveAndFlush(disruptionToEnd);
     }
