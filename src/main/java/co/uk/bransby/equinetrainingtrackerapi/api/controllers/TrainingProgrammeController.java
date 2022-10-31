@@ -1,8 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.SkillTrainingSession;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingCategory;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.SkillTrainingSessionDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingCategoryDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingProgrammeService;
 import lombok.AllArgsConstructor;
@@ -64,6 +66,16 @@ public class TrainingProgrammeController {
                 trainingProgrammeId,
                 modelMapper.map(newSkillTrainingSession, SkillTrainingSession.class)
         );
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<TrainingProgrammeDto> updateTrainingProgramme(@PathVariable Long id, @RequestBody TrainingProgrammeDto trainingProgrammeUpdatedValues) {
+        TrainingProgramme updatedTrainingProgramme = trainingProgrammeService.updateTrainingProgramme(id,
+                modelMapper.map(trainingProgrammeUpdatedValues, TrainingProgramme.class));
+
         return ResponseEntity
                 .ok()
                 .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));

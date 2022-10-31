@@ -142,4 +142,11 @@ public class TrainingProgrammeService {
 
         return skillProgressRecords;
     }
+
+    public TrainingProgramme updateTrainingProgramme(Long id, TrainingProgramme updatedTrainingProgramme) {
+        TrainingProgramme trainingProgramme = trainingProgrammeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No training programme found with id: " + id));
+        BeanUtils.copyProperties(updatedTrainingProgramme, trainingProgramme, "id");
+        return trainingProgramme;
+    }
 }
