@@ -44,11 +44,7 @@ class EquineControllerTest {
     @BeforeEach
     void setUp() {
         this.equineList = new ArrayList<>();
-        equineList.add(new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>()));
-        equineList.add(new Equine(2L, "Second Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>()));
-        equineList.add(new Equine(3L, "Third Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>()));
-        equineList.add(new Equine(4L, "Fourth Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>()));
-        equineList.add(new Equine(5L, "Fifth Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>()));
+        equineList.add(new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>()));
     }
 
     @Test
@@ -73,7 +69,7 @@ class EquineControllerTest {
     void createEquine() throws Exception {
         BDDMockito.given(equineService.createEquine(ArgumentMatchers.any(Equine.class))).willAnswer((invocation -> invocation.getArgument(0)));
 
-        Equine newEquine = new Equine(6L, "Sixth Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        Equine newEquine = new Equine(6L, "Sixth Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +80,7 @@ class EquineControllerTest {
 
     @Test
     void updateEquine() throws Exception {
-        Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
 
         BDDMockito.given(equineService.updateEquine(EquineToUpdate.getId(), EquineToUpdate)).willReturn(EquineToUpdate);
 
@@ -123,7 +119,7 @@ class EquineControllerTest {
 
     @Test
     void returnsNotFoundIfEquineAbsentWhenUpdated() throws Exception {
-        Equine invalidEquine = new Equine(9L, "Invalid Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        Equine invalidEquine = new Equine(9L, "Invalid Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
 
         BDDMockito.given(equineService.updateEquine(invalidEquine.getId(), invalidEquine)).willThrow((new EntityNotFoundException()));
 
@@ -178,7 +174,8 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(1L));
     }
-    
+
+    @Test
     void willReturnActiveTrainingProgrammeAndOkResponse() throws Exception {
         TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
         activeTrainingProgramme.setId(1L);
@@ -208,5 +205,4 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andExpect((MockMvcResultMatchers.jsonPath("$.[0].id").value(1L)))
                 .andExpect((MockMvcResultMatchers.jsonPath("$.[1].id").value(2L)));
     }
-
 }

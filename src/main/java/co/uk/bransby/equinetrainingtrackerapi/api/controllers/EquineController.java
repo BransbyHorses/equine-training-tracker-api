@@ -1,12 +1,10 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
+import co.uk.bransby.equinetrainingtrackerapi.api.models.Disruption;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.HealthAndSafetyFlag;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.HealthAndSafetyFlagDto;
+import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.SkillTrainingSessionDto;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.TrainingProgrammeDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -148,4 +146,19 @@ public class EquineController {
                 .body(allSkillTrainingSessions);
     }
 
+    @PostMapping("{equineId}/disruptions/{disruptionCodeId}/start")
+    public ResponseEntity<DisruptionDto> logNewDisruption(@PathVariable Long equineId, @PathVariable int disruptionCodeId) {
+        Disruption savedDisruption = equineService.logNewDisruption(disruptionCodeId, equineId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(savedDisruption, DisruptionDto.class));
+    }
+
+    @PostMapping("{equineId}/disruptions/{disruptionId}/end")
+    public ResponseEntity<DisruptionDto> endDisruption(@PathVariable int disruptionId, @PathVariable Long equineId) {
+        Disruption updatedDisruption = equineService.endDisruption(equineId, disruptionId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedDisruption, DisruptionDto.class));
+    }
 }

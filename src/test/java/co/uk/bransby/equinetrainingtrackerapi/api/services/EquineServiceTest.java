@@ -16,6 +16,8 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,14 +31,16 @@ class EquineServiceTest {
     YardRepository yardRepository;
     @Mock
     HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
+    @Mock
+    DisruptionRepository disruptionRepository;
     @InjectMocks
     private EquineService equineServiceUnderTest;
     private Equine equineInstance;
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository, healthAndSafetyFlagRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository, healthAndSafetyFlagRepository, disruptionRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
@@ -86,7 +90,7 @@ class EquineServiceTest {
                 EntityNotFoundException.class,
                 () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
         );
-        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+        assertEquals("No equine found with id: 1", exception.getMessage());
     }
 
     @Test
@@ -97,7 +101,7 @@ class EquineServiceTest {
                 EntityNotFoundException.class,
                 () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
         );
-        Assertions.assertEquals("No yard found with id: 1", exception.getMessage());
+        assertEquals("No yard found with id: 1", exception.getMessage());
     }
 
     @Test
@@ -115,7 +119,7 @@ class EquineServiceTest {
                 EntityNotFoundException.class,
                 () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
         );
-        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
+        assertEquals("No equine found with id: 1", exception.getMessage());
     }
 
     @Test
@@ -126,7 +130,7 @@ class EquineServiceTest {
                 EntityNotFoundException.class,
                 () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
         );
-        Assertions.assertEquals("No category found with id: 1", exception.getMessage());
+        assertEquals("No category found with id: 1", exception.getMessage());
     }
 
     @Test
@@ -158,9 +162,9 @@ class EquineServiceTest {
 
         List<TrainingProgramme> equineTrainingProgrammes = equineServiceUnderTest
                 .getEquineTrainingProgrammes(1L);
-        Assertions.assertEquals(2, equineTrainingProgrammes.size());
-        Assertions.assertEquals(1L, equineTrainingProgrammes.get(0).getId());
-        Assertions.assertEquals(2L, equineTrainingProgrammes.get(1).getId());
+        assertEquals(2, equineTrainingProgrammes.size());
+        assertEquals(1L, equineTrainingProgrammes.get(0).getId());
+        assertEquals(2L, equineTrainingProgrammes.get(1).getId());
 
     }
 
@@ -171,9 +175,9 @@ class EquineServiceTest {
         given(healthAndSafetyFlagRepository.saveAndFlush(healthAndSafetyFlag)).willReturn(healthAndSafetyFlag);
 
         HealthAndSafetyFlag savedHealthAndSafetyFlag = equineServiceUnderTest.createEquineHealthAndSafetyFlag(1L, healthAndSafetyFlag);
-        Assertions.assertEquals(savedHealthAndSafetyFlag, healthAndSafetyFlag);
+        assertEquals(savedHealthAndSafetyFlag, healthAndSafetyFlag);
         Assertions.assertNotNull(savedHealthAndSafetyFlag.getDateCreated());
-        Assertions.assertEquals(savedHealthAndSafetyFlag.getEquine(), equineInstance);
+        assertEquals(savedHealthAndSafetyFlag.getEquine(), equineInstance);
     }
 
     @Test
@@ -184,7 +188,7 @@ class EquineServiceTest {
         given(equineRepository.findById(1L)).willReturn(Optional.ofNullable(equineInstance));
 
         List<HealthAndSafetyFlag> healthAndSafetyFlags = equineServiceUnderTest.getEquineHealthAndSafetyFlags(1L);
-        Assertions.assertEquals(healthAndSafetyFlags, new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
+        assertEquals(healthAndSafetyFlags, new ArrayList<>(List.of(healthAndSafetyFlag1, healthAndSafetyFlag2)));
     }
 
     @Test
@@ -207,7 +211,7 @@ class EquineServiceTest {
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
 
         TrainingProgramme result = equineServiceUnderTest.getActiveTrainingProgramme(1L);
-        Assertions.assertEquals(result, activeTrainingProgramme1);
+        assertEquals(result, activeTrainingProgramme1);
     }
 
     @Test
@@ -250,7 +254,7 @@ class EquineServiceTest {
         testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
         List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions, new ArrayList<>(List.of(skillTrainingSession1, skillTrainingSession2, skillTrainingSession3)));
+        assertEquals(skillTrainingSessions, new ArrayList<>(List.of(skillTrainingSession1, skillTrainingSession2, skillTrainingSession3)));
     }
 
     @Test
@@ -262,7 +266,7 @@ class EquineServiceTest {
         testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
         List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions.size(), 0);
+        assertEquals(skillTrainingSessions.size(), 0);
     }
 
     @Test
@@ -271,6 +275,89 @@ class EquineServiceTest {
         testEquine.setTrainingProgrammes(null);
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
         List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        Assertions.assertEquals(skillTrainingSessions.size(), 0);
+        assertEquals(skillTrainingSessions.size(), 0);
+    }
+
+    @Test
+    void willLogNewDisruption() {
+        Equine testEquine = new Equine();
+        testEquine.setId(1L);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Disruption newDisruption1 = equineServiceUnderTest.logNewDisruption(1, 1L);
+        Disruption newDisruption2 = equineServiceUnderTest.logNewDisruption(2, 1L);
+        Disruption newDisruption3 = equineServiceUnderTest.logNewDisruption(3, 1L);
+        Disruption newDisruption4 = equineServiceUnderTest.logNewDisruption(4, 1L);
+        Disruption newDisruption5 = equineServiceUnderTest.logNewDisruption(5, 1L);
+
+        assertEquals(testEquine, newDisruption1.getEquine());
+        assertEquals(DisruptionCode.VETINARY_REVIEW, newDisruption1.getReason());
+        Assertions.assertNotNull(newDisruption1.getStartDate());
+        Assertions.assertNull(newDisruption1.getEndDate());
+
+        assertEquals(DisruptionCode.TEAM_LOW, newDisruption2.getReason());
+        assertEquals(DisruptionCode.WEATHER, newDisruption3.getReason());
+        assertEquals(DisruptionCode.YARD_BUSY, newDisruption4.getReason());
+        assertEquals(DisruptionCode.EQUINE_WELLBEING, newDisruption5.getReason());
+    }
+
+    @Test
+    void willEndDisruption() {
+        Equine testEquine = new Equine();
+        testEquine.setId(1L);
+
+        Disruption disruption1 = new Disruption();
+        disruption1.setId(1L);
+        disruption1.setReason(DisruptionCode.VETINARY_REVIEW);
+
+        Disruption disruption2 = new Disruption();
+        disruption2.setId(2L);
+        disruption2.setReason(DisruptionCode.TEAM_LOW);
+
+        Disruption disruption3 = new Disruption();
+        disruption3.setId(3L);
+        disruption3.setReason(DisruptionCode.WEATHER);
+
+        Disruption disruption4 = new Disruption();
+        disruption4.setId(1L);
+        disruption4.setReason(DisruptionCode.YARD_BUSY);
+
+        Disruption disruption5 = new Disruption();
+        disruption5.setId(1L);
+        disruption5.setReason(DisruptionCode.EQUINE_WELLBEING);
+
+
+        testEquine.setDisruptions(new ArrayList<>(List.of(disruption1, disruption2, disruption3, disruption4, disruption5)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
+
+        when(disruptionRepository.saveAndFlush(Mockito.any(Disruption.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Disruption endedDisruption1 = equineServiceUnderTest.endDisruption(1L, 1);
+        Disruption endedDisruption2 = equineServiceUnderTest.endDisruption(1L, 2);
+        Disruption endedDisruption3 = equineServiceUnderTest.endDisruption(1L, 3);
+        Disruption endedDisruption4 = equineServiceUnderTest.endDisruption(1L, 4);
+        Disruption endedDisruption5 = equineServiceUnderTest.endDisruption(1L, 5);
+        Disruption endedDisruption6 = equineServiceUnderTest.endDisruption(1L, 6);
+
+        assertEquals(DisruptionCode.VETINARY_REVIEW, endedDisruption1.getReason());
+        assertNotNull(endedDisruption1.getEndDate());
+
+        assertEquals(DisruptionCode.TEAM_LOW, endedDisruption2.getReason());
+        assertNotNull(endedDisruption1.getEndDate());
+
+        assertEquals(DisruptionCode.WEATHER, endedDisruption3.getReason());
+        assertNotNull(endedDisruption1.getEndDate());
+
+        assertEquals(DisruptionCode.YARD_BUSY, endedDisruption4.getReason());
+        assertNotNull(endedDisruption1.getEndDate());
+
+        assertEquals(DisruptionCode.EQUINE_WELLBEING, endedDisruption5.getReason());
+        assertNotNull(endedDisruption1.getEndDate());
+
     }
 }

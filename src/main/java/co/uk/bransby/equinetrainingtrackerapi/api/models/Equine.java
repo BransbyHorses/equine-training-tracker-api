@@ -42,6 +42,9 @@ public class Equine {
     @ToString.Exclude
     private List<HealthAndSafetyFlag> healthAndSafetyFlags;
 
+    @OneToMany(mappedBy = "equine")
+    private List<Disruption> disruptions;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
