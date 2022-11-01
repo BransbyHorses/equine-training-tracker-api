@@ -205,4 +205,18 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andExpect((MockMvcResultMatchers.jsonPath("$.[0].id").value(1L)))
                 .andExpect((MockMvcResultMatchers.jsonPath("$.[1].id").value(2L)));
     }
+
+    @Test
+    void willLogNewDisruptionAndReturnOkResponse() throws Exception {
+        Disruption newDisruption = new Disruption();
+        newDisruption.setId(1L);
+        newDisruption.setReason(DisruptionCode.YARD_BUSY);
+        BDDMockito.given(equineService.logNewDisruption(1, 1L)).willReturn(newDisruption);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines/1/disruptions/1/start"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reason.string").value("Yard Busy"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.startDate").isString());
+    }
 }
