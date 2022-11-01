@@ -40,18 +40,19 @@ public class TrainingProgramme {
 
     private final LocalDateTime createdOn;
 
-    public TrainingProgramme(Long id, TrainingCategory trainingCategory, Equine equine, List<SkillProgressRecord> skillProgressRecords, List<SkillTrainingSession> skillTrainingSessions, LocalDateTime startDate, LocalDateTime endDate) {
+    public TrainingProgramme(Long id, TrainingCategory trainingCategory, Equine equine, List<SkillProgressRecord> skillProgressRecords, List<SkillTrainingSession> skillTrainingSessions, LocalDateTime endDate) {
         this.id = id;
         this.trainingCategory = trainingCategory;
         this.equine = equine;
         this.skillProgressRecords = skillProgressRecords;
         this.skillTrainingSessions = skillTrainingSessions;
-        this.startDate = startDate;
+        this.startDate = LocalDateTime.now();
         this.endDate = endDate;
         this.createdOn = LocalDateTime.now();
     }
 
     public TrainingProgramme() {
+        this.startDate = LocalDateTime.now();
         this.createdOn = LocalDateTime.now();
     }
 
