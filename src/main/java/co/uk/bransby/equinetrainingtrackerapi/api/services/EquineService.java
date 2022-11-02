@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @AllArgsConstructor
@@ -17,6 +18,7 @@ public class EquineService {
     private final YardRepository yardRepository;
     private final EquineStatusRepository equineStatusRepository;
     private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
+    private final DisruptionRepository disruptionRepository;
 
     public List<Equine> getAllEquines(){
         return equineRepository.findAll();
@@ -122,5 +124,32 @@ public class EquineService {
                     }
                 }));
         return allSkillTrainingSessions;
+    }
+
+    public Disruption logNewDisruption(int disruptionId, Long equineId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + equineId)));
+        Disruption newDisruption = new Disruption();
+        newDisruption.setEquine(equine);
+
+        for(DisruptionCode dc: DisruptionCode.values()) {
+            if(dc.getId() == disruptionId) {
+                newDisruption.setReason(dc);
+                break;
+            }
+        }
+
+        if(newDisruption.getReason() == null) {
+            throw new EntityNotFoundException("No disruption code found with id " + disruptionId);
+        }
+
+        return disruptionRepository.saveAndFlush(newDisruption);
+    }
+
+    public Disruption endDisruption(Long equineId, int disruptionId) {
+        Disruption disruptionToEnd = disruptionRepository.findById((long) disruptionId)
+                        .orElseThrow(() -> new EntityNotFoundException(("No disruption found with id: " + disruptionId)));
+        disruptionToEnd.setEndDate(LocalDateTime.now());
+        return disruptionRepository.saveAndFlush(disruptionToEnd);
     }
 }

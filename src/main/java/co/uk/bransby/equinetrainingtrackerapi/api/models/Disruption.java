@@ -4,10 +4,9 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -17,7 +16,24 @@ public class Disruption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private DisruptionCode reason;
+    @ManyToOne
+    @JoinColumn(name = "equine_id")
+    private Equine equine;
+    private final LocalDateTime startDate;
+    private LocalDateTime endDate;
+
+    public Disruption() {
+        this.startDate = LocalDateTime.now();
+    }
+
+    public Disruption(Long id, DisruptionCode reason, Equine equine, LocalDateTime endDate) {
+        this.id = id;
+        this.reason = reason;
+        this.equine = equine;
+        this.startDate = LocalDateTime.now();
+        this.endDate = endDate;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -15,4 +15,5 @@ public class EquineDto {
     private List<TrainingProgrammeDto> trainingProgrammes;
     private LearnerTypeDto learnerType;
     private List<HealthAndSafetyFlagDto> healthAndSafetyFlags;
+    private List<DisruptionDto> disruptions;
 }
