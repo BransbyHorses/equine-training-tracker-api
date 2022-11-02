@@ -294,7 +294,7 @@ class EquineServiceTest {
         Disruption newDisruption5 = equineServiceUnderTest.logNewDisruption(5, 1L);
 
         assertEquals(testEquine, newDisruption1.getEquine());
-        assertEquals(DisruptionCode.VETINARY_REVIEW, newDisruption1.getReason());
+        assertEquals(DisruptionCode.VETERINARY_REVIEW, newDisruption1.getReason());
         Assertions.assertNotNull(newDisruption1.getStartDate());
         Assertions.assertNull(newDisruption1.getEndDate());
 
@@ -308,7 +308,7 @@ class EquineServiceTest {
     void willEndVetReviewDisruption() {
         Disruption disruption = new Disruption();
         disruption.setId(1L);
-        disruption.setReason(DisruptionCode.VETINARY_REVIEW);
+        disruption.setReason(DisruptionCode.VETERINARY_REVIEW);
 
         given(disruptionRepository.findById(1L)).willReturn(Optional.of(disruption));
 
@@ -317,7 +317,7 @@ class EquineServiceTest {
 
         Disruption endedDisruption = equineServiceUnderTest.endDisruption(1L, 1);
 
-        assertEquals(DisruptionCode.VETINARY_REVIEW, endedDisruption.getReason());
+        assertEquals(DisruptionCode.VETERINARY_REVIEW, endedDisruption.getReason());
         assertNotNull(endedDisruption.getEndDate());
     }
 

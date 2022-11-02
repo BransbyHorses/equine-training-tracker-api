@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DisruptionCode {
-    VETINARY_REVIEW("Vetinary Review", 1),
+    VETERINARY_REVIEW("Veterinary Review", 1),
     TEAM_LOW("Team Low", 2),
     WEATHER("Weather", 3),
     YARD_BUSY("Yard Busy", 4),
