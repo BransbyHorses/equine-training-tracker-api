@@ -15,7 +15,6 @@ public class EquineService {
 
     private final EquineRepository equineRepository;
     private final YardRepository yardRepository;
-    private final EquineStatusRepository equineStatusRepository;
     private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
 
     public List<Equine> getAllEquines(){
@@ -54,18 +53,6 @@ public class EquineService {
                     .orElseThrow(() -> new EntityNotFoundException("No yard found with id: " + yardId));
             Equine equine = equineInDb.get();
             equine.setYard(yard);
-            return equineRepository.saveAndFlush(equine);
-        } else {
-            throw new EntityNotFoundException("No equine found with id: " + equineId);
-        }
-    }
-
-    public Equine assignEquineToCategory(Long equineId, Long categoryId) {
-        Optional<Equine> equineInDb = equineRepository.findById(equineId);
-        if(equineInDb.isPresent()) {
-            EquineStatus category = equineStatusRepository.findById(categoryId)
-                    .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
-            Equine equine = equineInDb.get();
             return equineRepository.saveAndFlush(equine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);

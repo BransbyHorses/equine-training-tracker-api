@@ -24,8 +24,6 @@ class EquineServiceTest {
     @Mock
     EquineRepository equineRepository;
     @Mock
-    EquineStatusRepository equineStatusRepository;
-    @Mock
     YardRepository yardRepository;
     @Mock
     HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
@@ -35,8 +33,8 @@ class EquineServiceTest {
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository, healthAndSafetyFlagRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>());
     }
 
     @Test
@@ -98,35 +96,6 @@ class EquineServiceTest {
                 () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
         );
         Assertions.assertEquals("No yard found with id: 1", exception.getMessage());
-    }
-
-    @Test
-    void willAssignEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(equineStatusRepository.findById(1L)).willReturn(Optional.of(equineInstance.getEquineStatus()));
-        equineServiceUnderTest.assignEquineToCategory(1L, 1L);
-        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
-    }
-
-    @Test
-    void willThrowEquineNotFoundExceptionWhenAssigningEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
-        );
-        Assertions.assertEquals("No equine found with id: 1", exception.getMessage());
-    }
-
-    @Test
-    void willThrowCategoryNotFoundExceptionWhenAssigningEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(equineStatusRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
-        );
-        Assertions.assertEquals("No category found with id: 1", exception.getMessage());
     }
 
     @Test
