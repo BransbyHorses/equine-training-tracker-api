@@ -26,6 +26,8 @@ public class Equine {
     @JoinColumn(name = "yard_id", referencedColumnName = "id")
     private Yard yard;
 
+    private EquineStatus equineStatus;
+
     @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<TrainingProgramme> trainingProgrammes;
@@ -38,7 +40,6 @@ public class Equine {
     @ToString.Exclude
     private List<HealthAndSafetyFlag> healthAndSafetyFlags;
 
-    private EquineStatus equineStatus;
 
     @Override
     public boolean equals(Object o) {
