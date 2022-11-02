@@ -1,7 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.models.EquineStatus;
-import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineStatusService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

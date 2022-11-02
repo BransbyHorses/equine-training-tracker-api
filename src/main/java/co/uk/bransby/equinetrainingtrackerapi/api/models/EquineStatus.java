@@ -1,43 +1,38 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
-import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+public enum EquineStatus {
+    AWAITING_TRAINING("Awaiting Training", true),
+    IN_TRAINING("In Training", true),
+    RETURNED_TO_OWNER("Returned To Owner", false),
+    REHOMED("Rehomed", false),
+    EUTHANISED("Euthanised", false),
+    OTHER("Other", false);
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
-@Entity
-@Table(name="equine_statuses")
-public class EquineStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    @OneToMany(mappedBy = "id")
-    @ToString.Exclude
-    private Set<Equine> equines;
+    private final String string;
+    private final boolean categorisedAsTraining;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        EquineStatus category = (EquineStatus) o;
-        return id != null && Objects.equals(id, category.id);
+    EquineStatus(String string, boolean categorisedAsTraining) {
+        this.string = string;
+        this.categorisedAsTraining = categorisedAsTraining;
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+    public String getString() {
+        return string;
     }
 
-    public void removeEquine(Equine equine) {
-        this.equines.remove(equine);
+    public boolean isCategorisedAsTraining() {
+        return categorisedAsTraining;
+    }
+
+    @JsonCreator
+    public static EquineStatus getEquineStatus(String string) {
+        for(EquineStatus equineStatus : EquineStatus.values()) {
+            if(equineStatus.getString().equals(string)){
+                return equineStatus;
+            }
+        }
+        return null;
     }
 }
-
