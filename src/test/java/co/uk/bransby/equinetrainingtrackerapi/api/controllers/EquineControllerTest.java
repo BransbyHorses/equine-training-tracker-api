@@ -76,7 +76,6 @@ class EquineControllerTest {
     @Test
     void updateEquine() throws Exception {
         Equine EquineToUpdate = new Equine(1L, "Updated Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>());
-
         BDDMockito.given(equineService.updateEquine(EquineToUpdate.getId(), EquineToUpdate)).willReturn(EquineToUpdate);
 
         this.mockMvc.perform(MockMvcRequestBuilders.put("/data/equines/{id}", EquineToUpdate.getId())
@@ -183,4 +182,17 @@ class EquineControllerTest {
                 .andExpect((MockMvcResultMatchers.jsonPath("$.[1].id").value(2L)));
     }
 
+    @Test
+    void willLogNewDisruptionAndReturnOkResponse() throws Exception {
+        Disruption newDisruption = new Disruption();
+        newDisruption.setId(1L);
+        newDisruption.setReason(DisruptionCode.YARD_BUSY);
+        BDDMockito.given(equineService.logNewDisruption(1, 1L)).willReturn(newDisruption);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/data/equines/1/disruptions/1/start"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reason.string").value("Yard Busy"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.startDate").isString());
+    }
 }
