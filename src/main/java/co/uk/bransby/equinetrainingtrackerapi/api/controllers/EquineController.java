@@ -1,7 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Equine;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.EquineStatus;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.HealthAndSafetyFlag;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.EquineDto;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.dto.HealthAndSafetyFlagDto;
@@ -48,7 +47,7 @@ public class EquineController {
     public ResponseEntity<List<EquineDto>> findAllEquines() {
         List<EquineDto> allEquines = equineService.getAllEquines()
                 .stream()
-                .map(equine -> mapToDto((Equine) equine)).toList();
+                .map(this::mapToDto).toList();
         return ResponseEntity
                 .ok()
                 .body(allEquines);
@@ -85,7 +84,7 @@ public class EquineController {
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
     }
 
-    @PatchMapping("{equineId}/equineStatus/{equineStatusId}")
+    @PatchMapping("{equineId}/equine-status/{equineStatusId}")
     public ResponseEntity<?> assignEquineAStatus(@PathVariable Long equineId, @PathVariable Long equineStatusId){
         Equine updatedEquine = equineService.assignEquineAStatus(equineId, equineStatusId);
         return ResponseEntity

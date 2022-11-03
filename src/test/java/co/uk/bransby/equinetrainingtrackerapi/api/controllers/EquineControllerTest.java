@@ -143,12 +143,6 @@ class EquineControllerTest {
     }
 
     @Test
-    @Disabled
-    void willAssignEquineToCategoryAndReturnOkResponse() throws Exception {
-
-    }
-
-    @Test
     void willGetEquineHealthAndSafetyFlagsAndReturnOkResponse() throws Exception {
         HealthAndSafetyFlag healthAndSafetyFlag = new HealthAndSafetyFlag(1L, "", new Equine());
         BDDMockito.given(equineService.getEquineHealthAndSafetyFlags(1L)).willReturn(new ArrayList<>(List.of(healthAndSafetyFlag)));
