@@ -31,13 +31,15 @@ class EquineServiceTest {
     HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
     @Mock
     DisruptionRepository disruptionRepository;
+    @Mock
+    LearnerTypeRepository learnerTypeRepository;
     @InjectMocks
     private EquineService equineServiceUnderTest;
     private Equine equineInstance;
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository, disruptionRepository);
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository, disruptionRepository, learnerTypeRepository);
         equineInstance = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
     }
 
