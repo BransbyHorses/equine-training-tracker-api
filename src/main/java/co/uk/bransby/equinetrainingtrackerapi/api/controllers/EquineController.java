@@ -49,8 +49,9 @@ public class EquineController {
         List<EquineDto> allEquines = equineService.getAllEquines()
                 .stream()
                 .map(equine -> mapToDto((Equine) equine)).toList();
-        HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<List<EquineDto>>(allEquines, resHeaders, HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .body(allEquines);
     }
 
     @PostMapping

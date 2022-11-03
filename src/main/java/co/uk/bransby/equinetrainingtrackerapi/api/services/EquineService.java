@@ -55,6 +55,7 @@ public class EquineService {
             TrainingProgramme activeTrainingProgramme = findEquinesActiveTrainingProgramme(equine);
             if(activeTrainingProgramme != null) activeTrainingProgramme.setEndDate(LocalDateTime.now());
         }
+
         return equineRepository.saveAndFlush(equine);
     }
 
