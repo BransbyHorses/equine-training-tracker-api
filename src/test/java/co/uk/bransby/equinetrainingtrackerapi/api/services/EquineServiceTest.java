@@ -37,8 +37,8 @@ class EquineServiceTest {
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>());
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository, disruptionRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
@@ -190,33 +190,6 @@ class EquineServiceTest {
         Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 6L);
         Assertions.assertEquals(EquineStatus.OTHER, equineAwaitingTraining.getEquineStatus());
         Assertions.assertNotNull(equine.getTrainingProgrammes().get(0).getEndDate());
-    }
-
-
-    @Test
-    void willEndActiveTrainingProgrammeWhenEquineStatusIsSet() {
-
-    }
-
-    @Test
-    void willThrowEquineNotFoundExceptionWhenAssigningEquineToYard() {
-        given(equineRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
-        );
-        assertEquals("No equine found with id: 1", exception.getMessage());
-    }
-
-    @Test
-    void willThrowYardNotFoundExceptionWhenAssigningEquineToYard() {
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(yardRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToYard(1L, 1L)
-        );
-        Assertions.assertEquals("No yard found with id: 1", exception.getMessage());
     }
 
     @Test
