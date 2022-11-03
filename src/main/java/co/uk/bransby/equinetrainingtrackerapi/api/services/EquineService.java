@@ -18,6 +18,7 @@ public class EquineService {
     private final YardRepository yardRepository;
     private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
     private final DisruptionRepository disruptionRepository;
+    private final LearnerTypeRepository learnerTypeRepository;
 
     public List<Equine> getAllEquines(){
         return equineRepository.findAll();
@@ -71,6 +72,15 @@ public class EquineService {
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
         }
+    }
+
+    public Equine assignEquineALearnerType(Long equineId, Long learnerTypeId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        LearnerType learnerType = learnerTypeRepository.findById(learnerTypeId)
+                .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + learnerTypeId));
+        equine.setLearnerType(learnerType);
+        return equineRepository.saveAndFlush(equine);
     }
 
     public List<TrainingProgramme> getEquineTrainingProgrammes(Long id) {
