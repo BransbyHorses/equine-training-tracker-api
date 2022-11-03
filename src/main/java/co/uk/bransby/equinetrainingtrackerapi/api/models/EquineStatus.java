@@ -1,7 +1,9 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EquineStatus {
     AWAITING_TRAINING("Awaiting Training", 1L, true),
     IN_TRAINING("In Training", 2L, true),
