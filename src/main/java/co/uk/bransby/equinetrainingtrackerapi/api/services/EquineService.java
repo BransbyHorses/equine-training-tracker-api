@@ -16,7 +16,6 @@ public class EquineService {
 
     private final EquineRepository equineRepository;
     private final YardRepository yardRepository;
-    private final EquineStatusRepository equineStatusRepository;
     private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
     private final DisruptionRepository disruptionRepository;
 
@@ -49,6 +48,18 @@ public class EquineService {
         equineRepository.deleteById(id);
     }
 
+    public Equine assignEquineAStatus(Long equineId, Long equineStatusId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        equine.setEquineStatus(EquineStatus.getEquineStatusFromId(equineStatusId));
+        if(!equine.getEquineStatus().isCategorisedAsTraining()) {
+            TrainingProgramme activeTrainingProgramme = findEquinesActiveTrainingProgramme(equine);
+            if(activeTrainingProgramme != null) activeTrainingProgramme.setEndDate(LocalDateTime.now());
+        }
+
+        return equineRepository.saveAndFlush(equine);
+    }
+
     public Equine assignEquineToYard(Long equineId, Long yardId) {
         Optional<Equine> equineInDb = equineRepository.findById(equineId);
         if(equineInDb.isPresent()) {
@@ -56,18 +67,6 @@ public class EquineService {
                     .orElseThrow(() -> new EntityNotFoundException("No yard found with id: " + yardId));
             Equine equine = equineInDb.get();
             equine.setYard(yard);
-            return equineRepository.saveAndFlush(equine);
-        } else {
-            throw new EntityNotFoundException("No equine found with id: " + equineId);
-        }
-    }
-
-    public Equine assignEquineToCategory(Long equineId, Long categoryId) {
-        Optional<Equine> equineInDb = equineRepository.findById(equineId);
-        if(equineInDb.isPresent()) {
-            EquineStatus category = equineStatusRepository.findById(categoryId)
-                    .orElseThrow(() -> new EntityNotFoundException("No category found with id: " + categoryId));
-            Equine equine = equineInDb.get();
             return equineRepository.saveAndFlush(equine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
@@ -96,18 +95,7 @@ public class EquineService {
     public TrainingProgramme getActiveTrainingProgramme(Long id) {
         Equine equine = equineRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
-
-        if(equine.getTrainingProgrammes() == null) {
-            return null;
-        }
-
-        Optional<TrainingProgramme> activeTrainingProgramme = equine
-                .getTrainingProgrammes()
-                .stream()
-                .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
-                .findFirst();
-
-        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
+        return findEquinesActiveTrainingProgramme(equine);
     }
 
     public List<SkillTrainingSession> getEquineSkillTrainingSessions(Long id) {
@@ -151,5 +139,15 @@ public class EquineService {
                         .orElseThrow(() -> new EntityNotFoundException(("No disruption found with id: " + disruptionId)));
         disruptionToEnd.setEndDate(LocalDateTime.now());
         return disruptionRepository.saveAndFlush(disruptionToEnd);
+    }
+    
+    public TrainingProgramme findEquinesActiveTrainingProgramme(Equine equine) {
+        if(equine.getTrainingProgrammes() == null) return null;
+        Optional<TrainingProgramme> activeTrainingProgramme = equine
+                .getTrainingProgrammes()
+                .stream()
+                .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
+                .findFirst();
+        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
     }
 }

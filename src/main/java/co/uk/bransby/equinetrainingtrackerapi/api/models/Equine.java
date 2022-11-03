@@ -7,8 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -26,8 +26,6 @@ public class Equine {
     @JoinColumn(name = "yard_id", referencedColumnName = "id")
     private Yard yard;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private EquineStatus equineStatus;
 
     @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)

@@ -26,8 +26,6 @@ class EquineServiceTest {
     @Mock
     EquineRepository equineRepository;
     @Mock
-    EquineStatusRepository equineStatusRepository;
-    @Mock
     YardRepository yardRepository;
     @Mock
     HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
@@ -39,8 +37,8 @@ class EquineServiceTest {
 
     @BeforeEach
     void setUp() {
-        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, equineStatusRepository, healthAndSafetyFlagRepository, disruptionRepository);
-        equineInstance = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
+        equineServiceUnderTest = new EquineService(equineRepository, yardRepository, healthAndSafetyFlagRepository, disruptionRepository);
+        equineInstance = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
@@ -84,6 +82,28 @@ class EquineServiceTest {
     }
 
     @Test
+    void willAssignEquineAwaitingTrainingStatus() {
+        Equine equine = new Equine();
+        equine.setId(1L);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 1L);
+        Assertions.assertEquals(EquineStatus.AWAITING_TRAINING, equineAwaitingTraining.getEquineStatus());
+    }
+
+    @Test
+    void willAssignEquineInTrainingStatus() {
+        Equine equine = new Equine();
+        equine.setId(1L);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 2L);
+        Assertions.assertEquals(EquineStatus.IN_TRAINING, equineAwaitingTraining.getEquineStatus());
+    }
+    
+    @Test
     void willThrowEquineNotFoundExceptionWhenAssigningEquineToYard() {
         given(equineRepository.findById(1L)).willReturn(Optional.empty());
         Exception exception = Assertions.assertThrows(
@@ -105,32 +125,71 @@ class EquineServiceTest {
     }
 
     @Test
-    void willAssignEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(equineStatusRepository.findById(1L)).willReturn(Optional.of(equineInstance.getEquineStatus()));
-        equineServiceUnderTest.assignEquineToCategory(1L, 1L);
-        Mockito.verify(equineRepository).saveAndFlush(equineInstance);
+    void willAssignEquineReturnedStatusAndEndActiveTrainingProgramme() {
+        TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
+        activeTrainingProgramme.setStartDate(LocalDateTime.of(2022, 10, 15, 7, 30));
+
+        Equine equine = new Equine();
+        equine.setId(1L);
+        equine.setTrainingProgrammes(new ArrayList<>(List.of(activeTrainingProgramme)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 3L);
+        Assertions.assertEquals(EquineStatus.RETURNED_TO_OWNER, equineAwaitingTraining.getEquineStatus());
+        Assertions.assertNotNull(equine.getTrainingProgrammes().get(0).getEndDate());
     }
 
     @Test
-    void willThrowEquineNotFoundExceptionWhenAssigningEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
-        );
-        assertEquals("No equine found with id: 1", exception.getMessage());
+    void willAssignEquineRehomedStatusAndEndActiveTrainingProgramme() {
+        TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
+        activeTrainingProgramme.setStartDate(LocalDateTime.of(2022, 10, 15, 7, 30));
+
+        Equine equine = new Equine();
+        equine.setId(1L);
+        equine.setTrainingProgrammes(new ArrayList<>(List.of(activeTrainingProgramme)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 4L);
+        Assertions.assertEquals(EquineStatus.REHOMED, equineAwaitingTraining.getEquineStatus());
+        Assertions.assertNotNull(equine.getTrainingProgrammes().get(0).getEndDate());
     }
 
     @Test
-    void willThrowCategoryNotFoundExceptionWhenAssigningEquineToCategory() {
-        given(equineRepository.findById(1L)).willReturn(Optional.of(equineInstance));
-        given(equineStatusRepository.findById(1L)).willReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> equineServiceUnderTest.assignEquineToCategory(1L, 1L)
-        );
-        assertEquals("No category found with id: 1", exception.getMessage());
+    void willAssignEquineEuthanisedStatusAndEndActiveTrainingProgramme() {
+        TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
+        activeTrainingProgramme.setStartDate(LocalDateTime.of(2022, 10, 15, 7, 30));
+
+        Equine equine = new Equine();
+        equine.setId(1L);
+        equine.setTrainingProgrammes(new ArrayList<>(List.of(activeTrainingProgramme)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 5L);
+        Assertions.assertEquals(EquineStatus.EUTHANISED, equineAwaitingTraining.getEquineStatus());
+        Assertions.assertNotNull(equine.getTrainingProgrammes().get(0).getEndDate());
+    }
+
+    @Test
+    void willAssignEquineOtherStatusAndEndActiveTrainingProgramme() {
+        TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
+        activeTrainingProgramme.setStartDate(LocalDateTime.of(2022, 10, 15, 7, 30));
+
+        Equine equine = new Equine();
+        equine.setId(1L);
+        equine.setTrainingProgrammes(new ArrayList<>(List.of(activeTrainingProgramme)));
+
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+        when(equineRepository.saveAndFlush(equine))
+                .thenAnswer(i -> i.getArguments()[0]);
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 6L);
+        Assertions.assertEquals(EquineStatus.OTHER, equineAwaitingTraining.getEquineStatus());
+        Assertions.assertNotNull(equine.getTrainingProgrammes().get(0).getEndDate());
     }
 
     @Test

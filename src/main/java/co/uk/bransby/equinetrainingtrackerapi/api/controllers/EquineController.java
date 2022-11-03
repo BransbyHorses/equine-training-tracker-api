@@ -45,9 +45,10 @@ public class EquineController {
     public ResponseEntity<List<EquineDto>> findAllEquines() {
         List<EquineDto> allEquines = equineService.getAllEquines()
                 .stream()
-                .map(equine -> mapToDto((Equine) equine)).toList();
-        HttpHeaders resHeaders = new HttpHeaders();
-        return new ResponseEntity<List<EquineDto>>(allEquines, resHeaders, HttpStatus.OK);
+                .map(this::mapToDto).toList();
+        return ResponseEntity
+                .ok()
+                .body(allEquines);
     }
 
     @PostMapping
@@ -81,10 +82,12 @@ public class EquineController {
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
     }
 
-    @PatchMapping("{equineId}/categories/{categoryId}")
-    public ResponseEntity<?> assignEquineStatusToEquine(@PathVariable Long equineId, @PathVariable Long categoryId) {
-        Equine equine = equineService.assignEquineToCategory(equineId, categoryId);
-        return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
+    @PatchMapping("{equineId}/equine-status/{equineStatusId}")
+    public ResponseEntity<?> assignEquineAStatus(@PathVariable Long equineId, @PathVariable Long equineStatusId){
+        Equine updatedEquine = equineService.assignEquineAStatus(equineId, equineStatusId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedEquine, EquineDto.class));
     }
 
     @GetMapping("{equineId}/training-programmes")

@@ -1,43 +1,55 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum EquineStatus {
+    AWAITING_TRAINING("Awaiting Training", 1L, true),
+    IN_TRAINING("In Training", 2L, true),
+    RETURNED_TO_OWNER("Returned To Owner",3L, false),
+    REHOMED("Rehomed", 4L, false),
+    EUTHANISED("Euthanised",5L, false),
+    OTHER("Other",6L, false);
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
-@Entity
-@Table(name="equine_statuses")
-public class EquineStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    @OneToMany(mappedBy = "id")
-    @ToString.Exclude
-    private Set<Equine> equines;
+    private final String string;
+    private final Long id;
+    private final boolean categorisedAsTraining;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        EquineStatus category = (EquineStatus) o;
-        return id != null && Objects.equals(id, category.id);
+    EquineStatus(String string, Long id, boolean categorisedAsTraining) {
+        this.string = string;
+        this.id = id;
+        this.categorisedAsTraining = categorisedAsTraining;
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+    public String getString() {
+        return string;
     }
 
-    public void removeEquine(Equine equine) {
-        this.equines.remove(equine);
+    public Long getId() {
+        return id;
+    }
+
+    public boolean isCategorisedAsTraining() {
+        return categorisedAsTraining;
+    }
+
+    public static EquineStatus getEquineStatusFromId(Long id) {
+        for(EquineStatus equineStatus : EquineStatus.values()) {
+            if(equineStatus.getId().equals(id)){
+                return equineStatus;
+            }
+        }
+        return null;
+    }
+
+    @JsonCreator
+    public static EquineStatus getEquineStatusFromString(String string) {
+        for(EquineStatus equineStatus : EquineStatus.values()) {
+            if(equineStatus.getString().equals(string)){
+                return equineStatus;
+            }
+        }
+        return null;
     }
 }
-

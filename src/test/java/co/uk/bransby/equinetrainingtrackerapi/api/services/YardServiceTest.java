@@ -69,13 +69,10 @@ class YardServiceTest {
 
     @Test
     void canDeleteYard() {
-        Equine equine = new Equine(1L, "First Horse", new Yard(), new EquineStatus(), new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
+        Equine equine = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
         yardInstance.setEquines(new HashSet<>(List.of(equine)));
-        // given
         given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));
-        // when
         yardServiceUnderTest.deleteYard(yardInstance.getId());
-        // then
         Assertions.assertNull(equine.getYard());
         Mockito.verify(yardRepository).deleteById(yardInstance.getId());
     }
