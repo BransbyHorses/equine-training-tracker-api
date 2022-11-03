@@ -128,6 +128,7 @@ class TrainingProgrammeServiceTest {
         assertNull(savedTrainingProgramme.getEndDate());
         assertNull(savedTrainingProgramme.getStartDate());
         assertNotNull(savedTrainingProgramme.getCreatedOn());
+        assertEquals(EquineStatus.IN_TRAINING, equine.getEquineStatus());
     }
 
     @Test

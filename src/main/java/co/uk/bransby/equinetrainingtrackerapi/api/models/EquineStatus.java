@@ -32,7 +32,6 @@ public enum EquineStatus {
         return categorisedAsTraining;
     }
 
-    @JsonCreator
     public static EquineStatus getEquineStatusFromId(Long id) {
         for(EquineStatus equineStatus : EquineStatus.values()) {
             if(equineStatus.getId().equals(id)){

@@ -7,8 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -39,7 +39,6 @@ public class Equine {
     @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<HealthAndSafetyFlag> healthAndSafetyFlags;
-
 
     @Override
     public boolean equals(Object o) {

@@ -68,6 +68,8 @@ public class TrainingProgrammeService {
 
         newTrainingProgramme.setSkillProgressRecords(newSkillProgressRecords);
         trainingProgrammeRepository.saveAndFlush(newTrainingProgramme);
+        equine.setEquineStatus(EquineStatus.IN_TRAINING);
+        equineRepository.saveAndFlush(equine);
         return newTrainingProgramme;
     }
 

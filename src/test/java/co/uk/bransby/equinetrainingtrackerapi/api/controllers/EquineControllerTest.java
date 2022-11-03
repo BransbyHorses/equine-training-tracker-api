@@ -4,6 +4,7 @@ import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.EquineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -142,21 +143,9 @@ class EquineControllerTest {
     }
 
     @Test
+    @Disabled
     void willAssignEquineToCategoryAndReturnOkResponse() throws Exception {
-        BDDMockito.given(equineService.assignEquineToCategory(1L, 1L))
-                .willReturn(new Equine());
-        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/categories/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
 
-    @Test
-    void willReturnNotFoundResponseAndNotFoundMessageWhenEquineOrCategoryEntityWasNotFound() throws Exception {
-        BDDMockito.given(equineService.assignEquineToCategory(1L, 1L))
-                .willThrow(new EntityNotFoundException("No category found with id: 1"));
-
-        this.mockMvc.perform(MockMvcRequestBuilders.patch("/data/equines/1/categories/1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("No category found with id: 1"));
     }
 
     @Test
@@ -168,7 +157,8 @@ class EquineControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(1L));
     }
-    
+
+    @Test
     void willReturnActiveTrainingProgrammeAndOkResponse() throws Exception {
         TrainingProgramme activeTrainingProgramme = new TrainingProgramme();
         activeTrainingProgramme.setId(1L);

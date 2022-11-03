@@ -78,6 +78,32 @@ class EquineServiceTest {
     }
 
     @Test
+    void willAssignEquineAStatus() {
+        Equine equine = new Equine();
+        equine.setId(1L);
+        given(equineRepository.findById(1L)).willReturn(Optional.of(equine));
+
+        Equine equineAwaitingTraining = equineServiceUnderTest.assignEquineAStatus(1L, 1L);
+        Equine equineInTraining = equineServiceUnderTest.assignEquineAStatus(1L, 2L);
+        Equine equineReturned = equineServiceUnderTest.assignEquineAStatus(1L, 3L);
+        Equine equineRehomed = equineServiceUnderTest.assignEquineAStatus(1L, 4L);
+        Equine equineEuthanised = equineServiceUnderTest.assignEquineAStatus(1L, 5L);
+        Equine equineOther = equineServiceUnderTest.assignEquineAStatus(1L, 6L);
+
+        Assertions.assertEquals(EquineStatus.AWAITING_TRAINING, equineAwaitingTraining.getEquineStatus());
+        Assertions.assertEquals(EquineStatus.IN_TRAINING, equineInTraining.getEquineStatus());
+        Assertions.assertEquals(EquineStatus.RETURNED_TO_OWNER, equineReturned.getEquineStatus());
+        Assertions.assertEquals(EquineStatus.REHOMED, equineRehomed.getEquineStatus());
+        Assertions.assertEquals(EquineStatus.EUTHANISED, equineEuthanised.getEquineStatus());
+        Assertions.assertEquals(EquineStatus.OTHER, equineOther.getEquineStatus());
+    }
+
+    @Test
+    void willEndActiveTrainingProgrammeWhenEquineStatusIsSet() {
+
+    }
+
+    @Test
     void willThrowEquineNotFoundExceptionWhenAssigningEquineToYard() {
         given(equineRepository.findById(1L)).willReturn(Optional.empty());
         Exception exception = Assertions.assertThrows(

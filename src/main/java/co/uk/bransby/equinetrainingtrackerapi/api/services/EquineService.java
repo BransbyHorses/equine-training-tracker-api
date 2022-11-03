@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @AllArgsConstructor
@@ -46,6 +47,17 @@ public class EquineService {
         equineRepository.deleteById(id);
     }
 
+    public Equine assignEquineAStatus(Long equineId, Long equineStatusId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        equine.setEquineStatus(EquineStatus.getEquineStatusFromId(equineStatusId));
+        if(!equine.getEquineStatus().isCategorisedAsTraining()) {
+            TrainingProgramme activeTrainingProgramme = findEquinesActiveTrainingProgramme(equine);
+            if(activeTrainingProgramme != null) activeTrainingProgramme.setEndDate(LocalDateTime.now());
+        }
+        return equineRepository.saveAndFlush(equine);
+    }
+
     public Equine assignEquineToYard(Long equineId, Long yardId) {
         Optional<Equine> equineInDb = equineRepository.findById(equineId);
         if(equineInDb.isPresent()) {
@@ -81,18 +93,7 @@ public class EquineService {
     public TrainingProgramme getActiveTrainingProgramme(Long id) {
         Equine equine = equineRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + id));
-
-        if(equine.getTrainingProgrammes() == null) {
-            return null;
-        }
-
-        Optional<TrainingProgramme> activeTrainingProgramme = equine
-                .getTrainingProgrammes()
-                .stream()
-                .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
-                .findFirst();
-
-        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
+        return findEquinesActiveTrainingProgramme(equine);
     }
 
     public List<SkillTrainingSession> getEquineSkillTrainingSessions(Long id) {
@@ -109,5 +110,15 @@ public class EquineService {
                     }
                 }));
         return allSkillTrainingSessions;
+    }
+
+    public TrainingProgramme findEquinesActiveTrainingProgramme(Equine equine) {
+        if(equine.getTrainingProgrammes() == null) return null;
+        Optional<TrainingProgramme> activeTrainingProgramme = equine
+                .getTrainingProgrammes()
+                .stream()
+                .filter(trainingProgramme -> trainingProgramme.getEndDate() == null)
+                .findFirst();
+        return activeTrainingProgramme.isEmpty() ? null : activeTrainingProgramme.get();
     }
 }
