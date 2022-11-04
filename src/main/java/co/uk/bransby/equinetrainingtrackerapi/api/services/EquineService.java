@@ -18,6 +18,7 @@ public class EquineService {
     private final YardRepository yardRepository;
     private final HealthAndSafetyFlagRepository healthAndSafetyFlagRepository;
     private final DisruptionRepository disruptionRepository;
+    private final LearnerTypeRepository learnerTypeRepository;
 
     public List<Equine> getAllEquines(){
         return equineRepository.findAll();
@@ -67,6 +68,19 @@ public class EquineService {
                     .orElseThrow(() -> new EntityNotFoundException("No yard found with id: " + yardId));
             Equine equine = equineInDb.get();
             equine.setYard(yard);
+            return equineRepository.saveAndFlush(equine);
+        } else {
+            throw new EntityNotFoundException("No equine found with id: " + equineId);
+        }
+    }
+
+    public Equine assignEquineLearnerType(Long equineId, Long learnerTypeId) {
+        Optional<Equine> equineInDb = equineRepository.findById(equineId);
+        if(equineInDb.isPresent()) {
+            LearnerType learnerType = learnerTypeRepository.findById(learnerTypeId)
+                    .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + learnerTypeId));
+            Equine equine = equineInDb.get();
+            equine.setLearnerType(learnerType);
             return equineRepository.saveAndFlush(equine);
         } else {
             throw new EntityNotFoundException("No equine found with id: " + equineId);
@@ -140,7 +154,7 @@ public class EquineService {
         disruptionToEnd.setEndDate(LocalDateTime.now());
         return disruptionRepository.saveAndFlush(disruptionToEnd);
     }
-    
+
     public TrainingProgramme findEquinesActiveTrainingProgramme(Equine equine) {
         if(equine.getTrainingProgrammes() == null) return null;
         Optional<TrainingProgramme> activeTrainingProgramme = equine
