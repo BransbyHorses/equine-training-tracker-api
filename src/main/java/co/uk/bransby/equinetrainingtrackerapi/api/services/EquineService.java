@@ -74,17 +74,13 @@ public class EquineService {
         }
     }
 
-    public Equine assignEquineLearnerType(Long equineId, Long learnerTypeId) {
-        Optional<Equine> equineInDb = equineRepository.findById(equineId);
-        if(equineInDb.isPresent()) {
-            LearnerType learnerType = learnerTypeRepository.findById(learnerTypeId)
-                    .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + learnerTypeId));
-            Equine equine = equineInDb.get();
-            equine.setLearnerType(learnerType);
-            return equineRepository.saveAndFlush(equine);
-        } else {
-            throw new EntityNotFoundException("No equine found with id: " + equineId);
-        }
+    public Equine assignEquineALearnerType(Long equineId, Long learnerTypeId) {
+        Equine equine = equineRepository.findById(equineId)
+                .orElseThrow(() -> new EntityNotFoundException("No equine found with id: " + equineId));
+        LearnerType learnerType = learnerTypeRepository.findById(learnerTypeId)
+                .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + learnerTypeId));
+        equine.setLearnerType(learnerType);
+        return equineRepository.saveAndFlush(equine);
     }
 
     public List<TrainingProgramme> getEquineTrainingProgrammes(Long id) {

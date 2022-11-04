@@ -82,6 +82,16 @@ public class EquineController {
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
     }
 
+    @PatchMapping("{equineId}/learner-types/{learnerTypeId}")
+    public ResponseEntity<?> assignEquineALearnerType(@PathVariable Long equineId, @PathVariable Long learnerTypeId) {
+        Equine updatedEquine = equineService.assignEquineALearnerType(equineId, learnerTypeId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedEquine, EquineDto.class));
+    }
+
+
+
     @PatchMapping("{equineId}/equine-status/{equineStatusId}")
     public ResponseEntity<?> assignEquineAStatus(@PathVariable Long equineId, @PathVariable Long equineStatusId){
         Equine updatedEquine = equineService.assignEquineAStatus(equineId, equineStatusId);
