@@ -150,7 +150,7 @@ public class EquineService {
         disruptionToEnd.setEndDate(LocalDateTime.now());
         return disruptionRepository.saveAndFlush(disruptionToEnd);
     }
-    
+
     public TrainingProgramme findEquinesActiveTrainingProgramme(Equine equine) {
         if(equine.getTrainingProgrammes() == null) return null;
         Optional<TrainingProgramme> activeTrainingProgramme = equine

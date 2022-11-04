@@ -17,7 +17,7 @@ public class DisruptionController {
 
     @GetMapping
     public ResponseEntity<List<DisruptionCode>> disruptions() {
-        return new ResponseEntity<List<DisruptionCode>>(Arrays.asList(DisruptionCode.values()), HttpStatus.OK);
+        return new ResponseEntity<>(Arrays.asList(DisruptionCode.values()), HttpStatus.OK);
     }
 
 }

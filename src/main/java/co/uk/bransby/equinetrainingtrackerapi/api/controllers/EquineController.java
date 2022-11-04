@@ -100,6 +100,14 @@ public class EquineController {
                 .body(modelMapper.map(updatedEquine, EquineDto.class));
     }
 
+    @PatchMapping("{equineId}/learner-type/{learnerTypeId}")
+    public ResponseEntity<?> assignEquineLearnerType(@PathVariable Long equineId, @PathVariable Long learnerTypeId){
+        Equine updatedEquine = equineService.assignEquineALearnerType(equineId, learnerTypeId);
+        return ResponseEntity
+                .ok()
+                .body(modelMapper.map(updatedEquine, EquineDto.class));
+    }
+
     @GetMapping("{equineId}/training-programmes")
     public ResponseEntity<List<TrainingProgrammeDto>> getEquineTrainingProgrammes(@PathVariable Long equineId) {
         List<TrainingProgrammeDto> trainingProgrammes = equineService
@@ -134,7 +142,7 @@ public class EquineController {
                 .ok()
                 .body(equineHealthAndSafetyFlags);
     }
-    
+
     @GetMapping("{equineId}/training-programmes/latest")
     public ResponseEntity<TrainingProgrammeDto> getActiveTrainingProgramme(@PathVariable Long equineId) {
         TrainingProgramme activeTrainingProgramme = equineService.getActiveTrainingProgramme(equineId);
