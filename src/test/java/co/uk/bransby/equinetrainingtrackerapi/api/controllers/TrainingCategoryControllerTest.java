@@ -2,7 +2,6 @@ package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingCategory;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.TrainingCategoryService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -65,7 +61,6 @@ class TrainingCategoryControllerTest {
 
     @Test
     void createTrainingCategoryAndReturnCreatedResponse() throws Exception {
-
         given(trainingCategoryService.createTrainingCategory(any(TrainingCategory.class)))
                 .willAnswer((answer) -> answer.getArgument(0));
         this.mockMvc.perform(post("/data/training-categories")
