@@ -72,10 +72,6 @@ class TrainingEnvironmentControllerTest {
     }
 
     @Test
-    @Disabled
-    void canUpdateEnvironmentAndReturnOkResponse() throws Exception {}
-
-    @Test
     void deleteEnvironmentAndReturnOkResponse() throws Exception {
         given(environmentService.getEnvironment(1L)).willReturn(environments.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/environments/{id}", 1))

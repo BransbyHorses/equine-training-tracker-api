@@ -17,28 +17,28 @@ public class LearnerTypeService {
 
     public List<LearnerType> getLearnerTypes() {
         return learnerTypeRepository.findAll();
-    };
+    }
 
     public LearnerType getLearnerType(Long id){
         return learnerTypeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + id));
-    };
+    }
 
     public LearnerType createLearnerType(LearnerType newLearnerType) {
         return learnerTypeRepository.saveAndFlush(newLearnerType);
-    };
+    }
 
     public LearnerType updateLearnerType(Long id, LearnerType updatedLearnerTypeValues) {
         LearnerType updatedLearnerType = learnerTypeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + id));
         BeanUtils.copyProperties(updatedLearnerTypeValues, updatedLearnerType, "id");
         return learnerTypeRepository.saveAndFlush(updatedLearnerType);
-    };
+    }
 
     public void deleteLearnerType(Long id) {
         LearnerType learnerType = learnerTypeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + id));
         learnerTypeRepository.delete(learnerType);
-    };
+    }
 
 }

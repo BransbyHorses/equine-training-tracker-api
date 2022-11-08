@@ -43,7 +43,6 @@ public class EquineService {
     public void deleteEquine(Long id){
         Equine equine = equineRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException(("No equine found with id: " + id)));
-        // TODO - remove relationships before deleting
         equine.setYard(null);
         equineRepository.saveAndFlush(equine);
         equineRepository.deleteById(id);

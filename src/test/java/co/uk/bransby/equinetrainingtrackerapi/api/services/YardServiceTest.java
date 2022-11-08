@@ -64,7 +64,7 @@ class YardServiceTest {
 
     @Test
     void throwsExceptionWhenYardWasNotFoundAndUpdated() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> yardServiceUnderTest.updateYard(yardInstance.getId(), yardInstance));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> yardServiceUnderTest.updateYard(1L, yardInstance));
     }
 
     @Test

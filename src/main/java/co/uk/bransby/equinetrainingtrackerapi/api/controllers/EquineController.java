@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -67,7 +66,7 @@ public class EquineController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> deleteEquine(@PathVariable Long id) {
+    public ResponseEntity<EquineDto> deleteEquine(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         equineService.deleteEquine(id);
         return ResponseEntity
@@ -77,23 +76,13 @@ public class EquineController {
     }
 
     @PatchMapping("{equineId}/yards/{yardId}")
-    public ResponseEntity<?> assignYardToEquine(@PathVariable Long equineId, @PathVariable Long yardId) {
+    public ResponseEntity<EquineDto> assignYardToEquine(@PathVariable Long equineId, @PathVariable Long yardId) {
         Equine equine = equineService.assignEquineToYard(equineId, yardId);
         return ResponseEntity.ok().body(modelMapper.map(equine, EquineDto.class));
     }
 
-    @PatchMapping("{equineId}/learner-types/{learnerTypeId}")
-    public ResponseEntity<?> assignEquineALearnerType(@PathVariable Long equineId, @PathVariable Long learnerTypeId) {
-        Equine updatedEquine = equineService.assignEquineALearnerType(equineId, learnerTypeId);
-        return ResponseEntity
-                .ok()
-                .body(modelMapper.map(updatedEquine, EquineDto.class));
-    }
-
-
-
     @PatchMapping("{equineId}/equine-status/{equineStatusId}")
-    public ResponseEntity<?> assignEquineAStatus(@PathVariable Long equineId, @PathVariable Long equineStatusId){
+    public ResponseEntity<EquineDto> assignEquineAStatus(@PathVariable Long equineId, @PathVariable Long equineStatusId){
         Equine updatedEquine = equineService.assignEquineAStatus(equineId, equineStatusId);
         return ResponseEntity
                 .ok()
@@ -101,7 +90,7 @@ public class EquineController {
     }
 
     @PatchMapping("{equineId}/learner-type/{learnerTypeId}")
-    public ResponseEntity<?> assignEquineLearnerType(@PathVariable Long equineId, @PathVariable Long learnerTypeId){
+    public ResponseEntity<EquineDto> assignEquineALearnerType(@PathVariable Long equineId, @PathVariable Long learnerTypeId){
         Equine updatedEquine = equineService.assignEquineALearnerType(equineId, learnerTypeId);
         return ResponseEntity
                 .ok()
@@ -114,7 +103,7 @@ public class EquineController {
                 .getEquineTrainingProgrammes(equineId)
                 .stream()
                 .map(trainingProgramme -> modelMapper.map(trainingProgramme, TrainingProgrammeDto.class))
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity
                 .ok()

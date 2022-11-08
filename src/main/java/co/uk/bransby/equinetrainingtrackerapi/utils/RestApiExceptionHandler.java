@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    StringBuilder stringBuilder = new StringBuilder();
+
     private ResponseEntity<RestApiError> buildRestApiErrorResponse(RestApiError apiError) {
         return ResponseEntity
                 .status(apiError.getStatus())
@@ -21,19 +23,19 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<RestApiError> handleEntityNotFound(HttpServletRequest req, EntityNotFoundException e) {
-        RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.NOT_FOUND, e.getMessage());
+        RestApiError error = new RestApiError(stringBuilder.append(req.getRequestURL()), HttpStatus.NOT_FOUND, e.getMessage());
         return buildRestApiErrorResponse(error);
     }
 
     @ExceptionHandler(EntityExistsException.class)
     protected ResponseEntity<RestApiError> handleEntityExists(HttpServletRequest req, EntityExistsException e) {
-        RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.CONFLICT, e.getMessage());
+        RestApiError error = new RestApiError(stringBuilder.append(req.getRequestURL()), HttpStatus.CONFLICT, e.getMessage());
         return buildRestApiErrorResponse(error);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected  ResponseEntity<RestApiError> handleIllegalArgument(HttpServletRequest req, IllegalArgumentException e) {
-        RestApiError error = new RestApiError(req.getRequestURL(), HttpStatus.BAD_REQUEST, e.getMessage());
+        RestApiError error = new RestApiError(stringBuilder.append(req.getRequestURL()), HttpStatus.BAD_REQUEST, e.getMessage());
         return buildRestApiErrorResponse(error);
     }
 

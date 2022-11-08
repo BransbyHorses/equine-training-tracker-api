@@ -81,7 +81,7 @@ class TrainingMethodServiceTest {
         given(trainingMethodRepository.findById(1L)).willReturn(Optional.ofNullable(trainingMethod));
         given(trainingMethodRepository.saveAndFlush(trainingMethod)).willReturn(trainingMethod);
         TrainingMethod updatedAndSavedTrainingMethod = trainingMethodService.updateMethod(1L, updatedTrainingMethodValues);
-        Assertions.assertEquals(updatedAndSavedTrainingMethod.getId(), 1L);
+        Assertions.assertEquals(1L, updatedAndSavedTrainingMethod.getId());
         Assertions.assertEquals(updatedAndSavedTrainingMethod.getName(), updatedTrainingMethodValues.getName());
         Assertions.assertEquals(updatedAndSavedTrainingMethod.getDescription(), updatedTrainingMethodValues.getDescription());
     }

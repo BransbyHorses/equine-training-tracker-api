@@ -327,7 +327,7 @@ class EquineServiceTest {
         testEquine.setTrainingProgrammes(new ArrayList<>(List.of(trainingProgramme1, trainingProgramme2, trainingProgramme3)));
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
         List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        assertEquals(skillTrainingSessions.size(), 0);
+        assertEquals(0, skillTrainingSessions.size());
     }
 
     @Test
@@ -336,7 +336,7 @@ class EquineServiceTest {
         testEquine.setTrainingProgrammes(null);
         given(equineRepository.findById(1L)).willReturn(Optional.of(testEquine));
         List<SkillTrainingSession> skillTrainingSessions = equineServiceUnderTest.getEquineSkillTrainingSessions(1L);
-        assertEquals(skillTrainingSessions.size(), 0);
+        assertEquals(0, skillTrainingSessions.size());
     }
 
     @Test

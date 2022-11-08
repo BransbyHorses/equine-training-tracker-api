@@ -49,7 +49,7 @@ public class TrainingProgrammeController {
     }
 
     @DeleteMapping ("{id}")
-    public ResponseEntity<?> deleteTrainingProgramme(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTrainingProgramme(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         trainingProgrammeService.deleteProgramme(id);
         return ResponseEntity.ok().headers(resHeaders).build();

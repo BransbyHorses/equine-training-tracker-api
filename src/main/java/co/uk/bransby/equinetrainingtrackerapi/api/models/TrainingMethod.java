@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.models;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingMethodRepository;
 import lombok.*;
 
 import javax.persistence.*;

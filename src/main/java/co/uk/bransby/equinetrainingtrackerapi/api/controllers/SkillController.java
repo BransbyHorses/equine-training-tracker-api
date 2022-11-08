@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -22,6 +19,13 @@ public class SkillController {
 
     private final SkillService skillService;
     private ModelMapper modelMapper;
+
+    private Skill convertToEntity(SkillDto skillDto) {
+        return modelMapper.map(skillDto, Skill.class);
+    }
+    private SkillDto convertToDto(Skill skill) {
+        return modelMapper.map(skill, SkillDto.class);
+    }
 
     @GetMapping
     public ResponseEntity<List<SkillDto>> all() {
@@ -48,7 +52,7 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addSkill(@RequestBody SkillDto skillDto) {
+    public ResponseEntity<SkillDto> addSkill(@RequestBody SkillDto skillDto) {
         HttpHeaders headers = new HttpHeaders();
             Skill skillEntity = convertToEntity(skillDto);
             Skill newSkill = skillService.create(skillEntity);
@@ -70,7 +74,7 @@ public class SkillController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteSkillById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSkillById(@PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
         skillService.deleteById(id);
         return ResponseEntity
@@ -78,12 +82,4 @@ public class SkillController {
                 .headers(headers)
                 .build();
     }
-
-    private Skill convertToEntity(SkillDto skillDto) {
-        return modelMapper.map(skillDto, Skill.class);
-    }
-    private SkillDto convertToDto(Skill skill) {
-        return modelMapper.map(skill, SkillDto.class);
-    }
-
 }

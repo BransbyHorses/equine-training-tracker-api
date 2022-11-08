@@ -84,9 +84,4 @@ class TrainingProgrammeControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/training-programmes/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    void canAddSkillTrainingSessionToTrainingProgrammeAndReturnOkResponse() throws Exception {
-        // TODO - test controller response
-    }
 }

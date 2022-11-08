@@ -3,16 +3,12 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.*;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -42,7 +38,7 @@ public class TrainingProgrammeService {
                 .orElseThrow(() -> new EntityNotFoundException("No training category found with id: " + trainingCategoryId));
 
         TrainingProgramme lastTrainingProgramme =
-                equine.getTrainingProgrammes() == null || equine.getTrainingProgrammes().size() == 0 ?
+                equine.getTrainingProgrammes() == null || equine.getTrainingProgrammes().isEmpty() ?
                         null
                         :
                         equine.getTrainingProgrammes()
@@ -93,12 +89,12 @@ public class TrainingProgrammeService {
                 .stream()
                 .filter(s -> s.getSkill().getId().equals(savedSkillTrainingSession.getSkill().getId()))
                 .findFirst()
-                .ifPresent(record -> {
-                    if(record.getStartDate() == null) {
-                        record.setStartDate(LocalDateTime.now());
+                .ifPresent(skillProgressRecord -> {
+                    if(skillProgressRecord.getStartDate() == null) {
+                        skillProgressRecord.setStartDate(LocalDateTime.now());
                     }
-                    record.setProgressCode(savedSkillTrainingSession.getProgressCode());
-                    record.logTime(savedSkillTrainingSession.getTrainingTime());
+                    skillProgressRecord.setProgressCode(savedSkillTrainingSession.getProgressCode());
+                    skillProgressRecord.logTime(savedSkillTrainingSession.getTrainingTime());
                 });
 
         trainingProgrammeRepository.saveAndFlush(trainingProgramme);

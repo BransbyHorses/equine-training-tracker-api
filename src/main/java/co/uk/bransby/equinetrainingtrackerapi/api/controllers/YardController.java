@@ -6,15 +6,11 @@ import co.uk.bransby.equinetrainingtrackerapi.api.services.YardService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -56,7 +52,7 @@ public class YardController {
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> updateYard(@PathVariable Long id, @RequestBody YardDto updatedYardValues) {
+    public ResponseEntity<YardDto> updateYard(@PathVariable Long id, @RequestBody YardDto updatedYardValues) {
         HttpHeaders resHeaders = new HttpHeaders();
             Yard updatedYard =  yardService.updateYard(id, modelMapper.map(updatedYardValues, Yard.class));
             return ResponseEntity
@@ -66,7 +62,7 @@ public class YardController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> deleteYard(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteYard(@PathVariable Long id) {
         HttpHeaders resHeaders = new HttpHeaders();
         yardService.deleteYard(id);
         return ResponseEntity

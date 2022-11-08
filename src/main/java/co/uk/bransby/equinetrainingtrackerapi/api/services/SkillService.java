@@ -1,7 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
-import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillProgressRecordRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
@@ -66,9 +65,7 @@ public class SkillService {
                 .stream()
                 .filter(skillProgressRecord -> skillProgressRecord.getSkill().getId().equals(skillToDelete.getId()))
                 .toList();
-        skillProgressRecords.forEach(skillProgressRecord -> {
-            skillProgressRecordRepository.deleteById(skillProgressRecord.getId());
-        });
+        skillProgressRecords.forEach(skillProgressRecord -> skillProgressRecordRepository.deleteById(skillProgressRecord.getId()));
     }
 
     public void addNewSkillToTrainingProgrammes(Skill newSkill) {

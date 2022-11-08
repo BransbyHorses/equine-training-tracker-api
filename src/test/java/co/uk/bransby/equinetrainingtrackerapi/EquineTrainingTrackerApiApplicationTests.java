@@ -10,7 +10,4 @@ import javax.transaction.Transactional;
 @ActiveProfiles("test")
 class EquineTrainingTrackerApiApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
 }

@@ -2,7 +2,6 @@ package co.uk.bransby.equinetrainingtrackerapi.api.models.dto;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.ProgressCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;
