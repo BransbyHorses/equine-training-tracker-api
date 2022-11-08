@@ -72,11 +72,6 @@ class TrainingMethodControllerTest {
     }
 
     @Test
-    @Disabled
-    void willUpdateMethodAndReturnOkResponse() throws Exception {
-    }
-
-    @Test
     void willDeleteMethodAndReturnOkResponse() throws Exception {
         given(trainingMethodService.listMethod(1L)).willReturn(trainingMethods.get(0));
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/data/training-methods/{id}", 1))

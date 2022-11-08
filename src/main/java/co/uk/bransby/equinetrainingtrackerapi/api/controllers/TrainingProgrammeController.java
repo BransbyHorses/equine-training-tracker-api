@@ -68,5 +68,4 @@ public class TrainingProgrammeController {
                 .ok()
                 .body(modelMapper.map(updatedTrainingProgramme, TrainingProgrammeDto.class));
     }
-
 }

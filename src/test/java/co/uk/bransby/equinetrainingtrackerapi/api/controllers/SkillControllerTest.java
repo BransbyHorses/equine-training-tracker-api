@@ -1,8 +1,6 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.controllers.SkillController;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
-import co.uk.bransby.equinetrainingtrackerapi.api.models.TrainingProgramme;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.SkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
