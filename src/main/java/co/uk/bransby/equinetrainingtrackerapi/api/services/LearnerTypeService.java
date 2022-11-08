@@ -38,7 +38,7 @@ public class LearnerTypeService {
     public void deleteLearnerType(Long id) {
         LearnerType learnerType = learnerTypeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No learner type found with id: " + id));
-        learnerTypeRepository.deleteById(learnerType.getId());
+        learnerTypeRepository.delete(learnerType);
     };
 
 }

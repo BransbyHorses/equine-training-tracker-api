@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/data/equine-statuses")
 public class EquineStatusController {
 
-
     @GetMapping
     public ResponseEntity<List<EquineStatus>> getEquineStatuses() {
         return new ResponseEntity<>(Arrays.asList(EquineStatus.values()), HttpStatus.OK);
