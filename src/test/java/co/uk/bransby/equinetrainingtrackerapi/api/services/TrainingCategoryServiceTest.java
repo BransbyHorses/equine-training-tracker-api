@@ -62,7 +62,7 @@ class TrainingCategoryServiceTest {
     @Test
     void updateTrainingCategory() {
         TrainingCategory updatedTrainingCategory = new TrainingCategory(1L, "Updated Training Category");
-        given(trainingCategoryRepository.findById(1L)).willReturn(java.util.Optional.ofNullable(trainingCategory));
+        given(trainingCategoryRepository.findById(1L)).willReturn(Optional.of(trainingCategory));
         given(trainingCategoryRepository.saveAndFlush(trainingCategory)).willReturn(trainingCategory);
         TrainingCategory savedUpdatedTrainingCategory = trainingCategoryService.updateTrainingCategory(1L, updatedTrainingCategory);
         assertEquals(1L, savedUpdatedTrainingCategory.getId());
