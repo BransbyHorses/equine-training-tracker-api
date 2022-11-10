@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/data/progress-codes")
 public class ProgressCodeController {
 
-
     @GetMapping
     public ResponseEntity<List<ProgressCode>> progressCodes() {
         return new ResponseEntity<>(Arrays.asList(ProgressCode.values()), HttpStatus.OK);
