@@ -2,7 +2,9 @@ package co.uk.bransby.equinetrainingtrackerapi.api.services;
 
 import co.uk.bransby.equinetrainingtrackerapi.api.models.*;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.EquineRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillProgressRecordRepository;
 import co.uk.bransby.equinetrainingtrackerapi.api.repositories.SkillRepository;
+import co.uk.bransby.equinetrainingtrackerapi.api.repositories.TrainingProgrammeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +15,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityExistsException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -27,9 +28,11 @@ class SkillServiceTest {
 
     @Mock
     private SkillRepository skillRepository;
-
     @Mock
-    private EquineRepository equineRepository;
+    private TrainingProgrammeRepository trainingProgrammeRepository;
+    @Mock
+    private SkillProgressRecordRepository skillProgressRecordRepository;
+
 
     @InjectMocks
     private SkillService skillServiceTest;
@@ -37,8 +40,8 @@ class SkillServiceTest {
 
     @BeforeEach
     void setUp() {
-        skillServiceTest = new SkillService(skillRepository, equineRepository);
-        skillTestInstance = new Skill(1L, "Skill service can service skills", new HashSet<>());
+        skillServiceTest = new SkillService(skillRepository, trainingProgrammeRepository, skillProgressRecordRepository);
+        skillTestInstance = new Skill(1L, "Skill service can service skills");
     }
 
     @Test
@@ -61,7 +64,7 @@ class SkillServiceTest {
                 EntityExistsException.class,
                 () -> skillServiceTest.create(skillTestInstance)
         );
-        Assertions.assertEquals(skillTestInstance.getName() + " already exists", exception.getMessage());
+        assertEquals(skillTestInstance.getName() + " already exists", exception.getMessage());
     }
 
     @Test
@@ -85,17 +88,22 @@ class SkillServiceTest {
     }
 
     @Test
-    void canDeleteSkillById() {
-        // given
-        Equine equine = new Equine(1L, "First Horse", new Yard(), new Category(), new Programme(), new HashSet<Skill>(List.of(skillTestInstance)));
-        Set<Equine> equines = new HashSet<>(List.of(equine));
-        skillTestInstance.setEquines(equines);
-        given(skillRepository.findById(1L)).willReturn(Optional.of(skillTestInstance));
-        // when
-        skillServiceTest.deleteById(1L);
-        // then
-        assertThat(skillTestInstance.getEquines()).hasSize(0);
-        assertThat(equine.getSkills()).hasSize(0);
+    void willAddNewSkillToTrainingProgrammes() {
+        Skill newSkill = new Skill(1L, "New Skill");
+        TrainingProgramme trainingProgramme = new TrainingProgramme();
+        trainingProgramme.setSkillProgressRecords(new ArrayList<>());
+
+        given(trainingProgrammeRepository.findAll()).willReturn(new ArrayList<>(List.of(trainingProgramme)));
+
+        skillServiceTest.addNewSkillToTrainingProgrammes(newSkill);
+
+        assertEquals(1, trainingProgramme.getSkillProgressRecords().size());
+        assertEquals(newSkill, trainingProgramme.getSkillProgressRecords().get(0).getSkill());
+        assertEquals(0, trainingProgramme.getSkillProgressRecords().get(0).getTime());
+        assertEquals(ProgressCode.NOT_ABLE, trainingProgramme.getSkillProgressRecords().get(0).getProgressCode());
+        assertNull(trainingProgramme.getSkillProgressRecords().get(0).getStartDate());
+        assertNull(trainingProgramme.getSkillProgressRecords().get(0).getEndDate());
+        assertEquals(trainingProgramme, trainingProgramme.getSkillProgressRecords().get(0).getTrainingProgramme());
     }
 
 }

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -63,18 +64,15 @@ class YardServiceTest {
 
     @Test
     void throwsExceptionWhenYardWasNotFoundAndUpdated() {
-        Assertions.assertThrows(EntityNotFoundException.class, () -> yardServiceUnderTest.updateYard(yardInstance.getId(), yardInstance));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> yardServiceUnderTest.updateYard(1L, yardInstance));
     }
 
     @Test
     void canDeleteYard() {
-        Equine equine = new Equine(1L, "First Horse", yardInstance, new Category(), new Programme(), new HashSet<Skill>());
+        Equine equine = new Equine(1L, "First Horse", new Yard(), EquineStatus.AWAITING_TRAINING, new ArrayList<>(), new LearnerType(), new ArrayList<>(), new ArrayList<>());
         yardInstance.setEquines(new HashSet<>(List.of(equine)));
-        // given
         given(yardRepository.findById(1L)).willReturn(Optional.of(yardInstance));
-        // when
         yardServiceUnderTest.deleteYard(yardInstance.getId());
-        // then
         Assertions.assertNull(equine.getYard());
         Mockito.verify(yardRepository).deleteById(yardInstance.getId());
     }

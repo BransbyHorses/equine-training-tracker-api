@@ -4,11 +4,11 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -19,28 +19,30 @@ public class Equine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "yard_id", referencedColumnName = "id")
     private Yard yard;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    private EquineStatus equineStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "programme_id", referencedColumnName = "id")
-    private Programme programme;
-
-    @ManyToMany
-    @JoinTable(
-            name = "equines_skills",
-            joinColumns = @JoinColumn(name = "equine_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id")
-    )
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<Skill> skills;
+    private List<TrainingProgramme> trainingProgrammes;
+
+    @ManyToOne
+    @JoinColumn(name = "learner_type_id")
+    private LearnerType learnerType;
+
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<HealthAndSafetyFlag> healthAndSafetyFlags;
+
+    @OneToMany(mappedBy = "equine", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Disruption> disruptions;
 
     @Override
     public boolean equals(Object o) {

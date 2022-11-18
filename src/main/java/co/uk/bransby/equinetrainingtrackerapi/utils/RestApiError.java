@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @Setter
 public class RestApiError {
 
-    private final StringBuffer requestUrl;
+    private final StringBuilder requestUrl;
     private final HttpStatus status;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime timestamp;
     private String errorMessage;
 
-    public RestApiError(StringBuffer requestUrl, HttpStatus status, String errorMessage) {
+    RestApiError(StringBuilder requestUrl, HttpStatus status, String errorMessage) {
         this.requestUrl = requestUrl;
         this.status = status;
         this.timestamp = LocalDateTime.now();

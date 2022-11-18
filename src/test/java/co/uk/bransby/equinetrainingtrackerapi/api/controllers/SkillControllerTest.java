@@ -1,6 +1,5 @@
 package co.uk.bransby.equinetrainingtrackerapi.api.controllers;
 
-import co.uk.bransby.equinetrainingtrackerapi.api.controllers.SkillController;
 import co.uk.bransby.equinetrainingtrackerapi.api.models.Skill;
 import co.uk.bransby.equinetrainingtrackerapi.api.services.SkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -45,10 +42,10 @@ class SkillControllerTest {
     @BeforeEach
     void setUp() {
         this.skillList = new ArrayList<>();
-        this.skillList.add(new Skill(1L, "Accepts presence of humans at close proximity", new HashSet<>()));
-        this.skillList.add(new Skill(2L, "Accepts touch", new HashSet<>()));
-        this.skillList.add(new Skill(3L, "Will wear a head collar", new HashSet<>()));
-        this.skillList.add(new Skill(4L, "Can be led", new HashSet<>()));
+        this.skillList.add(new Skill(1L, "Accepts presence of humans at close proximity"));
+        this.skillList.add(new Skill(2L, "Accepts touch"));
+        this.skillList.add(new Skill(3L, "Will wear a head collar"));
+        this.skillList.add(new Skill(4L, "Can be led"));
     }
 
     @Test
@@ -85,7 +82,7 @@ class SkillControllerTest {
     @Test
     void savesSkillAndRespondsWithCreated() throws Exception {
 
-        Skill newSkill = new Skill(1L, "Test Skill", new HashSet<>());
+        Skill newSkill = new Skill(1L, "Test Skill");
         given(skillService.create(any(Skill.class))).willAnswer((answer) -> answer.getArgument(0));
 
 
@@ -99,7 +96,7 @@ class SkillControllerTest {
     @Test
     void updatesSkill() throws Exception {
         Long skillId = 1L;
-        Skill updatedSkill = new Skill(skillId, "Equine can be transformed", new HashSet<>());
+        Skill updatedSkill = new Skill(skillId, "Equine can be transformed");
 
         given(skillService.findById(skillId)).willReturn(updatedSkill);
         given(skillService.update(updatedSkill, updatedSkill.getId())).willReturn(updatedSkill);
