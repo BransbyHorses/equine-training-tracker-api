@@ -20,7 +20,7 @@ public class SkillProgressRecord {
     @ManyToOne
     @JoinColumn(name = "training_programme_id")
     private TrainingProgramme trainingProgramme;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "skill_id")
     private Skill skill;
     private ProgressCode progressCode;

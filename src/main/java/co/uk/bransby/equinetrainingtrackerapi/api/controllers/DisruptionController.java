@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/data/disruptions")
 public class DisruptionController {
 
-
     @GetMapping
     public ResponseEntity<List<DisruptionCode>> disruptions() {
         return new ResponseEntity<>(Arrays.asList(DisruptionCode.values()), HttpStatus.OK);
